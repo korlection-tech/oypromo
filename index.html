@@ -3,12 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>6月份 Olive Young 優惠查詢系統</title>
+    <title>6月份 Olive Young 最新優惠</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.4.1/papaparse.min.js"></script>
     <style>
         body {
             font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Microsoft JhengHei", sans-serif;
-            background-color: #f4f6f9;
+            background-color: #f3f8f2; /* 更改為 Olive Young 專屬淺綠色背景 */
             margin: 0;
             padding: 20px;
             color: #333;
@@ -20,7 +20,7 @@
             background: #fff;
             padding: 30px;
             border-radius: 12px;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+            box-shadow: 0 4px 15px rgba(0,0,0,0.03);
         }
         
         /* 頂部區塊 */
@@ -29,8 +29,8 @@
             margin-bottom: 25px;
         }
         .company-logo {
-            width: 100px;
-            height: 100px;
+            width: 115px; /* Logo 放大 15% (由 100px 變為 115px) */
+            height: 115px;
             border-radius: 50%;
             object-fit: cover;
             margin-bottom: 12px;
@@ -46,15 +46,9 @@
         }
         .subtitle {
             color: #4a5568;
-            margin: 0 0 6px 0;
+            margin: 0;
             font-size: 15px;
             font-weight: 600;
-        }
-        .notice-text {
-            color: #e53e3e;
-            font-size: 13px;
-            margin: 0;
-            font-weight: 500;
         }
         
         /* 狀態提示列 */
@@ -157,6 +151,25 @@
         .btn-search:hover { background-color: #001124; }
         .btn-search:disabled { background-color: #a0aec0; cursor: not-allowed; }
 
+        /* [NEW] 新品精選置頂區塊 */
+        .new-arrival-section {
+            background-color: #fffaf0;
+            border: 2px dashed #f6ad55;
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 30px;
+        }
+        .new-arrival-title {
+            font-size: 17px;
+            font-weight: bold;
+            color: #dd6b20;
+            margin-top: 0;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
         /* 商品卡片 Grid */
         .results-count { margin-bottom: 15px; font-weight: bold; color: #2c3e50; font-size: 16px; }
         .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 20px; }
@@ -234,18 +247,23 @@
         .modal-title { font-size: 18px; font-weight: bold; color: #1a1a1a; margin: 0 0 4px 0; line-height: 1.4; }
         .modal-desc { font-size: 14px; color: #4a5568; margin: 0 0 15px 0; line-height: 1.5; background: #f8f9fa; padding: 10px; border-radius: 6px; }
         
-        .modal-price-box { background: #fff5f5; padding: 15px; border-radius: 8px; display: flex; flex-direction: column; gap: 8px; }
-        .modal-price-title { font-size: 13px; color: #c53030; font-weight: bold; border-bottom: 1px dashed #fed7d7; padding-bottom: 4px; margin-bottom: 2px; }
+        /* 雙價格樣式修正：文字大小粗細完全一樣 */
+        .modal-price-box { background: #fff5f5; padding: 15px; border-radius: 8px; display: flex; flex-direction: column; gap: 10px; }
+        .modal-price-title { font-size: 15px; color: #c53030; font-weight: bold; border-bottom: 1px dashed #fed7d7; padding-bottom: 6px; margin-bottom: 2px; }
+        .price-row.p1 { color: #e53e3e; font-weight: bold; }
+        .price-row.p2 { color: #4a5568; font-weight: bold; }
+        .date-label { font-size: 15px; font-weight: 600; }
+        .price-val { font-weight: 700; }
+        .price-row.p1 .price-val, .price-row.p2 .price-val { font-size: 15px !important; }
     </style>
 </head>
 <body>
 
 <div class="container">
     <div class="header-section">
-        <img src="logo.png" alt="Company Logo" class="company-logo" onerror="this.style.display='none'">
-        <h1>6月份 Olive Young 優惠查詢系統</h1>
+        <img src="logo.png" alt="Company Logo" class="company-logo" onerror="this.src='logo.jpg';">
+        <h1>6月份 Olive Young 最新優惠</h1>
         <div class="subtitle">全面支援分類點選、指定日期雙重特價與產品詳情</div>
-        <p class="notice-text">* Olive Young 促銷瞬息萬變，落單前請與代購店主最終確認</p>
     </div>
     
     <div id="statusMessage" class="status-message status-loading">⏳ 正在連線讀取 Olive Young 產品資料庫，請稍候...</div>
@@ -253,13 +271,13 @@
     <div class="category-section">
         <div class="category-title">🎯 按產品分類快速篩選：</div>
         <div class="category-tabs" id="categoryTabs">
-            <button class="tab-btn active" onclick="selectCategory(event, 'all')">全部商品 (All)</button>
-            <button class="tab-btn" onclick="selectCategory(event, 'cosmetics')">彩妝化妝 (Cosmetics)</button>
-            <button class="tab-btn" onclick="selectCategory(event, 'skincare')">面部護膚 (Skincare)</button>
-            <button class="tab-btn" onclick="selectCategory(event, 'haircare')">美髮護理 (Haircare)</button>
-            <button class="tab-btn" onclick="selectCategory(event, 'bodycare')">身體護理 (Bodycare)</button>
-            <button class="tab-btn" onclick="selectCategory(event, 'snacks')">人氣零食 (Snacks)</button>
-            <button class="tab-btn" onclick="selectCategory(event, 'supplement')">保健食品 (Supplement)</button>
+            <button class="tab-btn active" onclick="selectCategory('all')">全部商品 (All)</button>
+            <button class="tab-btn" onclick="selectCategory('cosmetics')">彩妝化妝 (Cosmetics)</button>
+            <button class="tab-btn" onclick="selectCategory('skincare')">面部護膚 (Skincare)</button>
+            <button class="tab-btn" onclick="selectCategory('haircare')">美髮護理 (Haircare)</button>
+            <button class="tab-btn" onclick="selectCategory('bodycare')">身體護理 (Bodycare)</button>
+            <button class="tab-btn" onclick="selectCategory('snacks')">人氣零食 (Snacks)</button>
+            <button class="tab-btn" onclick="selectCategory('supplement')">保健食品 (Supplement)</button>
         </div>
         
         <div class="brand-filter-box" id="brandFilterBox"></div>
@@ -272,6 +290,11 @@
             <span id="brandCountHint">已輸入: 0 個關鍵字 / 上限 10 個</span>
         </div>
         <button class="btn-search" id="searchBtn" onclick="performSearch()" disabled>請稍候...</button>
+    </div>
+
+    <div class="new-arrival-section" id="newArrivalSection" style="display: none;">
+        <div class="new-arrival-title">⚡ 6月本週新品速遞 (NEW ARRIVALS)</div>
+        <div class="grid" id="newArrivalGrid"></div>
     </div>
 
     <div class="results-count" id="resultsCount"></div>
@@ -289,14 +312,14 @@
         <div id="modalDesc" class="modal-desc">產品描述說明</div>
         
         <div class="modal-price-box">
-            <div class="modal-price-title">📅 6 月份期間限定特惠價</div>
+            <div class="modal-price-title">🔥 6月份限時優惠</div>
             <div class="price-row p1">
-                <span id="modalDate1" class="date-label">時段一 (6/1 - 6/7)</span>
-                <span id="modalPrice1" class="price-val" style="color: #e53e3e; font-size: 22px;">HKD $0</span>
+                <span id="modalDate1" class="date-label">即日至 --</span>
+                <span id="modalPrice1" class="price-val">HKD $0</span>
             </div>
             <div class="price-row p2">
-                <span id="modalDate2" class="date-label">時段二 (6/8 - 6/30)</span>
-                <span id="modalPrice2" class="price-val" style="font-size: 18px;">HKD $0</span>
+                <span id="modalDate2" class="date-label">-- 至 --</span>
+                <span id="modalPrice2" class="price-val">HKD $0</span>
             </div>
         </div>
     </div>
@@ -323,6 +346,7 @@ document.addEventListener("DOMContentLoaded", function() {
             searchBtn.disabled = false;
             searchBtn.innerText = "立即搜尋產品";
             
+            // 載入時渲染並自動偵測置頂新品
             renderProducts(productsData);
         },
         error: function(err) {
@@ -342,15 +366,7 @@ document.getElementById('searchInput').addEventListener('input', function() {
     let keywords = parseKeywords(this.value);
     let hint = document.getElementById('brandCountHint');
     hint.innerText = `已輸入: ${keywords.length} 個關鍵字 / 上限 10 個`;
-    
-    const searchBtn = document.getElementById("searchBtn");
-    if (keywords.length > 10) {
-        hint.style.color = '#e53e3e';
-        searchBtn.disabled = true;
-    } else {
-        hint.style.color = '#6c757d';
-        searchBtn.disabled = false;
-    }
+    hint.style.color = keywords.length > 10 ? '#e53e3e' : '#6c757d';
 });
 
 function parseKeywords(text) {
@@ -358,15 +374,15 @@ function parseKeywords(text) {
     return text.split(/[\n,，\s]+/).filter(k => k.trim() !== "");
 }
 
-function selectCategory(e, catName) {
+function selectCategory(catName) {
     currentSelectedCategory = catName.toLowerCase();
-    currentSelectedBrand = 'all'; 
+    currentSelectedBrand = 'all';
     
     const buttons = document.querySelectorAll('#categoryTabs .tab-btn');
     buttons.forEach(btn => btn.classList.remove('active'));
     
-    if (e && e.target) {
-        e.target.classList.add('active');
+    if (event && event.target) {
+        event.target.classList.add('active');
     }
     
     updateBrandChips();
@@ -456,57 +472,89 @@ function performSearch() {
     renderProducts(filtered);
 }
 
+// 動態建立卡片 HTML 的輔助函式
+function createCardHtml(item) {
+    const brand = item["Brand"] || "OLIVE YOUNG";
+    const name = item["Product Name"] || "無品名";
+    const category = item["Category"] || "";
+    const desc = item["Description"] || "";
+    
+    const p1_date = item["Price 1 Date"] || "6月1-7日";
+    const p1_val = item["Price 1 (HKD)"] || "未定價";
+    const p2_date = item["Price 2 Date"] || "6月8-30日";
+    const p2_val = item["Price 2 (HKD)"] || "未定價";
+    
+    const imgUrl = item["Image"] || "";
+    const detailImgUrl = item["Detail Image"] && item["Detail Image"].trim() !== "" ? item["Detail Image"] : imgUrl;
+    
+    // 安全將字串轉義，防引號破壞屬性
+    const safeDesc = desc.replace(/"/g, '&quot;').replace(/'/g, '&#39;');
+    const safeName = name.replace(/"/g, '&quot;').replace(/'/g, '&#39;');
+    const safeBrand = brand.replace(/"/g, '&quot;').replace(/'/g, '&#39;');
+
+    const card = document.createElement('div');
+    card.className = 'card';
+    card.setAttribute('onclick', `openModal("${safeBrand}", "${safeName}", "${safeDesc}", "${p1_date}", "${p1_val}", "${p2_date}", "${p2_val}", "${detailImgUrl}")`);
+    
+    // 如果是置頂新品，展示名隱藏 [NEW] 字眼更美觀
+    const displayName = name.startsWith('[NEW]') ? name.replace('[NEW]', '<span style="color:#dd6b20; font-weight:bold;">[NEW]</span>') : name;
+    const displayDesc = (!desc || desc.trim() === "" || desc === "暫無商品描述") ? "" : desc;
+
+    card.innerHTML = `
+        <div class="image-container">
+            <img src="${imgUrl}" alt="${name}" onerror="this.src='https://placehold.co/200x200?text=No+Image'">
+        </div>
+        <div class="card-top-info">
+            <span class="brand-badge">${brand}</span>
+            <span class="category-badge">${category.toUpperCase()}</span>
+        </div>
+        <div class="product-name" title="${name}">${displayName}</div>
+        <div class="product-desc">${displayDesc}</div>
+        
+        <div class="prices-container">
+            <div class="price-row p1">
+                <span class="date-label">🔥 即日至 ${p1_date}</span>
+                <span class="price-val">HKD $${p1_val}</span>
+            </div>
+            <div class="price-row p2">
+                <span class="date-label">⏱️ ${p2_date}</span>
+                <span class="price-val">HKD $${p2_val}</span>
+            </div>
+        </div>
+        <div class="click-tip">🔍 點擊看詳情圖</div>
+    `;
+    return card;
+}
+
 function renderProducts(data) {
     const grid = document.getElementById('resultsGrid');
+    const newArrivalGrid = document.getElementById('newArrivalGrid');
+    const newArrivalSection = document.getElementById('newArrivalSection');
+    
     grid.innerHTML = '';
+    newArrivalGrid.innerHTML = '';
+
+    // 智能功能：自動辨識並篩選出名字以 [NEW] 開頭的貨品
+    const newArrivals = data.filter(item => item["Product Name"] && item["Product Name"].trim().startsWith('[NEW]'));
+    
+    // 只有在顯示「全部商品」且資料庫中確實有 [NEW] 商品時，才啟動置頂專區
+    if (currentSelectedCategory === 'all' && currentSelectedBrand === 'all' && newArrivals.length > 0) {
+        newArrivalSection.style.display = 'block';
+        newArrivals.forEach(item => {
+            newArrivalGrid.appendChild(createCardHtml(item));
+        });
+    } else {
+        newArrivalSection.style.display = 'none';
+    }
     
     if (data.length === 0) {
         grid.innerHTML = '<div class="no-result">沒有找到相符的 Olive Young 商品。</div>';
         return;
     }
     
+    // 顯示常規的所有貨品
     data.forEach(item => {
-        const brand = item["Brand"] || "OLIVE YOUNG";
-        const name = item["Product Name"] || "無品名";
-        const category = item["Category"] || "";
-        const desc = item["Description"] || "暫無商品描述";
-        
-        const p1_date = item["Price 1 Date"] || "6月1-7日";
-        const p1_val = item["Price 1 (HKD)"] || "未定價";
-        const p2_date = item["Price 2 Date"] || "6月8-30日";
-        const p2_val = item["Price 2 (HKD)"] || "未定價";
-        
-        const imgUrl = item["Image"] || "";
-        const detailImgUrl = item["Detail Image"] && item["Detail Image"].trim() !== "" ? item["Detail Image"] : imgUrl;
-        
-        const card = document.createElement('div');
-        card.className = 'card';
-        card.onclick = () => openModal(brand, name, desc, p1_date, p1_val, p2_date, p2_val, detailImgUrl);
-        
-        card.innerHTML = `
-            <div class="image-container">
-                <img src="${imgUrl}" alt="${name}" onerror="this.src='https://placeholder.co/200x200?text=No+Image'">
-            </div>
-            <div class="card-top-info">
-                <span class="brand-badge">${brand}</span>
-                <span class="category-badge">${category.toUpperCase()}</span>
-            </div>
-            <div class="product-name" title="${name}">${name}</div>
-            <div class="product-desc">${desc}</div>
-            
-            <div class="prices-container">
-                <div class="price-row p1">
-                    <span class="date-label">🔥 ${p1_date}</span>
-                    <span class="price-val">HKD $${p1_val}</span>
-                </div>
-                <div class="price-row p2">
-                    <span class="date-label">⏱️ ${p2_date}</span>
-                    <span class="price-val">HKD $${p2_val}</span>
-                </div>
-            </div>
-            <div class="click-tip">🔍 點擊看詳情圖</div>
-        `;
-        grid.appendChild(card);
+        grid.appendChild(createCardHtml(item));
     });
 }
 
@@ -514,23 +562,46 @@ function openModal(brand, name, desc, p1_date, p1_val, p2_date, p2_val, detailIm
     const container = document.getElementById('modalImgContainer');
     container.innerHTML = '';
     
-    if (detailImgRaw) {
-        const imgList = detailImgRaw.split(';').join(',').split(',').map(url => url.trim()).filter(url => url !== "");
+    // 細節圖核心修正：加強空白字元和多圖解析能力
+    if (detailImgRaw && detailImgRaw.trim() !== "" && !detailImgRaw.includes("placehold.co")) {
+        const imgList = detailImgRaw.replace(/;/g, ',').split(',').map(url => url.trim()).filter(url => url !== "");
         imgList.forEach(url => {
-            const img = document.createElement('img');
-            img.src = url;
-            img.onerror = function() { this.style.display = 'none'; };
-            container.appendChild(img);
+            if (url) {
+                const img = document.createElement('img');
+                img.src = url;
+                img.onerror = function() { this.style.display = 'none'; };
+                container.appendChild(img);
+            }
         });
     }
 
     document.getElementById('modalBrand').innerText = brand;
     document.getElementById('modalTitle').innerText = name;
-    document.getElementById('modalDesc').innerText = desc;
     
-    document.getElementById('modalDate1').innerText = "🔥 限時時段一 (" + p1_date + ")";
+    // 描述隱藏功能修正：如沒資料，直接隱藏外框
+    const descDiv = document.getElementById('modalDesc');
+    if (!desc || desc.trim() === "" || desc === "暫無商品描述") {
+        descDiv.style.display = 'none';
+    } else {
+        descDiv.style.display = 'block';
+        descDiv.innerText = desc;
+    }
+    
+    // 自動智能計算「翌日」字眼
+    let nextDayText = "";
+    if (p1_date && p1_date.includes('/')) {
+        let parts = p1_date.split('/');
+        let day = parseInt(parts[0], 10);
+        let month = parts[1] ? parts[1] : "6";
+        nextDayText = (day + 1) + "/" + month;
+    } else {
+        nextDayText = "階段二";
+    }
+    
+    // 修改 Wording：三行格式完全一樣，大小一樣
+    document.getElementById('modalDate1').innerText = "即日至 " + p1_date;
     document.getElementById('modalPrice1').innerText = "HKD $" + p1_val;
-    document.getElementById('modalDate2').innerText = "⏱️ 常規時段二 (" + p2_date + ")";
+    document.getElementById('modalDate2').innerText = nextDayText + " 至 " + p2_date;
     document.getElementById('modalPrice2').innerText = "HKD $" + p2_val;
     
     const modal = document.getElementById('detailModal');
