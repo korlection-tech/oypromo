@@ -8,47 +8,63 @@
     <style>
         body {
             font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Microsoft JhengHei", sans-serif;
-            background-color: #f3f8f2; /* 更改為 Olive Young 專屬淺綠色背景 */
+            /* 框以外使用 #82DC28 和 #FF7878 做對角線漸變 */
+            background: linear-gradient(135deg, #82DC28 0%, #FF7878 100%);
+            background-attachment: fixed; 
             margin: 0;
             padding: 20px;
             color: #333;
             line-height: 1.25;
         }
+        
+        /* 主容器：中間保留白色 */
         .container {
             max-width: 1100px;
             margin: 0 auto;
-            background: #fff;
+            background: #ffffff; 
             padding: 30px;
-            border-radius: 12px;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.03);
+            border-radius: 16px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1); 
+            box-sizing: border-box;
         }
         
         /* 頂部區塊 */
         .header-section {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
             text-align: center;
-            margin-bottom: 25px;
+            margin-bottom: 30px;
+            margin-top: 5px;
+            gap: 24px; /* Logo 之間隔一行的空間感 */
         }
-        .company-logo {
-            width: 115px; /* Logo 放大 15% (由 100px 變為 115px) */
+        
+        /* Korlection Logo 樣式 */
+        .korlection-logo {
+            width: 115px;
             height: 115px;
             border-radius: 50%;
             object-fit: cover;
-            margin-bottom: 12px;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-            border: 2px solid #fff;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            border: 3px solid #fff;
         }
+        
+        /* Olive Young Logo 樣式 */
+        .olive-logo {
+            width: 216px; 
+            height: auto;
+            object-fit: contain;
+            margin-bottom: 5px;
+        }
+        
+        /* 標題字體樣式調整 */
         h1 {
-            color: #1a1a1a;
-            margin: 0 0 12px 0;
-            font-size: 26px;
-            font-weight: 700;
-            line-height: 1.4;
-        }
-        .subtitle {
-            color: #4a5568;
+            color: #001f3f; /* 轉為高級深藍海軍藍，呼應搜尋按鈕，字體更清晰醒目 */
             margin: 0;
-            font-size: 15px;
-            font-weight: 600;
+            font-size: 28px; /* 稍微放大一點點 */
+            font-weight: 800; /* 加粗字體 */
+            line-height: 1.4;
+            letter-spacing: 1px; /* 微調字距增加質感 */
         }
         
         /* 狀態提示列 */
@@ -66,10 +82,13 @@
         /* 分類篩選區 */
         .category-section {
             margin-bottom: 25px;
+            background: #f8fafc; 
+            padding: 15px;
+            border-radius: 10px;
         }
         .category-title {
             font-weight: bold;
-            margin-bottom: 10px;
+            margin-bottom: 12px;
             color: #2c3e50;
             font-size: 15px;
         }
@@ -77,7 +96,7 @@
             display: flex;
             flex-wrap: wrap;
             gap: 8px;
-            margin-bottom: 15px;
+            margin-bottom: 5px;
         }
         .tab-btn {
             padding: 10px 18px;
@@ -98,14 +117,14 @@
         
         /* 子品牌動態清單 */
         .brand-filter-box {
-            background: #f8f9fa;
+            background: #fff;
             padding: 12px;
             border-radius: 8px;
             border: 1px dashed #cbd5e1;
             display: none;
             flex-wrap: wrap;
             gap: 6px;
-            margin-bottom: 15px;
+            margin-top: 12px;
         }
         .brand-chip {
             padding: 6px 12px;
@@ -126,11 +145,12 @@
 
         /* 搜尋區 */
         .search-box {
-            background: #f8f9fa;
+            background: #ffffff;
             padding: 20px;
-            border-radius: 8px;
-            border: 1px solid #e9ecef;
+            border-radius: 10px;
+            border: 1px solid #e2e8f0;
             margin-bottom: 30px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.02);
         }
         label { font-weight: 600; display: block; margin-bottom: 10px; color: #2c3e50; font-size: 16px; }
         textarea {
@@ -151,7 +171,7 @@
         .btn-search:hover { background-color: #001124; }
         .btn-search:disabled { background-color: #a0aec0; cursor: not-allowed; }
 
-        /* [NEW] 新品精選置頂區塊 */
+        /* 新品精選置頂區塊 */
         .new-arrival-section {
             background-color: #fffaf0;
             border: 2px dashed #f6ad55;
@@ -173,12 +193,15 @@
         /* 商品卡片 Grid */
         .results-count { margin-bottom: 15px; font-weight: bold; color: #2c3e50; font-size: 16px; }
         .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 20px; }
+        
+        /* 每個產品卡片 */
         .card {
-            background: #fff; border: 1px solid #e1e8ed; border-radius: 8px; overflow: hidden;
+            background: #ffffff; border: 1px solid #e2e8f0; border-radius: 10px; overflow: hidden;
             display: flex; flex-direction: column; padding: 15px; cursor: pointer;
             transition: transform 0.2s, box-shadow 0.2s;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.02);
         }
-        .card:hover { transform: translateY(-3px); box-shadow: 0 8px 16px rgba(0,0,0,0.08); }
+        .card:hover { transform: translateY(-4px); box-shadow: 0 12px 20px rgba(0,0,0,0.08); border-color: #cbd5e1; }
         .image-container { width: 100%; height: 180px; display: flex; align-items: center; justify-content: center; margin-bottom: 12px; }
         .card img { max-width: 100%; max-height: 100%; object-fit: contain; }
         
@@ -238,6 +261,7 @@
         
         @media (max-width: 480px) {
             .close-btn { top: 15px; right: 15px; width: 40px; height: 40px; line-height: 36px; font-size: 30px; }
+            .container { padding: 15px; }
         }
         
         .modal-image-container { display: flex; flex-direction: column; width: 100%; background: #fafafa; margin-bottom: 15px; border-radius: 6px; overflow: hidden; }
@@ -247,7 +271,6 @@
         .modal-title { font-size: 18px; font-weight: bold; color: #1a1a1a; margin: 0 0 4px 0; line-height: 1.4; }
         .modal-desc { font-size: 14px; color: #4a5568; margin: 0 0 15px 0; line-height: 1.5; background: #f8f9fa; padding: 10px; border-radius: 6px; }
         
-        /* 雙價格樣式修正：文字大小粗細完全一樣 */
         .modal-price-box { background: #fff5f5; padding: 15px; border-radius: 8px; display: flex; flex-direction: column; gap: 10px; }
         .modal-price-title { font-size: 15px; color: #c53030; font-weight: bold; border-bottom: 1px dashed #fed7d7; padding-bottom: 6px; margin-bottom: 2px; }
         .price-row.p1 { color: #e53e3e; font-weight: bold; }
@@ -261,9 +284,11 @@
 
 <div class="container">
     <div class="header-section">
-        <img src="logo.png" alt="Company Logo" class="company-logo" onerror="this.src='logo.jpg';">
-        <h1>6月份 Olive Young 最新優惠</h1>
-        <div class="subtitle">全面支援分類點選、指定日期雙重特價與產品詳情</div>
+        <img src="logo.png" alt="Korlection Logo" class="korlection-logo" onerror="this.src='logo.jpg';">
+        
+        <img src="olive_young_logo.svg" alt="Olive Young Logo" class="olive-logo">
+        
+        <h1>6月份最新優惠</h1>
     </div>
     
     <div id="statusMessage" class="status-message status-loading">⏳ 正在連線讀取 Olive Young 產品資料庫，請稍候...</div>
@@ -346,13 +371,12 @@ document.addEventListener("DOMContentLoaded", function() {
             searchBtn.disabled = false;
             searchBtn.innerText = "立即搜尋產品";
             
-            // 載入時渲染並自動偵測置頂新品
             renderProducts(productsData);
         },
         error: function(err) {
             const statusDiv = document.getElementById("statusMessage");
             statusDiv.className = "status-message status-error";
-            statusDiv.innerText = "❌ 錯誤：找不到您的 olive_pricelist.csv 資料庫檔案。請確保將它上傳至 GitHub 同一根目錄下。";
+            statusDiv.innerText = "❌ 錯誤：找不到您的 olive_pricelist.csv 資料庫檔案。";
         }
     });
 
@@ -472,7 +496,6 @@ function performSearch() {
     renderProducts(filtered);
 }
 
-// 動態建立卡片 HTML 的輔助函式
 function createCardHtml(item) {
     const brand = item["Brand"] || "OLIVE YOUNG";
     const name = item["Product Name"] || "無品名";
@@ -487,7 +510,6 @@ function createCardHtml(item) {
     const imgUrl = item["Image"] || "";
     const detailImgUrl = item["Detail Image"] && item["Detail Image"].trim() !== "" ? item["Detail Image"] : imgUrl;
     
-    // 安全將字串轉義，防引號破壞屬性
     const safeDesc = desc.replace(/"/g, '&quot;').replace(/'/g, '&#39;');
     const safeName = name.replace(/"/g, '&quot;').replace(/'/g, '&#39;');
     const safeBrand = brand.replace(/"/g, '&quot;').replace(/'/g, '&#39;');
@@ -496,7 +518,6 @@ function createCardHtml(item) {
     card.className = 'card';
     card.setAttribute('onclick', `openModal("${safeBrand}", "${safeName}", "${safeDesc}", "${p1_date}", "${p1_val}", "${p2_date}", "${p2_val}", "${detailImgUrl}")`);
     
-    // 如果是置頂新品，展示名隱藏 [NEW] 字眼更美觀
     const displayName = name.startsWith('[NEW]') ? name.replace('[NEW]', '<span style="color:#dd6b20; font-weight:bold;">[NEW]</span>') : name;
     const displayDesc = (!desc || desc.trim() === "" || desc === "暫無商品描述") ? "" : desc;
 
@@ -534,10 +555,8 @@ function renderProducts(data) {
     grid.innerHTML = '';
     newArrivalGrid.innerHTML = '';
 
-    // 智能功能：自動辨識並篩選出名字以 [NEW] 開頭的貨品
     const newArrivals = data.filter(item => item["Product Name"] && item["Product Name"].trim().startsWith('[NEW]'));
     
-    // 只有在顯示「全部商品」且資料庫中確實有 [NEW] 商品時，才啟動置頂專區
     if (currentSelectedCategory === 'all' && currentSelectedBrand === 'all' && newArrivals.length > 0) {
         newArrivalSection.style.display = 'block';
         newArrivals.forEach(item => {
@@ -552,7 +571,6 @@ function renderProducts(data) {
         return;
     }
     
-    // 顯示常規的所有貨品
     data.forEach(item => {
         grid.appendChild(createCardHtml(item));
     });
@@ -562,7 +580,6 @@ function openModal(brand, name, desc, p1_date, p1_val, p2_date, p2_val, detailIm
     const container = document.getElementById('modalImgContainer');
     container.innerHTML = '';
     
-    // 細節圖核心修正：加強空白字元和多圖解析能力
     if (detailImgRaw && detailImgRaw.trim() !== "" && !detailImgRaw.includes("placehold.co")) {
         const imgList = detailImgRaw.replace(/;/g, ',').split(',').map(url => url.trim()).filter(url => url !== "");
         imgList.forEach(url => {
@@ -578,7 +595,6 @@ function openModal(brand, name, desc, p1_date, p1_val, p2_date, p2_val, detailIm
     document.getElementById('modalBrand').innerText = brand;
     document.getElementById('modalTitle').innerText = name;
     
-    // 描述隱藏功能修正：如沒資料，直接隱藏外框
     const descDiv = document.getElementById('modalDesc');
     if (!desc || desc.trim() === "" || desc === "暫無商品描述") {
         descDiv.style.display = 'none';
@@ -587,7 +603,6 @@ function openModal(brand, name, desc, p1_date, p1_val, p2_date, p2_val, detailIm
         descDiv.innerText = desc;
     }
     
-    // 自動智能計算「翌日」字眼
     let nextDayText = "";
     if (p1_date && p1_date.includes('/')) {
         let parts = p1_date.split('/');
@@ -598,7 +613,6 @@ function openModal(brand, name, desc, p1_date, p1_val, p2_date, p2_val, detailIm
         nextDayText = "階段二";
     }
     
-    // 修改 Wording：三行格式完全一樣，大小一樣
     document.getElementById('modalDate1').innerText = "即日至 " + p1_date;
     document.getElementById('modalPrice1').innerText = "HKD $" + p1_val;
     document.getElementById('modalDate2').innerText = nextDayText + " 至 " + p2_date;
