@@ -12,6 +12,7 @@
             margin: 0;
             padding: 20px;
             color: #333;
+            line-height: 1.25;
         }
         .container {
             max-width: 1100px;
@@ -175,14 +176,14 @@
         
         .product-name { font-size: 14px; font-weight: 600; color: #2d3748; margin: 0 0 4px 0; line-height: 1.4; }
         
-        /* 產品描述（新需求） */
+        /* 產品描述 */
         .product-desc {
             font-size: 12px; color: #718096; margin-bottom: 12px;
             display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical;
             overflow: hidden; text-overflow: ellipsis; height: 34px; line-height: 1.4;
         }
         
-        /* 雙價格區塊（新需求） */
+        /* 雙價格區塊 */
         .prices-container {
             margin-top: auto; border-top: 1px dashed #edf2f7; padding-top: 10px;
             display: flex; flex-direction: column; gap: 4px;
@@ -197,7 +198,7 @@
         .no-result { text-align: center; color: #a0aec0; grid-column: 1 / -1; padding: 50px; font-size: 16px; }
         .click-tip { font-size: 11px; color: #3498db; text-align: right; margin-top: 6px; }
 
-        /* Modal 彈出視窗（關閉按鈕已固定在螢幕右上角） */
+        /* Modal 彈出視窗 */
         .modal-overlay {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
             background: rgba(0, 0, 0, 0.75); display: flex; align-items: center;
@@ -252,13 +253,13 @@
     <div class="category-section">
         <div class="category-title">🎯 按產品分類快速篩選：</div>
         <div class="category-tabs" id="categoryTabs">
-            <button class="tab-btn active" onclick="selectCategory('all')">全部商品 (All)</button>
-            <button class="tab-btn" onclick="selectCategory('cosmetics')">彩妝化妝 (Cosmetics)</button>
-            <button class="tab-btn" onclick="selectCategory('skincare')">面部護膚 (Skincare)</button>
-            <button class="tab-btn" onclick="selectCategory('haircare')">美髮護理 (Haircare)</button>
-            <button class="tab-btn" onclick="selectCategory('bodycare')">身體護理 (Bodycare)</button>
-            <button class="tab-btn" onclick="selectCategory('snacks')">人氣零食 (Snacks)</button>
-            <button class="tab-btn" onclick="selectCategory('supplement')">保健食品 (Supplement)</button>
+            <button class="tab-btn active" onclick="selectCategory(event, 'all')">全部商品 (All)</button>
+            <button class="tab-btn" onclick="selectCategory(event, 'cosmetics')">彩妝化妝 (Cosmetics)</button>
+            <button class="tab-btn" onclick="selectCategory(event, 'skincare')">面部護膚 (Skincare)</button>
+            <button class="tab-btn" onclick="selectCategory(event, 'haircare')">美髮護理 (Haircare)</button>
+            <button class="tab-btn" onclick="selectCategory(event, 'bodycare')">身體護理 (Bodycare)</button>
+            <button class="tab-btn" onclick="selectCategory(event, 'snacks')">人氣零食 (Snacks)</button>
+            <button class="tab-btn" onclick="selectCategory(event, 'supplement')">保健食品 (Supplement)</button>
         </div>
         
         <div class="brand-filter-box" id="brandFilterBox"></div>
@@ -308,8 +309,6 @@ let currentSelectedBrand = 'all';
 
 document.addEventListener("DOMContentLoaded", function() {
     const cacheBuster = "?v=" + new Date().getTime();
-    
-    // 你可以將 Olive Young 的資料庫命名為 olive_pricelist.csv 放喺 GitHub
     const csvUrl = "olive_pricelist.csv" + cacheBuster;
     
     Papa.parse(csvUrl, {
@@ -324,7 +323,6 @@ document.addEventListener("DOMContentLoaded", function() {
             searchBtn.disabled = false;
             searchBtn.innerText = "立即搜尋產品";
             
-            // 初始顯示全部產品
             renderProducts(productsData);
         },
         error: function(err) {
@@ -334,19 +332,25 @@ document.addEventListener("DOMContentLoaded", function() {
         }
     });
 
-    // Modal 關閉監聽
     const modalOverlay = document.getElementById('detailModal');
     const closeBtn = document.getElementById('globalCloseBtn');
     if (closeBtn) { closeBtn.addEventListener('click', () => modalOverlay.classList.remove('active')); }
     if (modalOverlay) { modalOverlay.addEventListener('click', (e) => { if (e.target === modalOverlay) modalOverlay.classList.remove('active'); }); }
 });
 
-// 字數提示
 document.getElementById('searchInput').addEventListener('input', function() {
     let keywords = parseKeywords(this.value);
     let hint = document.getElementById('brandCountHint');
     hint.innerText = `已輸入: ${keywords.length} 個關鍵字 / 上限 10 個`;
-    hint.style.color = keywords.length > 10 ? '#e53e3e' : '#6c757d';
+    
+    const searchBtn = document.getElementById("searchBtn");
+    if (keywords.length > 10) {
+        hint.style.color = '#e53e3e';
+        searchBtn.disabled = true;
+    } else {
+        hint.style.color = '#6c757d';
+        searchBtn.disabled = false;
+    }
 });
 
 function parseKeywords(text) {
@@ -354,21 +358,21 @@ function parseKeywords(text) {
     return text.split(/[\n,，\s]+/).filter(k => k.trim() !== "");
 }
 
-// 兩級篩選：點選大分類
-function selectCategory(catName) {
+function selectCategory(e, catName) {
     currentSelectedCategory = catName.toLowerCase();
-    currentSelectedBrand = 'all'; // 重設品牌
+    currentSelectedBrand = 'all'; 
     
-    // 切換 Tab 樣式
     const buttons = document.querySelectorAll('#categoryTabs .tab-btn');
     buttons.forEach(btn => btn.classList.remove('active'));
-    event.target.classList.add('active');
+    
+    if (e && e.target) {
+        e.target.classList.add('active');
+    }
     
     updateBrandChips();
     filterData();
 }
 
-// 點選大分類後，動態更新該分類下的「品牌選單」
 function updateBrandChips() {
     const box = document.getElementById('brandFilterBox');
     box.innerHTML = '';
@@ -378,7 +382,6 @@ function updateBrandChips() {
         return;
     }
     
-    // 找出目前分類裡有哪些不重複的品牌
     const filteredByCat = productsData.filter(p => p["Category"] && p["Category"].toLowerCase() === currentSelectedCategory);
     const brands = [...new Set(filteredByCat.map(p => p["Brand"]).filter(b => b))];
     
@@ -389,7 +392,6 @@ function updateBrandChips() {
     
     box.style.display = 'flex';
     
-    // 建立「全部品牌」Chip
     const allChip = document.createElement('div');
     allChip.className = 'brand-chip active';
     allChip.innerText = '全部品牌';
@@ -401,7 +403,6 @@ function updateBrandChips() {
     };
     box.appendChild(allChip);
     
-    // 建立個別品牌 Chips
     brands.forEach(b => {
         const chip = document.createElement('div');
         chip.className = 'brand-chip';
@@ -416,7 +417,6 @@ function updateBrandChips() {
     });
 }
 
-// 執行分類/品牌篩選
 function filterData() {
     let filtered = productsData;
     
@@ -431,21 +431,19 @@ function filterData() {
     renderProducts(filtered);
 }
 
-// 核心文字搜尋功能
 function performSearch() {
     const rawInput = document.getElementById('searchInput').value;
     let keywords = parseKeywords(rawInput);
     
     if (keywords.length === 0) { alert("請輸入查詢關鍵字。"); return; }
     
-    // 搜尋時重設分類按鈕
     const buttons = document.querySelectorAll('#categoryTabs .tab-btn');
     buttons.forEach(btn => btn.classList.remove('active'));
     buttons[0].classList.add('active');
     document.getElementById('brandFilterBox').style.display = 'none';
     
     const filtered = productsData.filter(product => {
-        return keywords.some(keyword => {
+        return keywords.every(keyword => {
             const k = keyword.toLowerCase().trim();
             const brandMatch = product["Brand"] ? product["Brand"].toLowerCase().includes(k) : false;
             const nameMatch = product["Product Name"] ? product["Product Name"].toLowerCase().includes(k) : false;
@@ -454,11 +452,10 @@ function performSearch() {
         });
     });
     
-    document.getElementById('resultsCount').innerText = `🔍 關鍵字搜尋結果：共 ${filtered.length} 筆商品 (基於關鍵字：${keywords.join(', ')})`;
+    document.getElementById('resultsCount').innerText = `🔍 關鍵字搜尋結果：共 ${filtered.length} 筆商品 (關鍵字：${keywords.join(', ')})`;
     renderProducts(filtered);
 }
 
-// 將資料渲染進 Grid
 function renderProducts(data) {
     const grid = document.getElementById('resultsGrid');
     grid.innerHTML = '';
@@ -474,7 +471,6 @@ function renderProducts(data) {
         const category = item["Category"] || "";
         const desc = item["Description"] || "暫無商品描述";
         
-        // 雙價錢與雙日期（新需求欄位）
         const p1_date = item["Price 1 Date"] || "6月1-7日";
         const p1_val = item["Price 1 (HKD)"] || "未定價";
         const p2_date = item["Price 2 Date"] || "6月8-30日";
@@ -489,7 +485,7 @@ function renderProducts(data) {
         
         card.innerHTML = `
             <div class="image-container">
-                <img src="${imgUrl}" alt="${name}" onerror="this.src='https://placehold.co/200x200?text=No+Image'">
+                <img src="${imgUrl}" alt="${name}" onerror="this.src='https://placeholder.co/200x200?text=No+Image'">
             </div>
             <div class="card-top-info">
                 <span class="brand-badge">${brand}</span>
@@ -514,18 +510,19 @@ function renderProducts(data) {
     });
 }
 
-// 打開 Modal 視窗
 function openModal(brand, name, desc, p1_date, p1_val, p2_date, p2_val, detailImgRaw) {
     const container = document.getElementById('modalImgContainer');
     container.innerHTML = '';
     
-    const imgList = detailImgRaw.split(';').join(',').split(',').map(url => url.trim()).filter(url => url !== "");
-    imgList.forEach(url => {
-        const img = document.createElement('img');
-        img.src = url;
-        img.onerror = function() { this.style.display = 'none'; };
-        container.appendChild(img);
-    });
+    if (detailImgRaw) {
+        const imgList = detailImgRaw.split(';').join(',').split(',').map(url => url.trim()).filter(url => url !== "");
+        imgList.forEach(url => {
+            const img = document.createElement('img');
+            img.src = url;
+            img.onerror = function() { this.style.display = 'none'; };
+            container.appendChild(img);
+        });
+    }
 
     document.getElementById('modalBrand').innerText = brand;
     document.getElementById('modalTitle').innerText = name;
