@@ -25,7 +25,6 @@
         }
 
         body {
-            position: relative;
             min-height: 100vh;
             margin: 0;
             padding: 32px 20px;
@@ -34,39 +33,14 @@
             font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
                 "Helvetica Neue", Arial, sans-serif;
             line-height: 1.3;
-            background:
-                radial-gradient(circle at 7% 8%, rgba(255, 213, 69, 0.88) 0 11%, transparent 29%),
-                radial-gradient(circle at 91% 14%, rgba(252, 156, 196, 0.53) 0 12%, transparent 30%),
-                radial-gradient(circle at 86% 88%, rgba(143, 195, 255, 0.58) 0 13%, transparent 34%),
-                radial-gradient(circle at 9% 89%, rgba(201, 168, 255, 0.48) 0 10%, transparent 31%),
-                linear-gradient(135deg, #fff7c7 0%, #ffe8ee 41%, #eef6ff 100%);
-        }
-
-        body::before,
-        body::after {
-            position: fixed;
-            z-index: -1;
-            display: block;
-            border-radius: 999px;
-            content: "";
-            filter: blur(10px);
-            pointer-events: none;
-        }
-
-        body::before {
-            top: 26%;
-            left: -100px;
-            width: 250px;
-            height: 250px;
-            background: rgba(255, 180, 207, 0.34);
-        }
-
-        body::after {
-            right: -120px;
-            bottom: 18%;
-            width: 300px;
-            height: 300px;
-            background: rgba(116, 182, 255, 0.26);
+            background: linear-gradient(
+                135deg,
+                #fff9d2 0%,
+                #fff0a8 28%,
+                #ffe477 55%,
+                #ffd84d 78%,
+                #ffc928 100%
+            );
         }
 
         .container {
@@ -74,13 +48,12 @@
             max-width: 1100px;
             margin: 0 auto;
             padding: 36px;
-            border: 1px solid rgba(255, 255, 255, 0.82);
+            border: 1px solid rgba(255, 255, 255, 0.88);
             border-radius: 30px;
-            background: rgba(255, 255, 255, 0.80);
+            background: rgba(255, 255, 255, 0.90);
             box-shadow:
-                0 24px 55px rgba(89, 73, 121, 0.16),
-                inset 0 1px 0 rgba(255, 255, 255, 0.92);
-            backdrop-filter: blur(14px);
+                0 24px 55px rgba(106, 84, 18, 0.18),
+                inset 0 1px 0 rgba(255, 255, 255, 0.95);
         }
 
         .header-section {
@@ -100,7 +73,7 @@
             object-fit: cover;
             background: #fff;
             box-shadow:
-                0 10px 25px rgba(44, 53, 78, 0.16),
+                0 10px 25px rgba(80, 63, 15, 0.18),
                 0 0 0 7px rgba(255, 255, 255, 0.38);
         }
 
@@ -123,16 +96,31 @@
         }
 
         .subtitle {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
             margin: 0;
             padding: 0;
-            background: linear-gradient(135deg, #195eff 0%, #ed3f87 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            box-shadow: none;
             font-size: 36px;
             font-weight: 900;
             letter-spacing: 1px;
             line-height: 1.1;
+        }
+
+        .subtitle span {
+            background: linear-gradient(135deg, #195eff 0%, #ed3f87 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .subtitle-flag {
+            display: block;
+            width: 43px;
+            height: auto;
+            flex: 0 0 auto;
+            border-radius: 4px;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.16);
         }
 
         .partner-logos {
@@ -230,7 +218,7 @@
             padding: 20px;
             border: 1px solid rgba(222, 227, 239, 0.96);
             border-radius: 18px;
-            background: rgba(255, 255, 255, 0.82);
+            background: rgba(255, 255, 255, 0.85);
             box-shadow: 0 7px 18px rgba(68, 78, 110, 0.05);
         }
 
@@ -283,7 +271,7 @@
             padding: 12px;
             border: 1px dashed #aab8ce;
             border-radius: 11px;
-            background: rgba(255, 255, 255, 0.85);
+            background: rgba(255, 255, 255, 0.90);
         }
 
         .brand-chip {
@@ -304,7 +292,7 @@
         }
 
         .search-box {
-            background: rgba(255, 255, 255, 0.92);
+            background: rgba(255, 255, 255, 0.93);
         }
 
         label {
@@ -541,7 +529,9 @@
             font-size: 28px;
         }
 
-        /* IG 1080 x 1350 poster */
+        /* ===============================
+           IG POSTER: 1080px x 1350px
+           =============================== */
 
         #renderCanvasHidden {
             position: absolute;
@@ -578,8 +568,8 @@
             display: block;
             width: auto !important;
             height: auto !important;
-            max-width: 82% !important;
-            max-height: 65% !important;
+            max-width: 98% !important;
+            max-height: 94% !important;
             margin: auto;
             object-fit: contain !important;
         }
@@ -590,18 +580,24 @@
             left: 20px;
             right: 20px;
             z-index: 10;
+
             display: -webkit-box;
             overflow: hidden;
-            padding: 10px 14px;
+            padding: 11px 14px;
+
             border: none !important;
-            border-radius: 0;
+            border-radius: 8px;
+
             color: #000 !important;
             background: #fff !important;
             background-color: #fff !important;
-            box-shadow: none !important;
+
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.12);
+
             font-size: 20px;
             font-weight: 800;
-            line-height: 1.3;
+            line-height: 1.28;
+
             -webkit-box-orient: vertical;
             -webkit-line-clamp: 2;
         }
@@ -611,19 +607,26 @@
             bottom: 20px;
             left: 50%;
             z-index: 10;
+
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: center;
             gap: 2px;
-            padding: 8px 22px;
+
+            padding: 9px 22px;
+
             border: none !important;
-            border-radius: 0;
+            border-radius: 10px;
+
             transform: translateX(-50%);
+
             color: #000;
             background: #fff !important;
             background-color: #fff !important;
-            box-shadow: none !important;
+
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.12);
+
             text-align: center;
             white-space: nowrap;
         }
@@ -647,14 +650,20 @@
             top: 50%;
             left: 50%;
             z-index: 20;
+
             padding: 10px 30px;
+
             border: none !important;
             border-radius: 16px;
+
             transform: translate(-50%, -50%);
+
             color: #fff !important;
             background: #e98fa3 !important;
             background-color: #e98fa3 !important;
+
             box-shadow: none !important;
+
             font-size: 28px;
             font-weight: 900;
             letter-spacing: 1px;
@@ -691,6 +700,10 @@
             .subtitle {
                 font-size: 28px;
             }
+
+            .subtitle-flag {
+                width: 34px;
+            }
         }
     </style>
 </head>
@@ -709,7 +722,14 @@
                 <h1>Korlection</h1>
             </div>
 
-            <p class="subtitle">🇰🇷 韓國9月份代購</p>
+            <div class="subtitle">
+                <img
+                    src="https://flagcdn.com/w80/kr.png"
+                    alt="韓國"
+                    class="subtitle-flag"
+                >
+                <span>韓國9月份代購</span>
+            </div>
 
             <div class="partner-logos">
                 <img
@@ -872,7 +892,6 @@
         let currentStore = "olive";
         let selectedCategories = ["all"];
         let selectedBrand = "all";
-        let isDefaultState = true;
 
         const categoryColors = {
             cosmetics: "#F19DA9",
@@ -927,10 +946,6 @@
                         });
                     });
 
-                    if (results.errors && results.errors.length > 0) {
-                        console.warn("CSV 有格式警告：", results.errors);
-                    }
-
                     statusMessage.style.display = "none";
 
                     searchButton.disabled = false;
@@ -950,10 +965,9 @@
                     statusMessage.innerHTML = `
                         <strong>無法讀取 olive_pricelist.csv。</strong><br><br>
                         請檢查：<br>
-                        1. CSV 檔名必須完全是 <b>olive_pricelist.csv</b><br>
-                        2. CSV 必須與 index.html 放在同一個 folder<br>
-                        3. 不可直接雙擊 HTML 以 file:/// 方式開啟<br>
-                        4. 請使用 VS Code Live Server 或 localhost 開啟網站
+                        1. 檔名必須完全是 olive_pricelist.csv<br>
+                        2. CSV 與 index.html 要放在同一個 folder<br>
+                        3. 請用 Live Server / localhost 開啟，而不是 file:/// 模式
                     `;
                 }
             });
@@ -986,8 +1000,6 @@
         }
 
         function toggleCategory(category) {
-            isDefaultState = false;
-
             if (category === "all") {
                 selectedCategories = ["all"];
             } else {
@@ -1034,13 +1046,12 @@
             }
 
             const filteredProducts = productsData.filter(function(product) {
-                const storeMatch = normalizeLower(product["Store"]) === currentStore;
-
-                const categoryMatch = selectedCategories.includes(
-                    normalizeLower(product["Category"])
+                return (
+                    normalizeLower(product["Store"]) === currentStore &&
+                    selectedCategories.includes(
+                        normalizeLower(product["Category"])
+                    )
                 );
-
-                return storeMatch && categoryMatch;
             });
 
             const brands = [...new Set(
@@ -1099,9 +1110,7 @@
 
         function getFilteredProducts() {
             return productsData.filter(function(product) {
-                const productStore = normalizeLower(product["Store"]);
-
-                if (productStore !== currentStore) {
+                if (normalizeLower(product["Store"]) !== currentStore) {
                     return false;
                 }
 
@@ -1114,9 +1123,7 @@
                 }
 
                 if (selectedBrand !== "all") {
-                    const productBrand = normalizeLower(product["Brand"]);
-
-                    if (productBrand !== selectedBrand) {
+                    if (normalizeLower(product["Brand"]) !== selectedBrand) {
                         return false;
                     }
                 }
@@ -1144,15 +1151,10 @@
                 return;
             }
 
-            isDefaultState = false;
-
             const keywords = keywordText.split(/\s+/).filter(Boolean);
 
             const filteredProducts = productsData.filter(function(product) {
-                const storeMatch =
-                    normalizeLower(product["Store"]) === currentStore;
-
-                if (!storeMatch) {
+                if (normalizeLower(product["Store"]) !== currentStore) {
                     return false;
                 }
 
@@ -1227,23 +1229,12 @@
             const date1 = parseCsvDate(item["Price 1 Date"]);
             const date2 = parseCsvDate(item["Price 2 Date"]);
 
-            let price1Text = "";
-            let price2Text = "";
-
-            if (date1) {
-                price1Text = `(~${formatSaleDate(date1)})`;
-            }
-
-            if (date1 && date2) {
-                price2Text =
-                    `(${formatSaleDate(nextDay(date1))}~${formatSaleDate(date2)})`;
-            } else if (date2) {
-                price2Text = `(~${formatSaleDate(date2)})`;
-            }
-
             return {
-                price1Text: price1Text,
-                price2Text: price2Text
+                price1Text: date1 ? `(~${formatSaleDate(date1)})` : "",
+                price2Text:
+                    date1 && date2
+                        ? `(${formatSaleDate(nextDay(date1))}~${formatSaleDate(date2)})`
+                        : (date2 ? `(~${formatSaleDate(date2)})` : "")
             };
         }
 
@@ -1255,7 +1246,7 @@
             if (list.length === 0) {
                 grid.innerHTML = `
                     <div style="grid-column:1/-1; text-align:center; color:#94A3B8; padding:40px;">
-                        此 Store 暫時未有商品，或者 CSV 的 Store 欄位不是 olive / daiso。
+                        此 Store 暫時未有商品。請確認 CSV 的 Store 欄位是 olive 或 daiso。
                     </div>
                 `;
 
@@ -1482,8 +1473,8 @@
                                 src="${image}"
                                 crossorigin="anonymous"
                                 style="
-                                    max-width:82% !important;
-                                    max-height:65% !important;
+                                    max-width:98% !important;
+                                    max-height:94% !important;
                                     width:auto !important;
                                     height:auto !important;
                                     object-fit:contain !important;
@@ -1500,7 +1491,8 @@
                                     background-color:#ffffff !important;
                                     color:#000000 !important;
                                     border:none !important;
-                                    box-shadow:none !important;
+                                    border-radius:8px;
+                                    box-shadow:0 3px 10px rgba(0,0,0,0.12);
                                 "
                             >
                                 ${name}
@@ -1512,7 +1504,8 @@
                                     background:#ffffff !important;
                                     background-color:#ffffff !important;
                                     border:none !important;
-                                    box-shadow:none !important;
+                                    border-radius:10px;
+                                    box-shadow:0 3px 10px rgba(0,0,0,0.12);
                                 "
                             >
                                 ${priceHtml}
