@@ -3,28 +3,26 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>6月份 Olive Young 最新優惠</title>
+    <title>9月份韓國代購 (Olive Young & Daiso)</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.4.1/papaparse.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
     <style>
         body {
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Microsoft JhengHei", sans-serif;
-            /* 框以外使用 #82DC28 和 #FF7878 做對角線漸變 */
-            background: linear-gradient(135deg, #82DC28 0%, #FF7878 100%);
-            background-attachment: fixed; 
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            background: #FEE100;
             margin: 0;
             padding: 20px;
-            color: #333;
-            line-height: 1.25;
+            color: #222;
+            line-height: 1.3;
         }
         
-        /* 主容器：中間保留白色 */
         .container {
             max-width: 1100px;
             margin: 0 auto;
             background: #ffffff; 
             padding: 30px;
-            border-radius: 16px;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1); 
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15); 
             box-sizing: border-box;
         }
         
@@ -34,250 +32,227 @@
             flex-direction: column;
             align-items: center;
             text-align: center;
-            margin-bottom: 30px;
-            margin-top: 5px;
-            gap: 24px; /* Logo 之間隔一行的空間感 */
+            margin-bottom: 25px;
+            gap: 15px;
         }
         
-        /* Korlection Logo 樣式 */
         .korlection-logo {
-            width: 115px;
-            height: 115px;
+            width: 100px;
+            height: 100px;
             border-radius: 50%;
             object-fit: cover;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
             border: 3px solid #fff;
         }
         
-        /* Olive Young Logo 樣式 */
-        .olive-logo {
-            width: 216px; 
-            height: auto;
+        .partner-logos {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 20px;
+            flex-wrap: wrap;
+            margin: 5px 0;
+        }
+        
+        .partner-logo {
+            height: 45px; 
+            width: auto;
             object-fit: contain;
-            margin-bottom: 5px;
         }
         
-        /* 標題字體樣式調整 */
         h1 {
-            color: #001f3f; /* 轉為高級深藍海軍藍，呼應搜尋按鈕，字體更清晰醒目 */
+            color: #1D63FF;
             margin: 0;
-            font-size: 28px; /* 稍微放大一點點 */
-            font-weight: 800; /* 加粗字體 */
-            line-height: 1.4;
-            letter-spacing: 1px; /* 微調字距增加質感 */
+            font-size: 32px;
+            font-weight: 900;
+            letter-spacing: 1px;
+            text-shadow: 1px 1px 0px #fff;
         }
         
-        /* 狀態提示列 */
-        .status-message {
-            text-align: center;
-            padding: 12px;
-            margin-bottom: 20px;
-            border-radius: 6px;
-            font-size: 14px;
-            font-weight: bold;
-        }
+        .status-message { text-align: center; padding: 12px; margin-bottom: 20px; border-radius: 8px; font-size: 14px; font-weight: bold; }
         .status-loading { background: #fff3cd; color: #856404; }
         .status-error { background: #f8d7da; color: #721c24; }
 
-        /* 分類篩選區 */
+        /* 📍 第一層 Store Tabs */
+        .store-tabs-container {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-bottom: 25px;
+        }
+        .store-tab-btn {
+            flex: 1;
+            max-width: 300px;
+            padding: 14px 20px;
+            font-size: 18px;
+            font-weight: 800;
+            border: 3px solid #1D63FF;
+            background: #fff;
+            color: #1D63FF;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            text-align: center;
+        }
+        .store-tab-btn.active {
+            background: #1D63FF;
+            color: #fff;
+            box-shadow: 0 4px 12px rgba(29, 99, 255, 0.3);
+        }
+
+        /* 🎯 第二層 Category 多選區塊 */
         .category-section {
             margin-bottom: 25px;
-            background: #f8fafc; 
-            padding: 15px;
-            border-radius: 10px;
+            background: #F7F9FC; 
+            padding: 20px;
+            border-radius: 14px;
+            border: 2px solid #E2E8F0;
         }
         .category-title {
             font-weight: bold;
             margin-bottom: 12px;
-            color: #2c3e50;
+            color: #1A202C;
             font-size: 15px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
         }
         .category-tabs {
             display: flex;
             flex-wrap: wrap;
-            gap: 8px;
-            margin-bottom: 5px;
+            gap: 10px;
         }
-        .tab-btn {
-            padding: 10px 18px;
-            background: #edf2f7;
-            border: none;
+        .cat-btn {
+            padding: 8px 16px;
+            background: #fff;
+            border: 2px solid #CBD5E1;
             border-radius: 20px;
             cursor: pointer;
-            font-weight: 600;
-            color: #4a5568;
+            font-weight: 700;
+            color: #475569;
             font-size: 14px;
             transition: all 0.2s ease;
+            user-select: none;
         }
-        .tab-btn:hover { background: #e2e8f0; }
-        .tab-btn.active {
-            background: #001f3f;
+        .cat-btn:hover { border-color: #1D63FF; color: #1D63FF; }
+        .cat-btn.selected {
+            background: #1D63FF;
             color: #fff;
+            border-color: #1D63FF;
         }
         
-        /* 子品牌動態清單 */
         .brand-filter-box {
             background: #fff;
             padding: 12px;
-            border-radius: 8px;
-            border: 1px dashed #cbd5e1;
+            border-radius: 10px;
+            border: 1px dashed #94A3B8;
             display: none;
             flex-wrap: wrap;
-            gap: 6px;
-            margin-top: 12px;
+            gap: 8px;
+            margin-top: 15px;
         }
         .brand-chip {
-            padding: 6px 12px;
-            background: #fff;
-            border: 1px solid #cbd5e1;
+            padding: 6px 14px;
+            background: #F1F5F9;
+            border: 1px solid #CBD5E1;
             border-radius: 6px;
-            font-size: 12px;
+            font-size: 13px;
             cursor: pointer;
-            font-weight: 500;
-            color: #4a5568;
+            font-weight: 600;
+            color: #334155;
         }
-        .brand-chip:hover { border-color: #001f3f; color: #001f3f; }
         .brand-chip.active {
-            background: #3182ce;
+            background: #FF007A;
             color: #fff;
-            border-color: #3182ce;
+            border-color: #FF007A;
         }
 
-        /* 搜尋區 */
         .search-box {
-            background: #ffffff;
+            background: #fff;
             padding: 20px;
-            border-radius: 10px;
-            border: 1px solid #e2e8f0;
+            border-radius: 12px;
+            border: 2px solid #E2E8F0;
             margin-bottom: 30px;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.02);
         }
-        label { font-weight: 600; display: block; margin-bottom: 10px; color: #2c3e50; font-size: 16px; }
+        label { font-weight: 700; display: block; margin-bottom: 8px; color: #1E293B; font-size: 15px; }
         textarea {
-            width: 100%; height: 80px; padding: 12px; border: 2px solid #ced4da;
-            border-radius: 6px; font-size: 16px; resize: vertical; box-sizing: border-box;
+            width: 100%; height: 75px; padding: 12px; border: 2px solid #CBD5E1;
+            border-radius: 8px; font-size: 15px; resize: vertical; box-sizing: border-box;
             font-family: inherit;
         }
-        textarea:focus { border-color: #001f3f; outline: none; }
-        .hint { font-size: 13px; color: #6c757d; margin-top: 8px; }
+        textarea:focus { border-color: #1D63FF; outline: none; }
         
+        .btn-group { display: flex; gap: 15px; margin-top: 15px; }
         .btn-search {
-            display: block; width: 100%; padding: 14px; 
-            background-color: #001f3f; color: white;
-            border: none; border-radius: 6px; font-size: 18px; font-weight: bold; cursor: pointer;
-            margin-top: 15px; transition: background 0.2s;
-            font-family: inherit;
+            flex: 2; padding: 14px; background-color: #1D63FF; color: white;
+            border: none; border-radius: 8px; font-size: 18px; font-weight: bold; cursor: pointer; transition: background 0.2s;
         }
-        .btn-search:hover { background-color: #001124; }
-        .btn-search:disabled { background-color: #a0aec0; cursor: not-allowed; }
+        .btn-search:hover { background-color: #0B4AD4; }
+        .btn-search:disabled { background-color: #94A3B8; cursor: not-allowed; }
 
-        /* 新品精選置頂區塊 */
-        .new-arrival-section {
-            background-color: #fffaf0;
-            border: 2px dashed #f6ad55;
-            padding: 20px;
-            border-radius: 10px;
-            margin-bottom: 30px;
-        }
-        .new-arrival-title {
-            font-size: 17px;
-            font-weight: bold;
-            color: #dd6b20;
-            margin-top: 0;
-            margin-bottom: 15px;
-            display: flex;
-            align-items: center;
-            gap: 6px;
+        .btn-ig-gen {
+            display: none; 
+            flex: 1; padding: 14px; background-color: #FF007A; color: white;
+            border: none; border-radius: 8px; font-size: 16px; font-weight: bold; cursor: pointer;
+            align-items: center; justify-content: center; gap: 6px;
         }
 
-        /* 商品卡片 Grid */
-        .results-count { margin-bottom: 15px; font-weight: bold; color: #2c3e50; font-size: 16px; }
-        .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 20px; }
+        .results-count { margin-bottom: 15px; font-weight: bold; color: #1E293B; font-size: 16px; }
+        .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(230px, 1fr)); gap: 20px; }
         
-        /* 每個產品卡片 */
         .card {
-            background: #ffffff; border: 1px solid #e2e8f0; border-radius: 10px; overflow: hidden;
-            display: flex; flex-direction: column; padding: 15px; cursor: pointer;
-            transition: transform 0.2s, box-shadow 0.2s;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.02);
+            background: #ffffff; border: 1px solid #E2E8F0; border-radius: 12px; overflow: hidden;
+            display: flex; flex-direction: column; padding: 15px; cursor: pointer; transition: transform 0.2s, box-shadow 0.2s;
         }
-        .card:hover { transform: translateY(-4px); box-shadow: 0 12px 20px rgba(0,0,0,0.08); border-color: #cbd5e1; }
+        .card:hover { transform: translateY(-4px); box-shadow: 0 10px 20px rgba(0,0,0,0.08); }
         .image-container { width: 100%; height: 180px; display: flex; align-items: center; justify-content: center; margin-bottom: 12px; }
         .card img { max-width: 100%; max-height: 100%; object-fit: contain; }
         
-        /* 標籤與文字 */
         .card-top-info { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; }
-        .brand-badge { background: #eef2f7; color: #4a5568; font-size: 11px; padding: 4px 8px; border-radius: 4px; font-weight: bold; text-transform: uppercase; }
-        .category-badge { color: #718096; font-size: 11px; font-weight: 500; }
+        .brand-badge { background: #E2E8F0; color: #334155; font-size: 11px; padding: 4px 8px; border-radius: 4px; font-weight: bold; text-transform: uppercase; }
+        .category-badge { color: #64748B; font-size: 11px; font-weight: 600; }
         
-        .product-name { font-size: 14px; font-weight: 600; color: #2d3748; margin: 0 0 4px 0; line-height: 1.4; }
+        .product-name { font-size: 14px; font-weight: 700; color: #0F172A; margin: 0 0 6px 0; line-height: 1.35; height: 38px; overflow: hidden; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; }
         
-        /* 產品描述 */
-        .product-desc {
-            font-size: 12px; color: #718096; margin-bottom: 12px;
-            display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical;
-            overflow: hidden; text-overflow: ellipsis; height: 34px; line-height: 1.4;
-        }
-        
-        /* 雙價格區塊 */
-        .prices-container {
-            margin-top: auto; border-top: 1px dashed #edf2f7; padding-top: 10px;
-            display: flex; flex-direction: column; gap: 4px;
-        }
+        .prices-container { margin-top: auto; border-top: 1px dashed #E2E8F0; padding-top: 10px; display: flex; flex-direction: column; gap: 4px; }
         .price-row { display: flex; justify-content: space-between; align-items: center; font-size: 13px; }
-        .price-row.p1 { color: #e53e3e; font-weight: bold; }
-        .price-row.p2 { color: #4a5568; }
-        .date-label { font-size: 11px; color: #718096; font-weight: normal; }
-        .price-val { font-weight: 700; }
-        .price-row.p1 .price-val { font-size: 16px; }
+        .price-row.p1 { color: #E11D48; font-weight: bold; }
+        .price-row.p2 { color: #475569; }
+        .date-label { font-size: 11px; color: #64748B; }
+        .price-val { font-weight: 800; }
 
-        .no-result { text-align: center; color: #a0aec0; grid-column: 1 / -1; padding: 50px; font-size: 16px; }
-        .click-tip { font-size: 11px; color: #3498db; text-align: right; margin-top: 6px; }
-
-        /* Modal 彈出視窗 */
-        .modal-overlay {
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0, 0, 0, 0.75); display: flex; align-items: center;
-            justify-content: center; z-index: 99999; opacity: 0; pointer-events: none;
-            transition: opacity 0.2s ease;
-        }
+        .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.75); display: flex; align-items: center; justify-content: center; z-index: 99999; opacity: 0; pointer-events: none; transition: opacity 0.2s; }
         .modal-overlay.active { opacity: 1; pointer-events: auto; }
+        .modal-content { background: #fff; width: 90%; max-width: 550px; max-height: 85vh; border-radius: 16px; padding: 25px; position: relative; overflow-y: auto; }
+        .close-btn { position: absolute; top: 15px; right: 15px; font-size: 28px; color: #666; cursor: pointer; border: none; background: #f1f5f9; border-radius: 50%; width: 36px; height: 36px; display: flex; align-items: center; justify-content: center; }
+
+        /* 📸 IG 宣傳圖 (已更新為 1080x1350 4:5 直向比例) 渲染隱藏區 */
+        #renderCanvasHidden { position: absolute; left: -9999px; top: -9999px; width: 1080px; height: 1350px; background: #ffffff; }
+        .ig-poster-1350 { width: 1080px; height: 1350px; background: #ffffff; position: relative; display: grid; grid-template-columns: 1fr 1fr; grid-template-rows: 1fr 1fr; box-sizing: border-box; }
+        .ig-grid-item { position: relative; width: 100%; height: 100%; overflow: hidden; background: #ffffff; border: 1px solid #f0f0f0; box-sizing: border-box; }
+        .ig-grid-item img { width: 100%; height: 100%; object-fit: cover; }
         
-        .modal-content {
-            background: #fff; width: 90%; max-width: 600px; max-height: 85vh;
-            border-radius: 14px; padding: 25px; position: relative; overflow-y: auto;
-            box-shadow: 0 12px 30px rgba(0,0,0,0.25); transform: scale(0.9); transition: transform 0.2s ease;
-        }
-        .modal-overlay.active .modal-content { transform: scale(1); }
-        
-        .close-btn {
-            position: fixed; top: 20px; right: 20px; font-size: 34px;
-            color: #333; cursor: pointer; border: none; background: rgba(255, 255, 255, 0.9);
-            font-weight: bold; z-index: 99999999 !important; width: 45px; height: 45px;
-            line-height: 41px; text-align: center; border-radius: 50%; 
-            box-shadow: 0 4px 12px rgba(0,0,0,0.2); transition: all 0.2s ease; padding: 0;
-        }
-        .close-btn:hover { color: #000; background: #ffffff; transform: scale(1.1); }
-        
-        @media (max-width: 480px) {
-            .close-btn { top: 15px; right: 15px; width: 40px; height: 40px; line-height: 36px; font-size: 30px; }
-            .container { padding: 15px; }
+        .ig-tag-title {
+            position: absolute; top: 25px; left: 20px; right: 20px;
+            background-color: #ffffff !important; color: #000000 !important;
+            padding: 10px 14px; border-radius: 8px; font-size: 24px; font-weight: bold; line-height: 1.3;
+            box-shadow: none !important; border: none !important; display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden;
         }
         
-        .modal-image-container { display: flex; flex-direction: column; width: 100%; background: #fafafa; margin-bottom: 15px; border-radius: 6px; overflow: hidden; }
-        .modal-image-container img { width: 100%; height: auto; display: block; }
-        
-        .modal-brand { font-size: 13px; color: #001f3f; font-weight: bold; text-transform: uppercase; margin-bottom: 2px; }
-        .modal-title { font-size: 18px; font-weight: bold; color: #1a1a1a; margin: 0 0 4px 0; line-height: 1.4; }
-        .modal-desc { font-size: 14px; color: #4a5568; margin: 0 0 15px 0; line-height: 1.5; background: #f8f9fa; padding: 10px; border-radius: 6px; }
-        
-        .modal-price-box { background: #fff5f5; padding: 15px; border-radius: 8px; display: flex; flex-direction: column; gap: 10px; }
-        .modal-price-title { font-size: 15px; color: #c53030; font-weight: bold; border-bottom: 1px dashed #fed7d7; padding-bottom: 6px; margin-bottom: 2px; }
-        .price-row.p1 { color: #e53e3e; font-weight: bold; }
-        .price-row.p2 { color: #4a5568; font-weight: bold; }
-        .date-label { font-size: 15px; font-weight: 600; }
-        .price-val { font-weight: 700; }
-        .price-row.p1 .price-val, .price-row.p2 .price-val { font-size: 15px !important; }
+        .ig-tag-price-box {
+            position: absolute; bottom: 25px; left: 50%; transform: translateX(-50%);
+            background-color: #ffffff !important; padding: 10px 22px; border-radius: 12px;
+            box-shadow: none !important; border: none !important; text-align: center; display: flex; flex-direction: column; gap: 2px;
+        }
+        .ig-price-line { font-size: 28px; font-weight: 900; color: #000; line-height: 1.1; white-space: nowrap; }
+        .ig-price-line.highlight { color: #E11D48; font-size: 34px; }
+
+        .ig-center-brand {
+            position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
+            color: #ffffff !important; font-size: 36px; font-weight: 900;
+            padding: 14px 40px; border-radius: 22px; text-transform: uppercase; letter-spacing: 2px; z-index: 10;
+            box-shadow: none !important; border: none !important; text-align: center;
+        }
     </style>
 </head>
 <body>
@@ -286,149 +261,169 @@
     <div class="header-section">
         <img src="logo.png" alt="Korlection Logo" class="korlection-logo" onerror="this.src='logo.jpg';">
         
-        <img src="olive_young_logo.svg" alt="Olive Young Logo" class="olive-logo">
+        <div class="partner-logos">
+            <img src="olive_young_logo.svg" alt="Olive Young Logo" class="partner-logo" onerror="this.style.display='none'">
+            <img src="daiso_logo.png" alt="Daiso Logo" class="partner-logo" onerror="this.src='daisologo.jpg'">
+        </div>
         
-        <h1>6月份最新優惠</h1>
+        <h1>9月份韓國代購</h1>
     </div>
     
-    <div id="statusMessage" class="status-message status-loading">⏳ 正在連線讀取 Olive Young 產品資料庫，請稍候...</div>
+    <div id="statusMessage" class="status-message status-loading">⏳ 正在載入代購產品資料庫，請稍候...</div>
 
+    <!-- 📍 第一層 Tab -->
+    <div class="store-tabs-container">
+        <button class="store-tab-btn active" id="tabOlive" onclick="switchStore('olive')">Olive Young 優惠</button>
+        <button class="store-tab-btn" id="tabDaiso" onclick="switchStore('daiso')">Daiso 代購</button>
+    </div>
+
+    <!-- 🎯 第二層 Category 多選區塊 -->
     <div class="category-section">
-        <div class="category-title">🎯 按產品分類快速篩選：</div>
+        <div class="category-title">
+            <span>🎯 產品分類 (可同時選擇多個 Category)：</span>
+            <span style="font-size:12px; color:#64748B; font-weight:normal;">點擊切換選取狀態</span>
+        </div>
         <div class="category-tabs" id="categoryTabs">
-            <button class="tab-btn active" onclick="selectCategory('all')">全部商品 (All)</button>
-            <button class="tab-btn" onclick="selectCategory('cosmetics')">彩妝化妝 (Cosmetics)</button>
-            <button class="tab-btn" onclick="selectCategory('skincare')">面部護膚 (Skincare)</button>
-            <button class="tab-btn" onclick="selectCategory('haircare')">美髮護理 (Haircare)</button>
-            <button class="tab-btn" onclick="selectCategory('bodycare')">身體護理 (Bodycare)</button>
-            <button class="tab-btn" onclick="selectCategory('snacks')">人氣零食 (Snacks)</button>
-            <button class="tab-btn" onclick="selectCategory('supplement')">保健食品 (Supplement)</button>
+            <div class="cat-btn selected" data-cat="all" onclick="toggleCategory('all')">全部商品 (All)</div>
+            <div class="cat-btn" data-cat="cosmetics" onclick="toggleCategory('cosmetics')">彩妝 (Cosmetics)</div>
+            <div class="cat-btn" data-cat="skincare" onclick="toggleCategory('skincare')">護膚 (Skincare)</div>
+            <div class="cat-btn" data-cat="bodycare" onclick="toggleCategory('bodycare')">身體護理 (Bodycare)</div>
+            <div class="cat-btn" data-cat="haircare" onclick="toggleCategory('haircare')">美髮 (Haircare)</div>
+            <div class="cat-btn" data-cat="supplement" onclick="toggleCategory('supplement')">保健食品 (Supplement)</div>
+            <div class="cat-btn" data-cat="snacks" onclick="toggleCategory('snacks')">食品零食 (Snacks)</div>
         </div>
         
         <div class="brand-filter-box" id="brandFilterBox"></div>
     </div>
 
     <div class="search-box">
-        <label for="searchInput">🔍 或是輸入關鍵字進行多重搜尋（用空格隔開）：</label>
-        <textarea id="searchInput" placeholder="例如輸入: AMUSE 唇釉 保濕"></textarea>
-        <div class="hint">
-            <span id="brandCountHint">已輸入: 0 個關鍵字 / 上限 10 個</span>
+        <label for="searchInput">🔍 輸入關鍵字搜尋（品牌 / 品名 / 功效）：</label>
+        <textarea id="searchInput" placeholder="例如: AMUSE 唇釉 保濕"></textarea>
+        <div class="btn-group">
+            <button class="btn-search" id="searchBtn" onclick="performSearch()" disabled>請稍候...</button>
+            <button class="btn-ig-gen" id="igGenBtn" onclick="generateAllIGPosters()">📸 一鍵生成 IG 宣傳圖</button>
         </div>
-        <button class="btn-search" id="searchBtn" onclick="performSearch()" disabled>請稍候...</button>
-    </div>
-
-    <div class="new-arrival-section" id="newArrivalSection" style="display: none;">
-        <div class="new-arrival-title">⚡ 6月本週新品速遞 (NEW ARRIVALS)</div>
-        <div class="grid" id="newArrivalGrid"></div>
     </div>
 
     <div class="results-count" id="resultsCount"></div>
     <div class="grid" id="resultsGrid"></div>
 </div>
 
+<!-- Modal -->
 <div class="modal-overlay" id="detailModal">
-    <button class="close-btn" id="globalCloseBtn" type="button">&times;</button>
-    
     <div class="modal-content">
-        <div class="modal-image-container" id="modalImgContainer"></div>
-        
-        <div id="modalBrand" class="modal-brand">BRAND</div>
-        <h2 id="modalTitle" class="modal-title">產品名稱</h2>
-        <div id="modalDesc" class="modal-desc">產品描述說明</div>
-        
-        <div class="modal-price-box">
-            <div class="modal-price-title">🔥 6月份限時優惠</div>
-            <div class="price-row p1">
-                <span id="modalDate1" class="date-label">即日至 --</span>
-                <span id="modalPrice1" class="price-val">HKD $0</span>
-            </div>
-            <div class="price-row p2">
-                <span id="modalDate2" class="date-label">-- 至 --</span>
-                <span id="modalPrice2" class="price-val">HKD $0</span>
-            </div>
-        </div>
+        <button class="close-btn" onclick="document.getElementById('detailModal').classList.remove('active')">&times;</button>
+        <img src="" id="modalImg" style="width:100%; max-height:300px; object-fit:contain; margin-bottom:15px;" alt="Detail">
+        <div id="modalBrand" style="font-size:12px; font-weight:bold; color:#1D63FF;">BRAND</div>
+        <h2 id="modalTitle" style="font-size:18px; margin:5px 0 15px 0;">產品名稱</h2>
+        <div id="modalPrices" style="background:#FFF5F5; padding:15px; border-radius:8px;"></div>
+    </div>
+</div>
+
+<!-- 隱藏截圖畫布容器 (1080x1350) -->
+<div id="renderCanvasHidden">
+    <div class="ig-poster-1350" id="igPostTemplate">
+        <div class="ig-center-brand" id="igBrandTag">BRAND</div>
+        <div class="ig-grid-item" id="igCell0"></div>
+        <div class="ig-grid-item" id="igCell1"></div>
+        <div class="ig-grid-item" id="igCell2"></div>
+        <div class="ig-grid-item" id="igCell3"></div>
     </div>
 </div>
 
 <script>
 let productsData = []; 
-let currentSelectedCategory = 'all';
-let currentSelectedBrand = 'all';
+let currentStore = 'olive';
+let selectedCategories = ['all']; 
+let selectedBrand = 'all';
+
+const categoryColors = {
+    'cosmetics': '#F19DA9', // 彩妝：粉紅
+    'skincare': '#4A90E2',  // 護膚：藍色
+    'bodycare': '#9B51E0',  // 身體護理：紫色
+    'haircare': '#9B51E0',  // 美髮：紫色
+    'supplement': '#F2994A',// 保健品：橙色
+    'snacks': '#F2C94C',    // 食品零食：黃色
+    'default': '#1D63FF'
+};
+
+document.addEventListener('keydown', function(e) {
+    if (e.ctrlKey && e.shiftKey && (e.key === 'G' || e.key === 'g')) {
+        e.preventDefault();
+        document.getElementById("igGenBtn").style.display = "flex";
+        alert("🔓 管理員模式已開啟！「一鍵生成 IG 宣傳圖」按鈕已顯示。");
+    }
+});
 
 document.addEventListener("DOMContentLoaded", function() {
     const cacheBuster = "?v=" + new Date().getTime();
-    const csvUrl = "olive_pricelist.csv" + cacheBuster;
-    
-    Papa.parse(csvUrl, {
-        download: true,
-        header: true,
-        skipEmptyLines: true,
+    Papa.parse("olive_pricelist.csv" + cacheBuster, {
+        download: true, header: true, skipEmptyLines: true,
         complete: function(results) {
             productsData = results.data;
             document.getElementById("statusMessage").style.display = "none";
-            
-            const searchBtn = document.getElementById("searchBtn");
-            searchBtn.disabled = false;
-            searchBtn.innerText = "立即搜尋產品";
-            
-            renderProducts(productsData);
+            const btn = document.getElementById("searchBtn");
+            btn.disabled = false;
+            btn.innerText = "立即搜尋產品";
+            applyFilter();
         },
-        error: function(err) {
-            const statusDiv = document.getElementById("statusMessage");
-            statusDiv.className = "status-message status-error";
-            statusDiv.innerText = "❌ 錯誤：找不到您的 olive_pricelist.csv 資料庫檔案。";
+        error: function() {
+            document.getElementById("statusMessage").className = "status-message status-error";
+            document.getElementById("statusMessage").innerText = "❌ 錯誤：無法讀取 olive_pricelist.csv 資料庫。";
         }
     });
-
-    const modalOverlay = document.getElementById('detailModal');
-    const closeBtn = document.getElementById('globalCloseBtn');
-    if (closeBtn) { closeBtn.addEventListener('click', () => modalOverlay.classList.remove('active')); }
-    if (modalOverlay) { modalOverlay.addEventListener('click', (e) => { if (e.target === modalOverlay) modalOverlay.classList.remove('active'); }); }
 });
 
-document.getElementById('searchInput').addEventListener('input', function() {
-    let keywords = parseKeywords(this.value);
-    let hint = document.getElementById('brandCountHint');
-    hint.innerText = `已輸入: ${keywords.length} 個關鍵字 / 上限 10 個`;
-    hint.style.color = keywords.length > 10 ? '#e53e3e' : '#6c757d';
-});
-
-function parseKeywords(text) {
-    if (!text.trim()) return [];
-    return text.split(/[\n,，\s]+/).filter(k => k.trim() !== "");
+function switchStore(store) {
+    currentStore = store;
+    document.getElementById('tabOlive').classList.toggle('active', store === 'olive');
+    document.getElementById('tabDaiso').classList.toggle('active', store === 'daiso');
+    applyFilter();
 }
 
-function selectCategory(catName) {
-    currentSelectedCategory = catName.toLowerCase();
-    currentSelectedBrand = 'all';
-    
-    const buttons = document.querySelectorAll('#categoryTabs .tab-btn');
-    buttons.forEach(btn => btn.classList.remove('active'));
-    
-    if (event && event.target) {
-        event.target.classList.add('active');
+function toggleCategory(cat) {
+    if (cat === 'all') {
+        selectedCategories = ['all'];
+    } else {
+        const idx = selectedCategories.indexOf('all');
+        if (idx > -1) selectedCategories.splice(idx, 1);
+        
+        const catIdx = selectedCategories.indexOf(cat);
+        if (catIdx > -1) {
+            selectedCategories.splice(catIdx, 1);
+        } else {
+            selectedCategories.push(cat);
+        }
+        if (selectedCategories.length === 0) selectedCategories = ['all'];
     }
     
+    document.querySelectorAll('#categoryTabs .cat-btn').forEach(btn => {
+        const c = btn.getAttribute('data-cat');
+        btn.classList.toggle('selected', selectedCategories.includes(c));
+    });
+    
+    selectedBrand = 'all';
     updateBrandChips();
-    filterData();
+    applyFilter();
 }
 
 function updateBrandChips() {
     const box = document.getElementById('brandFilterBox');
     box.innerHTML = '';
     
-    if (currentSelectedCategory === 'all') {
+    if (selectedCategories.includes('all')) {
         box.style.display = 'none';
         return;
     }
     
-    const filteredByCat = productsData.filter(p => p["Category"] && p["Category"].toLowerCase() === currentSelectedCategory);
-    const brands = [...new Set(filteredByCat.map(p => p["Brand"]).filter(b => b))];
+    let filtered = productsData.filter(p => {
+        const storeMatch = (p["Store"] || "olive").toLowerCase() === currentStore;
+        const catMatch = p["Category"] && selectedCategories.includes(p["Category"].toLowerCase());
+        return storeMatch && catMatch;
+    });
     
-    if (brands.length === 0) {
-        box.style.display = 'none';
-        return;
-    }
+    const brands = [...new Set(filtered.map(p => p["Brand"]).filter(b => b))];
+    if (brands.length === 0) { box.style.display = 'none'; return; }
     
     box.style.display = 'flex';
     
@@ -438,11 +433,11 @@ function updateBrandChips() {
     allChip.onclick = function() {
         document.querySelectorAll('.brand-chip').forEach(c => c.classList.remove('active'));
         allChip.classList.add('active');
-        currentSelectedBrand = 'all';
-        filterData();
+        selectedBrand = 'all';
+        applyFilter();
     };
     box.appendChild(allChip);
-    
+
     brands.forEach(b => {
         const chip = document.createElement('div');
         chip.className = 'brand-chip';
@@ -450,177 +445,165 @@ function updateBrandChips() {
         chip.onclick = function() {
             document.querySelectorAll('.brand-chip').forEach(c => c.classList.remove('active'));
             chip.classList.add('active');
-            currentSelectedBrand = b.toLowerCase();
-            filterData();
+            selectedBrand = b.toLowerCase();
+            applyFilter();
         };
         box.appendChild(chip);
     });
 }
 
-function filterData() {
-    let filtered = productsData;
+function applyFilter() {
+    let filtered = productsData.filter(p => {
+        const pStore = (p["Store"] || "olive").toLowerCase();
+        if (pStore !== currentStore) return false;
+        
+        if (!selectedCategories.includes('all')) {
+            const pCat = p["Category"] ? p["Category"].toLowerCase() : "";
+            if (!selectedCategories.includes(pCat)) return false;
+        }
+        
+        if (selectedBrand !== 'all') {
+            const pBrand = p["Brand"] ? p["Brand"].toLowerCase() : "";
+            if (pBrand !== selectedBrand) return false;
+        }
+        return true;
+    });
     
-    if (currentSelectedCategory !== 'all') {
-        filtered = filtered.filter(p => p["Category"] && p["Category"].toLowerCase() === currentSelectedCategory);
-    }
-    if (currentSelectedBrand !== 'all') {
-        filtered = filtered.filter(p => p["Brand"] && p["Brand"].toLowerCase() === currentSelectedBrand);
-    }
+    document.getElementById('resultsCount').innerText = `🎯 搜尋/篩選結果：共 ${filtered.length} 筆商品`;
+    renderGrid(filtered);
+}
+
+function renderGrid(list) {
+    const grid = document.getElementById('resultsGrid');
+    grid.innerHTML = '';
     
-    document.getElementById('resultsCount').innerText = `🎯 篩選結果：共 ${filtered.length} 筆商品`;
-    renderProducts(filtered);
+    if (list.length === 0) {
+        grid.innerHTML = '<div style="grid-column:1/-1; text-align:center; color:#94A3B8; padding:40px;">沒有找到相關商品。</div>';
+        return;
+    }
+
+    list.forEach(item => {
+        const brand = item["Brand"] || "K-BEAUTY";
+        const name = item["Product Name"] || "無品名";
+        const cat = item["Category"] || "";
+        const p1 = item["Price 1 (HKD)"] || item["Price (HKD)"] || "未定價";
+        const p2 = item["Price 2 (HKD)"] || "";
+        const img = item["Image"] || "";
+
+        const card = document.createElement('div');
+        card.className = 'card';
+        card.onclick = () => openModal(brand, name, item["Detail Image"] || img, p1, p2, item["Price 1 Date"], item["Price 2 Date"]);
+        
+        let priceHtml = `<div class="price-row p1"><span class="date-label">${item["Price 1 Date"] || "優惠價"}</span><span class="price-val">HKD $${p1}</span></div>`;
+        if (p2) {
+            priceHtml += `<div class="price-row p2"><span class="date-label">${item["Price 2 Date"] || "階段二"}</span><span class="price-val">HKD $${p2}</span></div>`;
+        }
+
+        card.innerHTML = `
+            <div class="image-container">
+                <img src="${img}" alt="${name}" onerror="this.src='https://placehold.co/200x200?text=No+Image'">
+            </div>
+            <div class="card-top-info">
+                <span class="brand-badge">${brand}</span>
+                <span class="category-badge">${cat.toUpperCase()}</span>
+            </div>
+            <div class="product-name">${name}</div>
+            <div class="prices-container">${priceHtml}</div>
+        `;
+        grid.appendChild(card);
+    });
 }
 
 function performSearch() {
-    const rawInput = document.getElementById('searchInput').value;
-    let keywords = parseKeywords(rawInput);
+    const text = document.getElementById('searchInput').value.trim().toLowerCase();
+    if (!text) { applyFilter(); return; }
     
-    if (keywords.length === 0) { alert("請輸入查詢關鍵字。"); return; }
-    
-    const buttons = document.querySelectorAll('#categoryTabs .tab-btn');
-    buttons.forEach(btn => btn.classList.remove('active'));
-    buttons[0].classList.add('active');
-    document.getElementById('brandFilterBox').style.display = 'none';
-    
-    const filtered = productsData.filter(product => {
-        return keywords.every(keyword => {
-            const k = keyword.toLowerCase().trim();
-            const brandMatch = product["Brand"] ? product["Brand"].toLowerCase().includes(k) : false;
-            const nameMatch = product["Product Name"] ? product["Product Name"].toLowerCase().includes(k) : false;
-            const descMatch = product["Description"] ? product["Description"].toLowerCase().includes(k) : false;
-            return brandMatch || nameMatch || descMatch;
-        });
-    });
-    
-    document.getElementById('resultsCount').innerText = `🔍 關鍵字搜尋結果：共 ${filtered.length} 筆商品 (關鍵字：${keywords.join(', ')})`;
-    renderProducts(filtered);
-}
-
-function createCardHtml(item) {
-    const brand = item["Brand"] || "OLIVE YOUNG";
-    const name = item["Product Name"] || "無品名";
-    const category = item["Category"] || "";
-    const desc = item["Description"] || "";
-    
-    const p1_date = item["Price 1 Date"] || "6月1-7日";
-    const p1_val = item["Price 1 (HKD)"] || "未定價";
-    const p2_date = item["Price 2 Date"] || "6月8-30日";
-    const p2_val = item["Price 2 (HKD)"] || "未定價";
-    
-    const imgUrl = item["Image"] || "";
-    const detailImgUrl = item["Detail Image"] && item["Detail Image"].trim() !== "" ? item["Detail Image"] : imgUrl;
-    
-    const safeDesc = desc.replace(/"/g, '&quot;').replace(/'/g, '&#39;');
-    const safeName = name.replace(/"/g, '&quot;').replace(/'/g, '&#39;');
-    const safeBrand = brand.replace(/"/g, '&quot;').replace(/'/g, '&#39;');
-
-    const card = document.createElement('div');
-    card.className = 'card';
-    card.setAttribute('onclick', `openModal("${safeBrand}", "${safeName}", "${safeDesc}", "${p1_date}", "${p1_val}", "${p2_date}", "${p2_val}", "${detailImgUrl}")`);
-    
-    const displayName = name.startsWith('[NEW]') ? name.replace('[NEW]', '<span style="color:#dd6b20; font-weight:bold;">[NEW]</span>') : name;
-    const displayDesc = (!desc || desc.trim() === "" || desc === "暫無商品描述") ? "" : desc;
-
-    card.innerHTML = `
-        <div class="image-container">
-            <img src="${imgUrl}" alt="${name}" onerror="this.src='https://placehold.co/200x200?text=No+Image'">
-        </div>
-        <div class="card-top-info">
-            <span class="brand-badge">${brand}</span>
-            <span class="category-badge">${category.toUpperCase()}</span>
-        </div>
-        <div class="product-name" title="${name}">${displayName}</div>
-        <div class="product-desc">${displayDesc}</div>
+    const kws = text.split(/\s+/);
+    let filtered = productsData.filter(p => {
+        const storeMatch = (p["Store"] || "olive").toLowerCase() === currentStore;
+        if (!storeMatch) return false;
         
-        <div class="prices-container">
-            <div class="price-row p1">
-                <span class="date-label">🔥 即日至 ${p1_date}</span>
-                <span class="price-val">HKD $${p1_val}</span>
-            </div>
-            <div class="price-row p2">
-                <span class="date-label">⏱️ ${p2_date}</span>
-                <span class="price-val">HKD $${p2_val}</span>
-            </div>
-        </div>
-        <div class="click-tip">🔍 點擊看詳情圖</div>
-    `;
-    return card;
-}
-
-function renderProducts(data) {
-    const grid = document.getElementById('resultsGrid');
-    const newArrivalGrid = document.getElementById('newArrivalGrid');
-    const newArrivalSection = document.getElementById('newArrivalSection');
-    
-    grid.innerHTML = '';
-    newArrivalGrid.innerHTML = '';
-
-    const newArrivals = data.filter(item => item["Product Name"] && item["Product Name"].trim().startsWith('[NEW]'));
-    
-    if (currentSelectedCategory === 'all' && currentSelectedBrand === 'all' && newArrivals.length > 0) {
-        newArrivalSection.style.display = 'block';
-        newArrivals.forEach(item => {
-            newArrivalGrid.appendChild(createCardHtml(item));
-        });
-    } else {
-        newArrivalSection.style.display = 'none';
-    }
-    
-    if (data.length === 0) {
-        grid.innerHTML = '<div class="no-result">沒有找到相符的 Olive Young 商品。</div>';
-        return;
-    }
-    
-    data.forEach(item => {
-        grid.appendChild(createCardHtml(item));
+        const b = (p["Brand"] || "").toLowerCase();
+        const n = (p["Product Name"] || "").toLowerCase();
+        return kws.every(k => b.includes(k) || n.includes(k));
     });
+    
+    document.getElementById('resultsCount').innerText = `🔍 關鍵字搜尋結果：共 ${filtered.length} 筆商品`;
+    renderGrid(filtered);
 }
 
-function openModal(brand, name, desc, p1_date, p1_val, p2_date, p2_val, detailImgRaw) {
-    const container = document.getElementById('modalImgContainer');
-    container.innerHTML = '';
-    
-    if (detailImgRaw && detailImgRaw.trim() !== "" && !detailImgRaw.includes("placehold.co")) {
-        const imgList = detailImgRaw.replace(/;/g, ',').split(',').map(url => url.trim()).filter(url => url !== "");
-        imgList.forEach(url => {
-            if (url) {
-                const img = document.createElement('img');
-                img.src = url;
-                img.onerror = function() { this.style.display = 'none'; };
-                container.appendChild(img);
-            }
-        });
-    }
-
+function openModal(brand, name, img, p1, p2, d1, d2) {
+    document.getElementById('modalImg').src = img;
     document.getElementById('modalBrand').innerText = brand;
     document.getElementById('modalTitle').innerText = name;
     
-    const descDiv = document.getElementById('modalDesc');
-    if (!desc || desc.trim() === "" || desc === "暫無商品描述") {
-        descDiv.style.display = 'none';
-    } else {
-        descDiv.style.display = 'block';
-        descDiv.innerText = desc;
+    let pBox = `<div><b>${d1 || "即時特價"}:</b> HKD $${p1}</div>`;
+    if (p2) pBox += `<div style="margin-top:5px; color:#666;"><b>${d2 || "原價/第二階段"}:</b> HKD $${p2}</div>`;
+    
+    document.getElementById('modalPrices').innerHTML = pBox;
+    document.getElementById('detailModal').classList.add('active');
+}
+
+/* 📸 產生 1080x1350 規格 IG 宣傳圖 */
+async function generateAllIGPosters() {
+    const brandMap = {};
+    productsData.forEach(p => {
+        const b = p["Brand"] ? p["Brand"].trim() : "";
+        if (b) {
+            if (!brandMap[b]) brandMap[b] = [];
+            brandMap[b].push(p);
+        }
+    });
+
+    const brands = Object.keys(brandMap);
+    if (!confirm(`將自動為 ${brands.length} 個品牌生成 1080x1350 (4:5) IG 宣傳圖，是否繼續？`)) return;
+
+    for (const bName of brands) {
+        const items = brandMap[bName];
+        const mainCategory = (items[0]["Category"] || "").toLowerCase();
+        
+        const tagColor = categoryColors[mainCategory] || categoryColors['default'];
+        const brandTagEl = document.getElementById("igBrandTag");
+        brandTagEl.innerText = bName;
+        brandTagEl.style.backgroundColor = tagColor;
+
+        for (let i = 0; i < items.length; i += 4) {
+            const chunk = items.slice(i, i + 4);
+            const page = Math.floor(i / 4) + 1;
+            
+            for (let c = 0; c < 4; c++) {
+                const cell = document.getElementById("igCell" + c);
+                cell.innerHTML = "";
+                if (chunk[c]) {
+                    const item = chunk[c];
+                    const name = item['Product Name'] || '';
+                    const p1 = item['Price 1 (HKD)'] || item['Price (HKD)'] || '';
+                    const p2 = item['Price 2 (HKD)'] || '';
+                    
+                    let priceHtml = `<div class="ig-price-line highlight">HKD $${p1}</div>`;
+                    if (p2) {
+                        priceHtml += `<div class="ig-price-line" style="font-size:22px; color:#666;">$${p2}</div>`;
+                    }
+
+                    cell.innerHTML = `
+                        <img src="${item['Image'] || ''}" crossorigin="anonymous" onerror="this.src='https://placehold.co/500x500?text=No+Image'">
+                        <div class="ig-tag-title">${name}</div>
+                        <div class="ig-tag-price-box">${priceHtml}</div>
+                    `;
+                }
+            }
+
+            await new Promise(r => setTimeout(r, 400));
+            const target = document.getElementById("igPostTemplate");
+            const canvas = await html2canvas(target, { useCORS: true, scale: 1, backgroundColor: "#ffffff" });
+            
+            const link = document.createElement("a");
+            link.download = `${bName.replace(/\s+/g, '_')}_Part${page}_IG_1080x1350.png`;
+            link.href = canvas.toDataURL("image/png");
+            link.click();
+        }
     }
-    
-    let nextDayText = "";
-    if (p1_date && p1_date.includes('/')) {
-        let parts = p1_date.split('/');
-        let day = parseInt(parts[0], 10);
-        let month = parts[1] ? parts[1] : "6";
-        nextDayText = (day + 1) + "/" + month;
-    } else {
-        nextDayText = "階段二";
-    }
-    
-    document.getElementById('modalDate1').innerText = "即日至 " + p1_date;
-    document.getElementById('modalPrice1').innerText = "HKD $" + p1_val;
-    document.getElementById('modalDate2').innerText = nextDayText + " 至 " + p2_date;
-    document.getElementById('modalPrice2').innerText = "HKD $" + p2_val;
-    
-    const modal = document.getElementById('detailModal');
-    modal.classList.add('active');
-    document.querySelector('.modal-content').scrollTop = 0;
+    alert("🎉 1080x1350 IG 宣傳圖生成並下載完成！");
 }
 </script>
 
