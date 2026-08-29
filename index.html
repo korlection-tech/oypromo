@@ -529,9 +529,9 @@
             font-size: 28px;
         }
 
-        /* ===============================
-           IG POSTER: 1080px x 1350px
-           =============================== */
+        /* =====================================
+           IG POSTER — 1080px x 1350px
+           ===================================== */
 
         #renderCanvasHidden {
             position: absolute;
@@ -539,7 +539,7 @@
             left: -9999px;
             width: 1080px;
             height: 1350px;
-            background: #fff !important;
+            background-color: #FFFFFF !important;
         }
 
         .ig-poster-1350 {
@@ -549,7 +549,7 @@
             grid-template-rows: 675px 675px;
             width: 1080px;
             height: 1350px;
-            background: #fff !important;
+            background-color: #FFFFFF !important;
         }
 
         .ig-grid-item {
@@ -560,8 +560,8 @@
             width: 540px;
             height: 675px;
             overflow: hidden;
-            border: none !important;
-            background: #fff !important;
+            border: 0 !important;
+            background-color: #FFFFFF !important;
         }
 
         .ig-grid-item img {
@@ -585,14 +585,13 @@
             overflow: hidden;
             padding: 11px 14px;
 
-            border: none !important;
-            border-radius: 8px;
+            color: #000000 !important;
+            background-color: #FFFFFF !important;
 
-            color: #000 !important;
-            background: #fff !important;
-            background-color: #fff !important;
-
-            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.12);
+            border: 0 !important;
+            border-radius: 0 !important;
+            box-shadow: none !important;
+            opacity: 1 !important;
 
             font-size: 20px;
             font-weight: 800;
@@ -616,17 +615,15 @@
 
             padding: 9px 22px;
 
-            border: none !important;
-            border-radius: 10px;
+            color: #000000 !important;
+            background-color: #FFFFFF !important;
+
+            border: 0 !important;
+            border-radius: 0 !important;
+            box-shadow: none !important;
+            opacity: 1 !important;
 
             transform: translateX(-50%);
-
-            color: #000;
-            background: #fff !important;
-            background-color: #fff !important;
-
-            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.12);
-
             text-align: center;
             white-space: nowrap;
         }
@@ -653,16 +650,16 @@
 
             padding: 10px 30px;
 
-            border: none !important;
+            border: 0 !important;
             border-radius: 16px;
 
             transform: translate(-50%, -50%);
 
-            color: #fff !important;
-            background: #e98fa3 !important;
-            background-color: #e98fa3 !important;
+            color: #FFFFFF !important;
+            background-color: #E98FA3 !important;
 
             box-shadow: none !important;
+            opacity: 1 !important;
 
             font-size: 28px;
             font-weight: 900;
@@ -1421,9 +1418,9 @@
                 const brandTag = document.getElementById("igBrandTag");
 
                 brandTag.innerText = brandName;
-                brandTag.style.background = brandColor;
                 brandTag.style.backgroundColor = brandColor;
                 brandTag.style.boxShadow = "none";
+                brandTag.style.opacity = "1";
 
                 for (let index = 0; index < items.length; index += 4) {
                     const chunk = items.slice(index, index + 4);
@@ -1487,12 +1484,12 @@
                             <div
                                 class="ig-tag-title"
                                 style="
-                                    background:#ffffff !important;
-                                    background-color:#ffffff !important;
+                                    background-color:#FFFFFF !important;
                                     color:#000000 !important;
-                                    border:none !important;
-                                    border-radius:8px;
-                                    box-shadow:0 3px 10px rgba(0,0,0,0.12);
+                                    border:0 !important;
+                                    border-radius:0 !important;
+                                    box-shadow:none !important;
+                                    opacity:1 !important;
                                 "
                             >
                                 ${name}
@@ -1501,11 +1498,12 @@
                             <div
                                 class="ig-tag-price-box"
                                 style="
-                                    background:#ffffff !important;
-                                    background-color:#ffffff !important;
-                                    border:none !important;
-                                    border-radius:10px;
-                                    box-shadow:0 3px 10px rgba(0,0,0,0.12);
+                                    background-color:#FFFFFF !important;
+                                    color:#000000 !important;
+                                    border:0 !important;
+                                    border-radius:0 !important;
+                                    box-shadow:none !important;
+                                    opacity:1 !important;
                                 "
                             >
                                 ${priceHtml}
@@ -1523,8 +1521,33 @@
                         useCORS: true,
                         allowTaint: false,
                         scale: 1,
-                        backgroundColor: "#ffffff",
-                        logging: false
+                        backgroundColor: "#FFFFFF",
+                        logging: false,
+
+                        onclone: function(clonedDocument) {
+                            clonedDocument
+                                .querySelectorAll(".ig-tag-title, .ig-tag-price-box")
+                                .forEach(function(element) {
+                                    element.style.background = "none";
+                                    element.style.backgroundColor = "#FFFFFF";
+                                    element.style.color = "#000000";
+                                    element.style.border = "0";
+                                    element.style.borderRadius = "0";
+                                    element.style.boxShadow = "none";
+                                    element.style.opacity = "1";
+                                });
+
+                            clonedDocument
+                                .querySelectorAll(
+                                    "#renderCanvasHidden, .ig-poster-1350, .ig-grid-item"
+                                )
+                                .forEach(function(element) {
+                                    element.style.background = "none";
+                                    element.style.backgroundColor = "#FFFFFF";
+                                    element.style.border = "0";
+                                    element.style.opacity = "1";
+                                });
+                        }
                     });
 
                     const link = document.createElement("a");
