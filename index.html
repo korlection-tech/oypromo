@@ -14,7 +14,6 @@
             --blue-dark: #0b4ad4;
             --pink: #ff4f91;
             --pink-dark: #e91e63;
-            --yellow: #ffd83d;
             --ink: #182033;
             --muted: #64748b;
             --white: #ffffff;
@@ -105,12 +104,43 @@
                 0 0 0 7px rgba(255, 255, 255, 0.38);
         }
 
+        .title-container {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-top: 3px;
+        }
+
+        h1 {
+            margin: 0;
+            background: linear-gradient(135deg, #195eff 0%, #ed3f87 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            font-size: 36px;
+            font-weight: 900;
+            letter-spacing: 1px;
+            line-height: 1.1;
+        }
+
+        .subtitle {
+            margin: 0;
+            padding: 0;
+            background: linear-gradient(135deg, #195eff 0%, #ed3f87 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            box-shadow: none;
+            font-size: 36px;
+            font-weight: 900;
+            letter-spacing: 1px;
+            line-height: 1.1;
+        }
+
         .partner-logos {
             display: flex;
             align-items: center;
             justify-content: center;
             gap: 25px;
-            margin: 4px 0 0;
+            margin: 8px 0 0;
         }
 
         .oy-logo {
@@ -123,49 +153,6 @@
             width: auto;
             height: 56px;
             object-fit: contain;
-        }
-
-        .title-container {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 9px;
-        }
-
-        .flag-icon {
-            width: 36px;
-            height: 26px;
-            border-radius: 4px;
-            object-fit: contain;
-            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.14);
-        }
-
-        h1 {
-            display: inline-block;
-            margin: 0;
-            background: linear-gradient(135deg, #195eff 0%, #ed3f87 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            font-size: 36px;
-            font-weight: 900;
-            letter-spacing: 1px;
-        }
-
-        .subtitle {
-            margin: 0;
-            padding: 8px 17px;
-            border: 1px solid rgba(255, 128, 174, 0.20);
-            border-radius: 999px;
-            color: #a83b68;
-            background: linear-gradient(
-                135deg,
-                rgba(255, 243, 183, 0.86),
-                rgba(255, 218, 232, 0.88)
-            );
-            box-shadow: 0 4px 12px rgba(199, 96, 139, 0.09);
-            font-size: 16px;
-            font-weight: 800;
-            letter-spacing: 0.5px;
         }
 
         .status-message {
@@ -700,12 +687,9 @@
                 max-width: none;
             }
 
-            h1 {
-                font-size: 28px;
-            }
-
+            h1,
             .subtitle {
-                font-size: 14px;
+                font-size: 28px;
             }
         }
     </style>
@@ -720,6 +704,12 @@
                 class="korlection-logo"
                 onerror="this.src='logo.jpg';"
             >
+
+            <div class="title-container">
+                <h1>Korlection</h1>
+            </div>
+
+            <p class="subtitle">🇰🇷 韓國9月份代購</p>
 
             <div class="partner-logos">
                 <img
@@ -736,21 +726,10 @@
                     onerror="this.src='daisologo.jpg';"
                 >
             </div>
-
-            <div class="title-container">
-                <img
-                    src="https://flagcdn.com/w80/kr.png"
-                    alt="Korea Flag"
-                    class="flag-icon"
-                >
-                <h1>Korlection</h1>
-            </div>
-
-            <p class="subtitle">🇰🇷 韓國9月份代購</p>
         </div>
 
         <div id="statusMessage" class="status-message status-loading">
-            正在載入產品資料……
+            正在載入 olive_pricelist.csv 商品資料……
         </div>
 
         <div class="store-tabs-container">
@@ -774,19 +753,40 @@
         <div class="category-section">
             <div class="category-title">
                 <span>Category</span>
+
                 <span style="font-size:12px; color:#64748B; font-weight:normal;">
                     可選多個分類
                 </span>
             </div>
 
             <div class="category-tabs" id="categoryTabs">
-                <div class="cat-btn selected" data-cat="all" onclick="toggleCategory('all')">All</div>
-                <div class="cat-btn" data-cat="cosmetics" onclick="toggleCategory('cosmetics')">Cosmetics</div>
-                <div class="cat-btn" data-cat="skincare" onclick="toggleCategory('skincare')">Skincare</div>
-                <div class="cat-btn" data-cat="bodycare" onclick="toggleCategory('bodycare')">Bodycare</div>
-                <div class="cat-btn" data-cat="haircare" onclick="toggleCategory('haircare')">Haircare</div>
-                <div class="cat-btn" data-cat="supplement" onclick="toggleCategory('supplement')">Supplement</div>
-                <div class="cat-btn" data-cat="snacks" onclick="toggleCategory('snacks')">Snacks</div>
+                <div class="cat-btn selected" data-cat="all" onclick="toggleCategory('all')">
+                    All
+                </div>
+
+                <div class="cat-btn" data-cat="cosmetics" onclick="toggleCategory('cosmetics')">
+                    Cosmetics
+                </div>
+
+                <div class="cat-btn" data-cat="skincare" onclick="toggleCategory('skincare')">
+                    Skincare
+                </div>
+
+                <div class="cat-btn" data-cat="bodycare" onclick="toggleCategory('bodycare')">
+                    Bodycare
+                </div>
+
+                <div class="cat-btn" data-cat="haircare" onclick="toggleCategory('haircare')">
+                    Haircare
+                </div>
+
+                <div class="cat-btn" data-cat="supplement" onclick="toggleCategory('supplement')">
+                    Supplement
+                </div>
+
+                <div class="cat-btn" data-cat="snacks" onclick="toggleCategory('snacks')">
+                    Snacks
+                </div>
             </div>
 
             <div class="brand-filter-box" id="brandFilterBox"></div>
@@ -807,7 +807,7 @@
                     onclick="performSearch()"
                     disabled
                 >
-                    搜尋商品
+                    載入中……
                 </button>
 
                 <button
@@ -887,40 +887,77 @@
         document.addEventListener("keydown", function(event) {
             if (event.ctrlKey && event.shiftKey && event.key.toLowerCase() === "g") {
                 event.preventDefault();
+
                 document.getElementById("igGenBtn").style.display = "block";
+
                 alert("已顯示 Generate IG 按鈕。");
             }
         });
 
         document.addEventListener("DOMContentLoaded", function() {
+            loadProductCsv();
+        });
+
+        function loadProductCsv() {
+            const statusMessage = document.getElementById("statusMessage");
+            const searchButton = document.getElementById("searchBtn");
+
+            statusMessage.className = "status-message status-loading";
+            statusMessage.innerText = "正在載入 olive_pricelist.csv 商品資料……";
+            statusMessage.style.display = "block";
+
+            searchButton.disabled = true;
+            searchButton.innerText = "載入中……";
+
             const cacheBuster = "?v=" + new Date().getTime();
 
             Papa.parse("olive_pricelist.csv" + cacheBuster, {
                 download: true,
                 header: true,
                 skipEmptyLines: true,
+                delimiter: "",
 
                 complete: function(results) {
-                    productsData = results.data || [];
+                    console.log("CSV 成功讀取：", results.data);
+                    console.log("CSV errors：", results.errors);
 
-                    document.getElementById("statusMessage").style.display = "none";
+                    productsData = (results.data || []).filter(function(product) {
+                        return Object.values(product).some(function(value) {
+                            return String(value || "").trim() !== "";
+                        });
+                    });
 
-                    const searchButton = document.getElementById("searchBtn");
+                    if (results.errors && results.errors.length > 0) {
+                        console.warn("CSV 有格式警告：", results.errors);
+                    }
+
+                    statusMessage.style.display = "none";
+
                     searchButton.disabled = false;
                     searchButton.innerText = "搜尋商品";
 
                     applyFilter();
                 },
 
-                error: function() {
-                    const statusMessage = document.getElementById("statusMessage");
+                error: function(error) {
+                    console.error("CSV 讀取失敗：", error);
+
+                    searchButton.disabled = true;
+                    searchButton.innerText = "未能載入";
 
                     statusMessage.className = "status-message status-error";
-                    statusMessage.innerText =
-                        "無法讀取 olive_pricelist.csv。請確認 HTML 與 CSV 放在同一個資料夾，並以網站 server 開啟。";
+
+                    statusMessage.innerHTML = `
+                        <strong>無法讀取 olive_pricelist.csv。</strong><br><br>
+                        請檢查：<br>
+                        1. CSV 檔名必須完全是 <b>olive_pricelist.csv</b><br>
+                        2. CSV 必須與 index.html 放在同一個 folder<br>
+                        3. 不可直接雙擊 HTML 以 file:/// 方式開啟<br>
+                        4. 請使用 VS Code Live Server 或 localhost 開啟網站
+                    `;
                 }
             });
-        });
+        }
 
         function normalizeText(value) {
             return String(value || "").trim();
@@ -981,6 +1018,7 @@
             });
 
             selectedBrand = "all";
+
             updateBrandChips();
             applyFilter();
         }
@@ -1021,6 +1059,7 @@
             box.style.display = "flex";
 
             const allChip = document.createElement("div");
+
             allChip.className = "brand-chip active";
             allChip.innerText = "All";
 
@@ -1031,6 +1070,7 @@
 
                 allChip.classList.add("active");
                 selectedBrand = "all";
+
                 applyFilter();
             };
 
@@ -1059,30 +1099,24 @@
 
         function getFilteredProducts() {
             return productsData.filter(function(product) {
-                if (normalizeLower(product["Store"]) !== currentStore) {
+                const productStore = normalizeLower(product["Store"]);
+
+                if (productStore !== currentStore) {
                     return false;
                 }
 
-                if (
-                    isDefaultState &&
-                    selectedCategories.includes("all") &&
-                    selectedBrand === "all"
-                ) {
-                    return isTrueValue(product["Featured"]);
-                }
-
                 if (!selectedCategories.includes("all")) {
-                    if (
-                        !selectedCategories.includes(
-                            normalizeLower(product["Category"])
-                        )
-                    ) {
+                    const productCategory = normalizeLower(product["Category"]);
+
+                    if (!selectedCategories.includes(productCategory)) {
                         return false;
                     }
                 }
 
                 if (selectedBrand !== "all") {
-                    if (normalizeLower(product["Brand"]) !== selectedBrand) {
+                    const productBrand = normalizeLower(product["Brand"]);
+
+                    if (productBrand !== selectedBrand) {
                         return false;
                     }
                 }
@@ -1115,7 +1149,10 @@
             const keywords = keywordText.split(/\s+/).filter(Boolean);
 
             const filteredProducts = productsData.filter(function(product) {
-                if (normalizeLower(product["Store"]) !== currentStore) {
+                const storeMatch =
+                    normalizeLower(product["Store"]) === currentStore;
+
+                if (!storeMatch) {
                     return false;
                 }
 
@@ -1139,7 +1176,9 @@
             }
 
             const text = String(value).trim();
-            let match = text.match(/^(\d{4})[-/](\d{1,2})[-/](\d{1,2})$/);
+            let match;
+
+            match = text.match(/^(\d{4})[-/](\d{1,2})[-/](\d{1,2})$/);
 
             if (match) {
                 return new Date(
@@ -1161,7 +1200,11 @@
 
             const parsedDate = new Date(text);
 
-            return Number.isNaN(parsedDate.getTime()) ? null : parsedDate;
+            if (Number.isNaN(parsedDate.getTime())) {
+                return null;
+            }
+
+            return parsedDate;
         }
 
         function formatSaleDate(date) {
@@ -1212,7 +1255,7 @@
             if (list.length === 0) {
                 grid.innerHTML = `
                     <div style="grid-column:1/-1; text-align:center; color:#94A3B8; padding:40px;">
-                        沒有找到相關商品。
+                        此 Store 暫時未有商品，或者 CSV 的 Store 欄位不是 olive / daiso。
                     </div>
                 `;
 
@@ -1223,6 +1266,7 @@
                 const brand = item["Brand"] || "K-BEAUTY";
                 const name = item["Product Name"] || "無品名";
                 const category = item["Category"] || "";
+
                 const price1 =
                     item["Price 1 (HKD)"] ||
                     item["Price (HKD)"] ||
@@ -1230,6 +1274,7 @@
 
                 const price2 = item["Price 2 (HKD)"] || "";
                 const image = item["Image"] || "";
+
                 const validity = buildValidityText(item);
 
                 const card = document.createElement("div");
@@ -1253,6 +1298,7 @@
                         <span class="date-label">
                             ${validity.price1Text || "優惠價"}
                         </span>
+
                         <span class="price-val">
                             HKD $${price1}
                         </span>
@@ -1265,6 +1311,7 @@
                             <span class="date-label">
                                 ${validity.price2Text || "第二階段"}
                             </span>
+
                             <span class="price-val">
                                 HKD $${price2}
                             </span>
@@ -1283,6 +1330,7 @@
 
                     <div class="card-top-info">
                         <span class="brand-badge">${brand}</span>
+
                         <span class="category-badge">
                             ${category.toUpperCase()}
                         </span>
@@ -1322,6 +1370,7 @@
                 priceBox += `
                     <div style="margin-top:5px; color:#666;">
                         <b>HKD $${price2}</b>
+
                         <span style="color:#64748B;">
                             ${validity.price2Text}
                         </span>
@@ -1340,8 +1389,8 @@
 
             if (targetProducts.length === 0) {
                 alert(
-                    "⚠️ 沒有找到需要生成 IG 圖的產品！\n" +
-                    "請確保 CSV 的 Generate_IG 欄位填寫 Y / YES / 1 / TRUE。"
+                    "⚠️ 沒有找到需要生成 IG 圖的產品！\n\n" +
+                    "請確保 olive_pricelist.csv 的 Generate_IG 欄位填寫：Y、YES、1 或 TRUE。"
                 );
 
                 return;
@@ -1390,7 +1439,9 @@
                     const page = Math.floor(index / 4) + 1;
 
                     for (let cellIndex = 0; cellIndex < 4; cellIndex++) {
-                        const cell = document.getElementById("igCell" + cellIndex);
+                        const cell = document.getElementById(
+                            "igCell" + cellIndex
+                        );
 
                         cell.innerHTML = "";
 
@@ -1409,6 +1460,7 @@
                             "";
 
                         const price2 = item["Price 2 (HKD)"] || "";
+
                         const validity = buildValidityText(item);
 
                         let priceHtml = `
