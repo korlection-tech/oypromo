@@ -3,14 +3,14 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>🇰🇷 韓國代購 (Olive Young & Daiso)</title>
+    <title>韓國代購 (Olive Young & Daiso)</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.4.1/papaparse.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
     <style>
-        /* 網頁底色配合 Poster 主色 (鮮黃色系) */
+        /* 網頁底色：高彩度活力鮮黃色 */
         body {
             font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
-            background: linear-gradient(135deg, #FFDD00 0%, #FFEA00 100%);
+            background: linear-gradient(135deg, #FFDE00 0%, #FFEB3B 100%);
             min-height: 100vh;
             margin: 0;
             padding: 30px 20px;
@@ -38,7 +38,6 @@
             gap: 15px;
         }
         
-        /* Korlection Logo 放大 20% (90px -> 108px) */
         .korlection-logo {
             width: 108px;
             height: 108px;
@@ -56,23 +55,37 @@
             margin: 5px 0;
         }
         
-        /* Olive Young 細20% (27px -> 21.6px) */
         .oy-logo {
             height: 21.6px;
             width: auto;
             object-fit: contain;
         }
 
-        /* Daiso 大60% (27px -> 43.2px) */
+        /* Daiso Logo 再放大 30% (43.2px -> 56px) */
         .daiso-logo {
-            height: 43.2px;
+            height: 56px;
             width: auto;
             object-fit: contain;
         }
         
-        /* 標題：雙色漸變 + Blink Blink 閃爍動畫 */
+        /* 標題與國旗圖示 */
+        .title-container {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .flag-icon {
+            width: 36px;
+            height: 26px;
+            object-fit: contain;
+            border-radius: 3px;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+        }
+
         h1 {
-            margin: 5px 0 0 0;
+            margin: 0;
             font-size: 34px;
             font-weight: 900;
             letter-spacing: 1px;
@@ -80,7 +93,6 @@
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             display: inline-block;
-            position: relative;
             text-shadow: 0px 2px 10px rgba(255, 0, 122, 0.15);
         }
 
@@ -100,7 +112,6 @@
         .status-loading { background: #fff3cd; color: #856404; }
         .status-error { background: #f8d7da; color: #721c24; }
 
-        /* 商店按鈕縮小 10%，避免太長 */
         .store-tabs-container {
             display: flex;
             justify-content: center;
@@ -109,9 +120,9 @@
         }
         .store-tab-btn {
             flex: 1;
-            max-width: 280px; /* 縮短上限 */
-            padding: 14px 18px; /* 縮小內距 */
-            font-size: 20px; /* 縮小字體 */
+            max-width: 280px;
+            padding: 14px 18px;
+            font-size: 20px;
             font-weight: 800;
             border-radius: 12px;
             cursor: pointer;
@@ -121,27 +132,11 @@
             box-shadow: 0 4px 10px rgba(0,0,0,0.05);
         }
         
-        #tabOlive {
-            background: #E8F0FE;
-            color: #1D63FF;
-            border: 2px solid #1D63FF;
-        }
-        #tabOlive.active {
-            background: #1D63FF;
-            color: #ffffff;
-            box-shadow: 0 6px 15px rgba(29, 99, 255, 0.35);
-        }
+        #tabOlive { background: #E8F0FE; color: #1D63FF; border: 2px solid #1D63FF; }
+        #tabOlive.active { background: #1D63FF; color: #ffffff; box-shadow: 0 6px 15px rgba(29, 99, 255, 0.35); }
 
-        #tabDaiso {
-            background: #FEE8EA;
-            color: #E4002B;
-            border: 2px solid #E4002B;
-        }
-        #tabDaiso.active {
-            background: #E4002B;
-            color: #ffffff;
-            box-shadow: 0 6px 15px rgba(228, 0, 43, 0.35);
-        }
+        #tabDaiso { background: #FEE8EA; color: #E4002B; border: 2px solid #E4002B; }
+        #tabDaiso.active { background: #E4002B; color: #ffffff; box-shadow: 0 6px 15px rgba(228, 0, 43, 0.35); }
 
         .category-section {
             margin-bottom: 25px;
@@ -159,68 +154,32 @@
             justify-content: space-between;
             align-items: center;
         }
-        .category-tabs {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 10px;
-        }
+        .category-tabs { display: flex; flex-wrap: wrap; gap: 10px; }
         .cat-btn {
-            padding: 8px 18px;
-            background: #fff;
-            border: 2px solid #CBD5E1;
-            border-radius: 20px;
-            cursor: pointer;
-            font-weight: 700;
-            color: #475569;
-            font-size: 14px;
-            transition: all 0.2s ease;
-            user-select: none;
+            padding: 8px 18px; background: #fff; border: 2px solid #CBD5E1;
+            border-radius: 20px; cursor: pointer; font-weight: 700; color: #475569; font-size: 14px;
+            transition: all 0.2s ease; user-select: none;
         }
         .cat-btn:hover { border-color: #1D63FF; color: #1D63FF; }
-        .cat-btn.selected {
-            background: #1D63FF;
-            color: #fff;
-            border-color: #1D63FF;
-        }
+        .cat-btn.selected { background: #1D63FF; color: #fff; border-color: #1D63FF; }
         
         .brand-filter-box {
-            background: #fff;
-            padding: 12px;
-            border-radius: 10px;
-            border: 1px dashed #94A3B8;
-            display: none;
-            flex-wrap: wrap;
-            gap: 8px;
-            margin-top: 15px;
+            background: #fff; padding: 12px; border-radius: 10px; border: 1px dashed #94A3B8;
+            display: none; flex-wrap: wrap; gap: 8px; margin-top: 15px;
         }
         .brand-chip {
-            padding: 6px 14px;
-            background: #F1F5F9;
-            border: 1px solid #CBD5E1;
-            border-radius: 6px;
-            font-size: 13px;
-            cursor: pointer;
-            font-weight: 600;
-            color: #334155;
+            padding: 6px 14px; background: #F1F5F9; border: 1px solid #CBD5E1;
+            border-radius: 6px; font-size: 13px; cursor: pointer; font-weight: 600; color: #334155;
         }
-        .brand-chip.active {
-            background: #FF007A;
-            color: #fff;
-            border-color: #FF007A;
-        }
+        .brand-chip.active { background: #FF007A; color: #fff; border-color: #FF007A; }
 
         .search-box {
-            background: #fff;
-            padding: 20px;
-            border-radius: 16px;
-            border: 1px solid #E2E8F0;
-            margin-bottom: 30px;
+            background: #fff; padding: 20px; border-radius: 16px; border: 1px solid #E2E8F0; margin-bottom: 30px;
         }
         label { font-weight: 700; display: block; margin-bottom: 8px; color: #1E293B; font-size: 15px; }
         textarea {
             width: 100%; height: 70px; padding: 12px; border: 2px solid #CBD5E1;
-            border-radius: 10px; font-size: 15px; resize: vertical; box-sizing: border-box;
-            font-family: inherit;
+            border-radius: 10px; font-size: 15px; resize: vertical; box-sizing: border-box; font-family: inherit;
         }
         textarea:focus { border-color: #1D63FF; outline: none; }
         
@@ -233,8 +192,7 @@
         .btn-search:disabled { background-color: #94A3B8; cursor: not-allowed; }
 
         .btn-ig-gen {
-            display: none; 
-            flex: 1; padding: 14px; background-color: #FF007A; color: white;
+            display: none; flex: 1; padding: 14px; background-color: #FF007A; color: white;
             border: none; border-radius: 10px; font-size: 16px; font-weight: bold; cursor: pointer;
             align-items: center; justify-content: center; gap: 6px;
         }
@@ -268,40 +226,54 @@
         .modal-content { background: #fff; width: 90%; max-width: 550px; max-height: 85vh; border-radius: 20px; padding: 25px; position: relative; overflow-y: auto; }
         .close-btn { position: absolute; top: 15px; right: 15px; font-size: 28px; color: #666; cursor: pointer; border: none; background: #f1f5f9; border-radius: 50%; width: 36px; height: 36px; display: flex; align-items: center; justify-content: center; }
 
-        /* IG 宣傳圖 (1080x1350) */
-        #renderCanvasHidden { position: absolute; left: -9999px; top: -9999px; width: 1080px; height: 1350px; background: #ffffff; }
-        .ig-poster-1350 { width: 1080px; height: 1350px; background: #ffffff; position: relative; display: grid; grid-template-columns: 1fr 1fr; grid-template-rows: 1fr 1fr; box-sizing: border-box; }
+        /* ==================== IG 宣傳圖 (1080x1350) 樣式修復 ==================== */
+        #renderCanvasHidden { 
+            position: absolute; left: -9999px; top: -9999px; 
+            width: 1080px; height: 1350px; background-color: #ffffff !important; 
+        }
+        
+        .ig-poster-1350 { 
+            width: 1080px; height: 1350px; background-color: #ffffff !important; 
+            position: relative; display: grid; grid-template-columns: 1fr 1fr; grid-template-rows: 1fr 1fr; box-sizing: border-box; 
+        }
         
         .ig-grid-item { 
-            position: relative; width: 100%; height: 100%; overflow: hidden; background: #ffffff; border: 1px solid #f0f0f0; box-sizing: border-box; 
+            position: relative; width: 100%; height: 100%; overflow: hidden; 
+            background-color: #ffffff !important; border: 1px solid #f0f0f0; box-sizing: border-box; 
             display: flex; align-items: center; justify-content: center;
         }
+        
         .ig-grid-item img { 
-            width: 100%; height: 100%; object-fit: contain; padding: 60px 20px 80px 20px; box-sizing: border-box;
+            width: 100%; height: 100%; object-fit: contain; padding: 75px 25px 95px 25px; box-sizing: border-box; background-color: #ffffff !important;
         }
         
+        /* 標題：純白底，頂部排列 */
         .ig-tag-title {
-            position: absolute; top: 20px; left: 20px; right: 20px;
-            background-color: #ffffff !important; color: #000000 !important;
-            padding: 10px 14px; border-radius: 8px; font-size: 22px; font-weight: bold; line-height: 1.3;
+            position: absolute; top: 15px; left: 15px; right: 15px;
+            background: #ffffff !important; color: #111111 !important;
+            padding: 8px 12px; border-radius: 8px; font-size: 20px; font-weight: 800; line-height: 1.3;
             display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.06);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.08); border: 1px solid #f0f0f0; z-index: 5;
         }
         
+        /* 價格框：純白底、不橫跨全寬 (縮短) */
         .ig-tag-price-box {
-            position: absolute; bottom: 20px; left: 50%; transform: translateX(-50%);
-            background-color: #ffffff !important; padding: 8px 24px; border-radius: 12px;
+            position: absolute; bottom: 15px; left: 50%; transform: translateX(-50%);
+            background: #ffffff !important; padding: 6px 18px; border-radius: 10px;
             text-align: center; display: flex; flex-direction: column; align-items: center; gap: 2px;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.08); width: 80%;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1); border: 1px solid #f0f0f0; z-index: 5;
+            width: fit-content; max-width: 85%;
         }
-        .ig-price-line.highlight { color: #E11D48; font-size: 28px; font-weight: 900; line-height: 1.1; white-space: nowrap; }
-        .ig-price-line.sub { color: #475569; font-size: 22px; font-weight: 700; line-height: 1.1; white-space: nowrap; }
+        
+        .ig-price-line.highlight { color: #E11D48 !important; font-size: 26px; font-weight: 900; line-height: 1.1; white-space: nowrap; }
+        .ig-price-line.sub { color: #475569 !important; font-size: 20px; font-weight: 700; line-height: 1.1; white-space: nowrap; }
 
+        /* 中間 Brand Tag：無透明度、無格仔 */
         .ig-center-brand {
             position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
-            color: #ffffff !important; font-size: 32px; font-weight: 900;
-            padding: 12px 36px; border-radius: 20px; text-transform: uppercase; letter-spacing: 1px; z-index: 10;
-            text-align: center; box-shadow: 0 6px 20px rgba(0,0,0,0.15);
+            color: #ffffff !important; font-size: 30px; font-weight: 900;
+            padding: 10px 32px; border-radius: 18px; text-transform: uppercase; letter-spacing: 1px; z-index: 10;
+            text-align: center; box-shadow: 0 6px 20px rgba(0,0,0,0.2); opacity: 1 !important;
         }
     </style>
 </head>
@@ -309,23 +281,22 @@
 
 <div class="container">
     <div class="header-section">
-        <!-- Korlection Logo 放大 20% -->
         <img src="logo.png" alt="Korlection Logo" class="korlection-logo" onerror="this.src='logo.jpg';">
         
         <div class="partner-logos">
-            <!-- Olive Young Logo 細20% -->
             <img src="olive_young_logo.svg" alt="Olive Young Logo" class="oy-logo" onerror="this.style.display='none'">
-            <!-- Daiso Logo 大60% -->
             <img src="daiso_logo.png" alt="Daiso Logo" class="daiso-logo" onerror="this.src='daisologo.jpg'">
         </div>
         
-        <!-- 標題：韓國國旗 + 雙色漸變 + Blink Blink -->
-        <h1>🇰🇷 9月份韓國代購 <i class="sparkle">✨</i></h1>
+        <!-- 標題：圖片國旗 + 雙色漸變 + Blink Blink -->
+        <div class="title-container">
+            <img src="https://flagcdn.com/w80/kr.png" alt="Korea Flag" class="flag-icon">
+            <h1>9月份韓國代購 <i class="sparkle">✨</i></h1>
+        </div>
     </div>
     
     <div id="statusMessage" class="status-message status-loading">⏳ 正在載入代購產品資料庫，請稍候...</div>
 
-    <!-- 商店按鈕 (寬度縮短 10%) -->
     <div class="store-tabs-container">
         <button class="store-tab-btn active" id="tabOlive" onclick="switchStore('olive')">Olive Young 優惠</button>
         <button class="store-tab-btn" id="tabDaiso" onclick="switchStore('daiso')">Daiso 代購</button>
@@ -373,7 +344,7 @@
     </div>
 </div>
 
-<!-- 隱藏截圖畫布容器 (1080x1350) -->
+<!-- 隱藏截圖畫布容器 -->
 <div id="renderCanvasHidden">
     <div class="ig-poster-1350" id="igPostTemplate">
         <div class="ig-center-brand" id="igBrandTag">BRAND</div>
