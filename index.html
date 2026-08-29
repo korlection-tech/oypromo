@@ -3,13 +3,14 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>韓國代購 (Olive Young & Daiso)</title>
+    <title>🇰🇷 韓國代購 (Olive Young & Daiso)</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.4.1/papaparse.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
     <style>
+        /* 網頁底色配合 Poster 主色 (鮮黃色系) */
         body {
             font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
-            background: linear-gradient(135deg, #FFDEE9 0%, #B5FFFC 100%);
+            background: linear-gradient(135deg, #FFDD00 0%, #FFEA00 100%);
             min-height: 100vh;
             margin: 0;
             padding: 30px 20px;
@@ -20,15 +21,14 @@
         .container {
             max-width: 1100px;
             margin: 0 auto;
-            background: rgba(255, 255, 255, 0.95); 
+            background: rgba(255, 255, 255, 0.96); 
             backdrop-filter: blur(10px);
             padding: 35px;
             border-radius: 24px;
-            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.12); 
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15); 
             box-sizing: border-box;
         }
         
-        /* 1. Logo 區域修正 */
         .header-section {
             display: flex;
             flex-direction: column;
@@ -38,12 +38,13 @@
             gap: 15px;
         }
         
+        /* Korlection Logo 放大 20% (90px -> 108px) */
         .korlection-logo {
-            width: 90px;
-            height: 90px;
+            width: 108px;
+            height: 108px;
             border-radius: 50%;
             object-fit: cover;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.12);
+            box-shadow: 0 4px 15px rgba(0,0,0,0.15);
             border: 3px solid #fff;
         }
         
@@ -55,38 +56,64 @@
             margin: 5px 0;
         }
         
-        .partner-logo {
-            height: 27px;
+        /* Olive Young 細20% (27px -> 21.6px) */
+        .oy-logo {
+            height: 21.6px;
+            width: auto;
+            object-fit: contain;
+        }
+
+        /* Daiso 大60% (27px -> 43.2px) */
+        .daiso-logo {
+            height: 43.2px;
             width: auto;
             object-fit: contain;
         }
         
+        /* 標題：雙色漸變 + Blink Blink 閃爍動畫 */
         h1 {
-            color: #1D63FF;
-            margin: 0;
-            font-size: 32px;
+            margin: 5px 0 0 0;
+            font-size: 34px;
             font-weight: 900;
             letter-spacing: 1px;
+            background: linear-gradient(135deg, #1D63FF 0%, #FF007A 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            display: inline-block;
+            position: relative;
+            text-shadow: 0px 2px 10px rgba(255, 0, 122, 0.15);
+        }
+
+        .sparkle {
+            display: inline-block;
+            animation: blink 1.2s infinite alternate;
+            margin-left: 4px;
+            font-style: normal;
+        }
+
+        @keyframes blink {
+            0% { opacity: 0.3; transform: scale(0.8); }
+            100% { opacity: 1; transform: scale(1.2); }
         }
         
         .status-message { text-align: center; padding: 12px; margin-bottom: 20px; border-radius: 8px; font-size: 14px; font-weight: bold; }
         .status-loading { background: #fff3cd; color: #856404; }
         .status-error { background: #f8d7da; color: #721c24; }
 
-        /* 3. 商店 Tab 按鈕 */
+        /* 商店按鈕縮小 10%，避免太長 */
         .store-tabs-container {
             display: flex;
             justify-content: center;
-            gap: 20px;
+            gap: 15px;
             margin-bottom: 25px;
         }
         .store-tab-btn {
             flex: 1;
-            max-width: 320px;
-            padding: 16px 20px;
-            font-size: 22px;
+            max-width: 280px; /* 縮短上限 */
+            padding: 14px 18px; /* 縮小內距 */
+            font-size: 20px; /* 縮小字體 */
             font-weight: 800;
-            border-radius: 14px;
+            border-radius: 12px;
             cursor: pointer;
             transition: all 0.2s ease;
             text-align: center;
@@ -116,7 +143,6 @@
             box-shadow: 0 6px 15px rgba(228, 0, 43, 0.35);
         }
 
-        /* 5. 分類選單 */
         .category-section {
             margin-bottom: 25px;
             background: #F8FAFC; 
@@ -242,7 +268,7 @@
         .modal-content { background: #fff; width: 90%; max-width: 550px; max-height: 85vh; border-radius: 20px; padding: 25px; position: relative; overflow-y: auto; }
         .close-btn { position: absolute; top: 15px; right: 15px; font-size: 28px; color: #666; cursor: pointer; border: none; background: #f1f5f9; border-radius: 50%; width: 36px; height: 36px; display: flex; align-items: center; justify-content: center; }
 
-        /* IG 宣傳圖 (1080x1350) 畫布 */
+        /* IG 宣傳圖 (1080x1350) */
         #renderCanvasHidden { position: absolute; left: -9999px; top: -9999px; width: 1080px; height: 1350px; background: #ffffff; }
         .ig-poster-1350 { width: 1080px; height: 1350px; background: #ffffff; position: relative; display: grid; grid-template-columns: 1fr 1fr; grid-template-rows: 1fr 1fr; box-sizing: border-box; }
         
@@ -283,25 +309,28 @@
 
 <div class="container">
     <div class="header-section">
+        <!-- Korlection Logo 放大 20% -->
         <img src="logo.png" alt="Korlection Logo" class="korlection-logo" onerror="this.src='logo.jpg';">
         
         <div class="partner-logos">
-            <img src="olive_young_logo.svg" alt="Olive Young Logo" class="partner-logo" onerror="this.style.display='none'">
-            <img src="daiso_logo.png" alt="Daiso Logo" class="partner-logo" onerror="this.src='daisologo.jpg'">
+            <!-- Olive Young Logo 細20% -->
+            <img src="olive_young_logo.svg" alt="Olive Young Logo" class="oy-logo" onerror="this.style.display='none'">
+            <!-- Daiso Logo 大60% -->
+            <img src="daiso_logo.png" alt="Daiso Logo" class="daiso-logo" onerror="this.src='daisologo.jpg'">
         </div>
         
-        <h1>9月份韓國代購</h1>
+        <!-- 標題：韓國國旗 + 雙色漸變 + Blink Blink -->
+        <h1>🇰🇷 9月份韓國代購 <i class="sparkle">✨</i></h1>
     </div>
     
     <div id="statusMessage" class="status-message status-loading">⏳ 正在載入代購產品資料庫，請稍候...</div>
 
-    <!-- 第一層 Tab -->
+    <!-- 商店按鈕 (寬度縮短 10%) -->
     <div class="store-tabs-container">
         <button class="store-tab-btn active" id="tabOlive" onclick="switchStore('olive')">Olive Young 優惠</button>
         <button class="store-tab-btn" id="tabDaiso" onclick="switchStore('daiso')">Daiso 代購</button>
     </div>
 
-    <!-- 第二層 Category 多選區塊 -->
     <div class="category-section">
         <div class="category-title">
             <span>🎯 產品分類 (可同時選擇多個 Category)：</span>
@@ -360,7 +389,7 @@ let productsData = [];
 let currentStore = 'olive';
 let selectedCategories = ['all']; 
 let selectedBrand = 'all';
-let isDefaultState = true; // 紀錄是否為初始預設狀態
+let isDefaultState = true;
 
 const categoryColors = {
     'cosmetics': '#F19DA9',
@@ -407,7 +436,7 @@ function switchStore(store) {
 }
 
 function toggleCategory(cat) {
-    isDefaultState = false; // 用戶進行篩選後，取消預設推介模式
+    isDefaultState = false;
     if (cat === 'all') {
         selectedCategories = ['all'];
     } else {
@@ -483,7 +512,6 @@ function applyFilter() {
         const pStore = (p["Store"] || "olive").toLowerCase();
         if (pStore !== currentStore) return false;
         
-        // 🌟 如果是初始載入狀態，只篩選「Featured 填寫 Y」的重點推介商品
         if (isDefaultState && selectedCategories.includes('all') && selectedBrand === 'all') {
             const isFeatured = (p["Featured"] || "").trim().toUpperCase();
             if (!(isFeatured === 'Y' || isFeatured === 'YES' || isFeatured === '1' || isFeatured === 'TRUE')) {
@@ -557,7 +585,7 @@ function performSearch() {
     const text = document.getElementById('searchInput').value.trim().toLowerCase();
     if (!text) { applyFilter(); return; }
     
-    isDefaultState = false; // 搜尋時離開預設模式
+    isDefaultState = false;
     const kws = text.split(/\s+/);
     let filtered = productsData.filter(p => {
         const storeMatch = (p["Store"] || "olive").toLowerCase() === currentStore;
