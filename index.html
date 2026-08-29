@@ -63,7 +63,7 @@
             object-fit: contain;
         }
 
-        /* Daiso Logo (再放大 30% -> 56px) */
+        /* Daiso Logo (56px) */
         .daiso-logo {
             height: 56px;
             width: auto;
@@ -228,55 +228,99 @@
         .modal-content { background: #fff; width: 90%; max-width: 550px; max-height: 85vh; border-radius: 20px; padding: 25px; position: relative; overflow-y: auto; }
         .close-btn { position: absolute; top: 15px; right: 15px; font-size: 28px; color: #666; cursor: pointer; border: none; background: #f1f5f9; border-radius: 50%; width: 36px; height: 36px; display: flex; align-items: center; justify-content: center; }
 
-        /* ==================== IG 宣傳圖 (1080x1350) 樣式修復 ==================== */
+        /* ==================== IG 宣傳圖 (1080x1350) 徹底修正版本 ==================== */
         #renderCanvasHidden { 
             position: absolute; left: -9999px; top: -9999px; 
-            width: 1080px; height: 1350px; background-color: #ffffff !important; 
+            width: 1080px; height: 1350px; 
+            background-color: #ffffff !important; 
+            background: #ffffff !important;
         }
-        
+
         .ig-poster-1350 { 
-            width: 1080px; height: 1350px; background-color: #ffffff !important; 
-            position: relative; display: grid; grid-template-columns: 1fr 1fr; grid-template-rows: 1fr 1fr; box-sizing: border-box; 
+            width: 1080px; height: 1350px; 
+            background-color: #ffffff !important; 
+            background: #ffffff !important;
+            position: relative; 
+            display: grid; 
+            grid-template-columns: 1fr 1fr; 
+            grid-template-rows: 1fr 1fr; 
+            box-sizing: border-box; 
         }
-        
+
         .ig-grid-item { 
-            position: relative; width: 100%; height: 100%; overflow: hidden; 
-            background-color: #ffffff !important; border: 1px solid #f0f0f0; box-sizing: border-box; 
-            display: flex; align-items: center; justify-content: center;
+            position: relative; 
+            width: 540px; 
+            height: 675px; 
+            overflow: hidden; 
+            background-color: #ffffff !important; 
+            background: #ffffff !important;
+            border: 1px solid #f0f0f0; 
+            box-sizing: border-box; 
+            display: flex; 
+            align-items: center; 
+            justify-content: center;
         }
-        
-        /* 圖片放大：減小留白，保持比例 contain */
+
+        /* 核心修復：限定 max-width/max-height 保持原圖長寬比，留白縮小但絕對不切圖 */
         .ig-grid-item img { 
-            width: 100%; height: 100%; object-fit: contain; 
-            padding: 40px 10px 50px 10px; box-sizing: border-box; background-color: #ffffff !important;
+            max-width: 92% !important; 
+            max-height: 75% !important; 
+            width: auto !important;
+            height: auto !important;
+            object-fit: contain !important; 
+            margin: auto;
+            display: block;
+            background-color: transparent !important;
         }
-        
-        /* 商品名稱：純白底 + 陰影邊框 */
+
+        /* 1. 商品名稱：純白底 */
         .ig-tag-title {
-            position: absolute; top: 12px; left: 12px; right: 12px;
+            position: absolute; 
+            top: 15px; 
+            left: 15px; 
+            right: 15px;
             background-color: #ffffff !important; 
             background: #ffffff !important;
             color: #000000 !important;
-            padding: 8px 12px; border-radius: 8px; font-size: 20px; font-weight: 800; line-height: 1.3;
-            display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.1); border: 1px solid #e2e8f0; z-index: 10;
+            padding: 8px 12px; 
+            border-radius: 8px; 
+            font-size: 20px; 
+            font-weight: 800; 
+            line-height: 1.3;
+            display: -webkit-box; 
+            -webkit-line-clamp: 2; 
+            -webkit-box-orient: vertical; 
+            overflow: hidden;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.12); 
+            border: 1px solid #dcdcdc; 
+            z-index: 10;
         }
-        
-        /* 價格框：純白底 + 自適應短框 */
+
+        /* 2. 價格框：純白底 + 自適應包覆 */
         .ig-tag-price-box {
-            position: absolute; bottom: 12px; left: 50%; transform: translateX(-50%);
+            position: absolute; 
+            bottom: 15px; 
+            left: 50%; 
+            transform: translateX(-50%);
             background-color: #ffffff !important; 
             background: #ffffff !important;
-            padding: 6px 16px; border-radius: 10px;
-            text-align: center; display: flex; flex-direction: column; align-items: center; gap: 2px;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.12); border: 1px solid #e2e8f0; z-index: 10;
-            width: fit-content !important; max-width: 85%;
+            padding: 6px 18px; 
+            border-radius: 10px;
+            text-align: center; 
+            display: flex; 
+            flex-direction: column; 
+            align-items: center; 
+            gap: 2px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.12); 
+            border: 1px solid #dcdcdc; 
+            z-index: 10;
+            width: auto !important; 
+            white-space: nowrap;
         }
-        
-        .ig-price-line.highlight { color: #E11D48 !important; font-size: 26px; font-weight: 900; line-height: 1.1; white-space: nowrap; }
-        .ig-price-line.sub { color: #475569 !important; font-size: 20px; font-weight: 700; line-height: 1.1; white-space: nowrap; }
 
-        /* 中間 Brand Tag：無透明度、無格仔 */
+        .ig-price-line.highlight { color: #E11D48 !important; font-size: 24px; font-weight: 900; line-height: 1.1; }
+        .ig-price-line.sub { color: #475569 !important; font-size: 18px; font-weight: 700; line-height: 1.1; }
+
         .ig-center-brand {
             position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
             color: #ffffff !important; font-size: 30px; font-weight: 900;
@@ -652,8 +696,8 @@ async function generateAllIGPosters() {
 
                     cell.innerHTML = `
                         <img src="${item['Image'] || ''}" crossorigin="anonymous" onerror="this.src='https://placehold.co/500x500?text=No+Image'">
-                        <div class="ig-tag-title">${name}</div>
-                        <div class="ig-tag-price-box">${priceHtml}</div>
+                        <div class="ig-tag-title" style="background-color: #ffffff !important; background: #ffffff !important;">${name}</div>
+                        <div class="ig-tag-price-box" style="background-color: #ffffff !important; background: #ffffff !important;">${priceHtml}</div>
                     `;
                 }
             }
