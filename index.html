@@ -3,15 +3,16 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>9月份韓國代購 (Olive Young & Daiso)</title>
+    <title>韓國代購 (Olive Young & Daiso)</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.4.1/papaparse.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
     <style>
         body {
             font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
-            background: #FEE100;
+            background: linear-gradient(135deg, #FFDEE9 0%, #B5FFFC 100%);
+            min-height: 100vh;
             margin: 0;
-            padding: 20px;
+            padding: 30px 20px;
             color: #222;
             line-height: 1.3;
         }
@@ -19,14 +20,15 @@
         .container {
             max-width: 1100px;
             margin: 0 auto;
-            background: #ffffff; 
-            padding: 30px;
-            border-radius: 20px;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15); 
+            background: rgba(255, 255, 255, 0.95); 
+            backdrop-filter: blur(10px);
+            padding: 35px;
+            border-radius: 24px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.12); 
             box-sizing: border-box;
         }
         
-        /* 頂部區塊 */
+        /* 1. Logo 區域修正 */
         .header-section {
             display: flex;
             flex-direction: column;
@@ -37,11 +39,11 @@
         }
         
         .korlection-logo {
-            width: 100px;
-            height: 100px;
+            width: 90px;
+            height: 90px;
             border-radius: 50%;
             object-fit: cover;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            box-shadow: 0 4px 15px rgba(0,0,0,0.12);
             border: 3px solid #fff;
         }
         
@@ -49,13 +51,12 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            gap: 20px;
-            flex-wrap: wrap;
+            gap: 25px;
             margin: 5px 0;
         }
         
         .partner-logo {
-            height: 45px; 
+            height: 27px;
             width: auto;
             object-fit: contain;
         }
@@ -66,47 +67,62 @@
             font-size: 32px;
             font-weight: 900;
             letter-spacing: 1px;
-            text-shadow: 1px 1px 0px #fff;
         }
         
         .status-message { text-align: center; padding: 12px; margin-bottom: 20px; border-radius: 8px; font-size: 14px; font-weight: bold; }
         .status-loading { background: #fff3cd; color: #856404; }
         .status-error { background: #f8d7da; color: #721c24; }
 
-        /* 📍 第一層 Store Tabs */
+        /* 3. 商店 Tab 按鈕 */
         .store-tabs-container {
             display: flex;
             justify-content: center;
-            gap: 15px;
+            gap: 20px;
             margin-bottom: 25px;
         }
         .store-tab-btn {
             flex: 1;
-            max-width: 300px;
-            padding: 14px 20px;
-            font-size: 18px;
+            max-width: 320px;
+            padding: 16px 20px;
+            font-size: 22px;
             font-weight: 800;
-            border: 3px solid #1D63FF;
-            background: #fff;
-            color: #1D63FF;
-            border-radius: 12px;
+            border-radius: 14px;
             cursor: pointer;
             transition: all 0.2s ease;
             text-align: center;
+            border: none;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.05);
         }
-        .store-tab-btn.active {
+        
+        #tabOlive {
+            background: #E8F0FE;
+            color: #1D63FF;
+            border: 2px solid #1D63FF;
+        }
+        #tabOlive.active {
             background: #1D63FF;
-            color: #fff;
-            box-shadow: 0 4px 12px rgba(29, 99, 255, 0.3);
+            color: #ffffff;
+            box-shadow: 0 6px 15px rgba(29, 99, 255, 0.35);
         }
 
-        /* 🎯 第二層 Category 多選區塊 */
+        #tabDaiso {
+            background: #FEE8EA;
+            color: #E4002B;
+            border: 2px solid #E4002B;
+        }
+        #tabDaiso.active {
+            background: #E4002B;
+            color: #ffffff;
+            box-shadow: 0 6px 15px rgba(228, 0, 43, 0.35);
+        }
+
+        /* 5. 分類選單 */
         .category-section {
             margin-bottom: 25px;
-            background: #F7F9FC; 
+            background: #F8FAFC; 
             padding: 20px;
-            border-radius: 14px;
-            border: 2px solid #E2E8F0;
+            border-radius: 16px;
+            border: 1px solid #E2E8F0;
         }
         .category-title {
             font-weight: bold;
@@ -123,7 +139,7 @@
             gap: 10px;
         }
         .cat-btn {
-            padding: 8px 16px;
+            padding: 8px 18px;
             background: #fff;
             border: 2px solid #CBD5E1;
             border-radius: 20px;
@@ -170,14 +186,14 @@
         .search-box {
             background: #fff;
             padding: 20px;
-            border-radius: 12px;
-            border: 2px solid #E2E8F0;
+            border-radius: 16px;
+            border: 1px solid #E2E8F0;
             margin-bottom: 30px;
         }
         label { font-weight: 700; display: block; margin-bottom: 8px; color: #1E293B; font-size: 15px; }
         textarea {
-            width: 100%; height: 75px; padding: 12px; border: 2px solid #CBD5E1;
-            border-radius: 8px; font-size: 15px; resize: vertical; box-sizing: border-box;
+            width: 100%; height: 70px; padding: 12px; border: 2px solid #CBD5E1;
+            border-radius: 10px; font-size: 15px; resize: vertical; box-sizing: border-box;
             font-family: inherit;
         }
         textarea:focus { border-color: #1D63FF; outline: none; }
@@ -185,7 +201,7 @@
         .btn-group { display: flex; gap: 15px; margin-top: 15px; }
         .btn-search {
             flex: 2; padding: 14px; background-color: #1D63FF; color: white;
-            border: none; border-radius: 8px; font-size: 18px; font-weight: bold; cursor: pointer; transition: background 0.2s;
+            border: none; border-radius: 10px; font-size: 18px; font-weight: bold; cursor: pointer; transition: background 0.2s;
         }
         .btn-search:hover { background-color: #0B4AD4; }
         .btn-search:disabled { background-color: #94A3B8; cursor: not-allowed; }
@@ -193,7 +209,7 @@
         .btn-ig-gen {
             display: none; 
             flex: 1; padding: 14px; background-color: #FF007A; color: white;
-            border: none; border-radius: 8px; font-size: 16px; font-weight: bold; cursor: pointer;
+            border: none; border-radius: 10px; font-size: 16px; font-weight: bold; cursor: pointer;
             align-items: center; justify-content: center; gap: 6px;
         }
 
@@ -201,15 +217,15 @@
         .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(230px, 1fr)); gap: 20px; }
         
         .card {
-            background: #ffffff; border: 1px solid #E2E8F0; border-radius: 12px; overflow: hidden;
+            background: #ffffff; border: 1px solid #E2E8F0; border-radius: 16px; overflow: hidden;
             display: flex; flex-direction: column; padding: 15px; cursor: pointer; transition: transform 0.2s, box-shadow 0.2s;
         }
-        .card:hover { transform: translateY(-4px); box-shadow: 0 10px 20px rgba(0,0,0,0.08); }
+        .card:hover { transform: translateY(-4px); box-shadow: 0 12px 24px rgba(0,0,0,0.08); }
         .image-container { width: 100%; height: 180px; display: flex; align-items: center; justify-content: center; margin-bottom: 12px; }
         .card img { max-width: 100%; max-height: 100%; object-fit: contain; }
         
         .card-top-info { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; }
-        .brand-badge { background: #E2E8F0; color: #334155; font-size: 11px; padding: 4px 8px; border-radius: 4px; font-weight: bold; text-transform: uppercase; }
+        .brand-badge { background: #F1F5F9; color: #334155; font-size: 11px; padding: 4px 8px; border-radius: 6px; font-weight: bold; text-transform: uppercase; }
         .category-badge { color: #64748B; font-size: 11px; font-weight: 600; }
         
         .product-name { font-size: 14px; font-weight: 700; color: #0F172A; margin: 0 0 6px 0; line-height: 1.35; height: 38px; overflow: hidden; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; }
@@ -223,35 +239,43 @@
 
         .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.75); display: flex; align-items: center; justify-content: center; z-index: 99999; opacity: 0; pointer-events: none; transition: opacity 0.2s; }
         .modal-overlay.active { opacity: 1; pointer-events: auto; }
-        .modal-content { background: #fff; width: 90%; max-width: 550px; max-height: 85vh; border-radius: 16px; padding: 25px; position: relative; overflow-y: auto; }
+        .modal-content { background: #fff; width: 90%; max-width: 550px; max-height: 85vh; border-radius: 20px; padding: 25px; position: relative; overflow-y: auto; }
         .close-btn { position: absolute; top: 15px; right: 15px; font-size: 28px; color: #666; cursor: pointer; border: none; background: #f1f5f9; border-radius: 50%; width: 36px; height: 36px; display: flex; align-items: center; justify-content: center; }
 
-        /* 📸 IG 宣傳圖 (已更新為 1080x1350 4:5 直向比例) 渲染隱藏區 */
+        /* IG 宣傳圖 (1080x1350) 畫布 */
         #renderCanvasHidden { position: absolute; left: -9999px; top: -9999px; width: 1080px; height: 1350px; background: #ffffff; }
         .ig-poster-1350 { width: 1080px; height: 1350px; background: #ffffff; position: relative; display: grid; grid-template-columns: 1fr 1fr; grid-template-rows: 1fr 1fr; box-sizing: border-box; }
-        .ig-grid-item { position: relative; width: 100%; height: 100%; overflow: hidden; background: #ffffff; border: 1px solid #f0f0f0; box-sizing: border-box; }
-        .ig-grid-item img { width: 100%; height: 100%; object-fit: cover; }
+        
+        .ig-grid-item { 
+            position: relative; width: 100%; height: 100%; overflow: hidden; background: #ffffff; border: 1px solid #f0f0f0; box-sizing: border-box; 
+            display: flex; align-items: center; justify-content: center;
+        }
+        .ig-grid-item img { 
+            width: 100%; height: 100%; object-fit: contain; padding: 60px 20px 80px 20px; box-sizing: border-box;
+        }
         
         .ig-tag-title {
-            position: absolute; top: 25px; left: 20px; right: 20px;
+            position: absolute; top: 20px; left: 20px; right: 20px;
             background-color: #ffffff !important; color: #000000 !important;
-            padding: 10px 14px; border-radius: 8px; font-size: 24px; font-weight: bold; line-height: 1.3;
-            box-shadow: none !important; border: none !important; display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden;
+            padding: 10px 14px; border-radius: 8px; font-size: 22px; font-weight: bold; line-height: 1.3;
+            display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.06);
         }
         
         .ig-tag-price-box {
-            position: absolute; bottom: 25px; left: 50%; transform: translateX(-50%);
-            background-color: #ffffff !important; padding: 10px 22px; border-radius: 12px;
-            box-shadow: none !important; border: none !important; text-align: center; display: flex; flex-direction: column; gap: 2px;
+            position: absolute; bottom: 20px; left: 50%; transform: translateX(-50%);
+            background-color: #ffffff !important; padding: 8px 24px; border-radius: 12px;
+            text-align: center; display: flex; flex-direction: column; align-items: center; gap: 2px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.08); width: 80%;
         }
-        .ig-price-line { font-size: 28px; font-weight: 900; color: #000; line-height: 1.1; white-space: nowrap; }
-        .ig-price-line.highlight { color: #E11D48; font-size: 34px; }
+        .ig-price-line.highlight { color: #E11D48; font-size: 28px; font-weight: 900; line-height: 1.1; white-space: nowrap; }
+        .ig-price-line.sub { color: #475569; font-size: 22px; font-weight: 700; line-height: 1.1; white-space: nowrap; }
 
         .ig-center-brand {
             position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
-            color: #ffffff !important; font-size: 36px; font-weight: 900;
-            padding: 14px 40px; border-radius: 22px; text-transform: uppercase; letter-spacing: 2px; z-index: 10;
-            box-shadow: none !important; border: none !important; text-align: center;
+            color: #ffffff !important; font-size: 32px; font-weight: 900;
+            padding: 12px 36px; border-radius: 20px; text-transform: uppercase; letter-spacing: 1px; z-index: 10;
+            text-align: center; box-shadow: 0 6px 20px rgba(0,0,0,0.15);
         }
     </style>
 </head>
@@ -271,13 +295,13 @@
     
     <div id="statusMessage" class="status-message status-loading">⏳ 正在載入代購產品資料庫，請稍候...</div>
 
-    <!-- 📍 第一層 Tab -->
+    <!-- 第一層 Tab -->
     <div class="store-tabs-container">
         <button class="store-tab-btn active" id="tabOlive" onclick="switchStore('olive')">Olive Young 優惠</button>
         <button class="store-tab-btn" id="tabDaiso" onclick="switchStore('daiso')">Daiso 代購</button>
     </div>
 
-    <!-- 🎯 第二層 Category 多選區塊 -->
+    <!-- 第二層 Category 多選區塊 -->
     <div class="category-section">
         <div class="category-title">
             <span>🎯 產品分類 (可同時選擇多個 Category)：</span>
@@ -285,10 +309,10 @@
         </div>
         <div class="category-tabs" id="categoryTabs">
             <div class="cat-btn selected" data-cat="all" onclick="toggleCategory('all')">全部商品 (All)</div>
-            <div class="cat-btn" data-cat="cosmetics" onclick="toggleCategory('cosmetics')">彩妝 (Cosmetics)</div>
+            <div class="cat-btn" data-cat="cosmetics" onclick="toggleCategory('cosmetics')">化妝品 (Cosmetics)</div>
             <div class="cat-btn" data-cat="skincare" onclick="toggleCategory('skincare')">護膚 (Skincare)</div>
             <div class="cat-btn" data-cat="bodycare" onclick="toggleCategory('bodycare')">身體護理 (Bodycare)</div>
-            <div class="cat-btn" data-cat="haircare" onclick="toggleCategory('haircare')">美髮 (Haircare)</div>
+            <div class="cat-btn" data-cat="haircare" onclick="toggleCategory('haircare')">護髮 (Haircare)</div>
             <div class="cat-btn" data-cat="supplement" onclick="toggleCategory('supplement')">保健食品 (Supplement)</div>
             <div class="cat-btn" data-cat="snacks" onclick="toggleCategory('snacks')">食品零食 (Snacks)</div>
         </div>
@@ -336,14 +360,15 @@ let productsData = [];
 let currentStore = 'olive';
 let selectedCategories = ['all']; 
 let selectedBrand = 'all';
+let isDefaultState = true; // 紀錄是否為初始預設狀態
 
 const categoryColors = {
-    'cosmetics': '#F19DA9', // 彩妝：粉紅
-    'skincare': '#4A90E2',  // 護膚：藍色
-    'bodycare': '#9B51E0',  // 身體護理：紫色
-    'haircare': '#9B51E0',  // 美髮：紫色
-    'supplement': '#F2994A',// 保健品：橙色
-    'snacks': '#F2C94C',    // 食品零食：黃色
+    'cosmetics': '#F19DA9',
+    'skincare': '#4A90E2',
+    'bodycare': '#9B51E0',
+    'haircare': '#9B51E0',
+    'supplement': '#F2994A',
+    'snacks': '#F2C94C',
     'default': '#1D63FF'
 };
 
@@ -382,6 +407,7 @@ function switchStore(store) {
 }
 
 function toggleCategory(cat) {
+    isDefaultState = false; // 用戶進行篩選後，取消預設推介模式
     if (cat === 'all') {
         selectedCategories = ['all'];
     } else {
@@ -457,19 +483,32 @@ function applyFilter() {
         const pStore = (p["Store"] || "olive").toLowerCase();
         if (pStore !== currentStore) return false;
         
-        if (!selectedCategories.includes('all')) {
-            const pCat = p["Category"] ? p["Category"].toLowerCase() : "";
-            if (!selectedCategories.includes(pCat)) return false;
-        }
-        
-        if (selectedBrand !== 'all') {
-            const pBrand = p["Brand"] ? p["Brand"].toLowerCase() : "";
-            if (pBrand !== selectedBrand) return false;
+        // 🌟 如果是初始載入狀態，只篩選「Featured 填寫 Y」的重點推介商品
+        if (isDefaultState && selectedCategories.includes('all') && selectedBrand === 'all') {
+            const isFeatured = (p["Featured"] || "").trim().toUpperCase();
+            if (!(isFeatured === 'Y' || isFeatured === 'YES' || isFeatured === '1' || isFeatured === 'TRUE')) {
+                return false;
+            }
+        } else {
+            if (!selectedCategories.includes('all')) {
+                const pCat = p["Category"] ? p["Category"].toLowerCase() : "";
+                if (!selectedCategories.includes(pCat)) return false;
+            }
+            
+            if (selectedBrand !== 'all') {
+                const pBrand = p["Brand"] ? p["Brand"].toLowerCase() : "";
+                if (pBrand !== selectedBrand) return false;
+            }
         }
         return true;
     });
     
-    document.getElementById('resultsCount').innerText = `🎯 搜尋/篩選結果：共 ${filtered.length} 筆商品`;
+    if (isDefaultState && selectedCategories.includes('all') && selectedBrand === 'all') {
+        document.getElementById('resultsCount').innerText = `🔥 本月重點推介商品（共 ${filtered.length} 筆）：`;
+    } else {
+        document.getElementById('resultsCount').innerText = `🎯 搜尋/篩選結果：共 ${filtered.length} 筆商品`;
+    }
+    
     renderGrid(filtered);
 }
 
@@ -518,6 +557,7 @@ function performSearch() {
     const text = document.getElementById('searchInput').value.trim().toLowerCase();
     if (!text) { applyFilter(); return; }
     
+    isDefaultState = false; // 搜尋時離開預設模式
     const kws = text.split(/\s+/);
     let filtered = productsData.filter(p => {
         const storeMatch = (p["Store"] || "olive").toLowerCase() === currentStore;
@@ -544,19 +584,35 @@ function openModal(brand, name, img, p1, p2, d1, d2) {
     document.getElementById('detailModal').classList.add('active');
 }
 
-/* 📸 產生 1080x1350 規格 IG 宣傳圖 */
+function formatEndDate(dateStr) {
+    if (!dateStr) return '';
+    if (dateStr.includes('-')) {
+        const parts = dateStr.split('-');
+        return `(~${parts[1].trim()})`;
+    }
+    return `(${dateStr.trim()})`;
+}
+
 async function generateAllIGPosters() {
+    const targetProducts = productsData.filter(p => {
+        const flag = (p["Generate_IG"] || "").trim().toUpperCase();
+        return flag === 'Y' || flag === 'YES' || flag === '1' || flag === 'TRUE';
+    });
+
+    if (targetProducts.length === 0) {
+        alert("⚠️ 沒有找到需要生成 IG 圖的產品！\n請確保 CSV 中的「Generate_IG」欄位有填寫「Y」。");
+        return;
+    }
+
     const brandMap = {};
-    productsData.forEach(p => {
-        const b = p["Brand"] ? p["Brand"].trim() : "";
-        if (b) {
-            if (!brandMap[b]) brandMap[b] = [];
-            brandMap[b].push(p);
-        }
+    targetProducts.forEach(p => {
+        const b = p["Brand"] ? p["Brand"].trim() : "K-BEAUTY";
+        if (!brandMap[b]) brandMap[b] = [];
+        brandMap[b].push(p);
     });
 
     const brands = Object.keys(brandMap);
-    if (!confirm(`將自動為 ${brands.length} 個品牌生成 1080x1350 (4:5) IG 宣傳圖，是否繼續？`)) return;
+    if (!confirm(`找到 ${targetProducts.length} 件指定產品（共 ${brands.length} 個品牌），是否開始生成 1080x1350 IG 宣傳圖？`)) return;
 
     for (const bName of brands) {
         const items = brandMap[bName];
@@ -580,9 +636,12 @@ async function generateAllIGPosters() {
                     const p1 = item['Price 1 (HKD)'] || item['Price (HKD)'] || '';
                     const p2 = item['Price 2 (HKD)'] || '';
                     
-                    let priceHtml = `<div class="ig-price-line highlight">HKD $${p1}</div>`;
+                    const d1Str = formatEndDate(item['Price 1 Date']);
+                    const d2Str = item['Price 2 Date'] ? `(${item['Price 2 Date'].trim()})` : '';
+
+                    let priceHtml = `<div class="ig-price-line highlight">$${p1} ${d1Str}</div>`;
                     if (p2) {
-                        priceHtml += `<div class="ig-price-line" style="font-size:22px; color:#666;">$${p2}</div>`;
+                        priceHtml += `<div class="ig-price-line sub">$${p2} ${d2Str}</div>`;
                     }
 
                     cell.innerHTML = `
@@ -603,7 +662,7 @@ async function generateAllIGPosters() {
             link.click();
         }
     }
-    alert("🎉 1080x1350 IG 宣傳圖生成並下載完成！");
+    alert("🎉 指定產品的 IG 宣傳圖已全部成功生成並下載！");
 }
 </script>
 
