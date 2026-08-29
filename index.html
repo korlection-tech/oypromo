@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>韓國代購 (Olive Young & Daiso)</title>
+    <title>Korlection韓國代購</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.4.1/papaparse.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
     <style>
@@ -228,22 +228,20 @@
         .modal-content { background: #fff; width: 90%; max-width: 550px; max-height: 85vh; border-radius: 20px; padding: 25px; position: relative; overflow-y: auto; }
         .close-btn { position: absolute; top: 15px; right: 15px; font-size: 28px; color: #666; cursor: pointer; border: none; background: #f1f5f9; border-radius: 50%; width: 36px; height: 36px; display: flex; align-items: center; justify-content: center; }
 
-        /* ==================== IG 宣傳圖 (1080x1350) 徹底修正版本 ==================== */
+        /* ==================== IG 宣傳圖 (1080x1350) 修正 CSS ==================== */
         #renderCanvasHidden { 
             position: absolute; left: -9999px; top: -9999px; 
             width: 1080px; height: 1350px; 
-            background-color: #ffffff !important; 
             background: #ffffff !important;
         }
 
         .ig-poster-1350 { 
             width: 1080px; height: 1350px; 
-            background-color: #ffffff !important; 
             background: #ffffff !important;
             position: relative; 
             display: grid; 
-            grid-template-columns: 1fr 1fr; 
-            grid-template-rows: 1fr 1fr; 
+            grid-template-columns: 540px 540px; 
+            grid-template-rows: 675px 675px; 
             box-sizing: border-box; 
         }
 
@@ -252,37 +250,34 @@
             width: 540px; 
             height: 675px; 
             overflow: hidden; 
-            background-color: #ffffff !important; 
             background: #ffffff !important;
-            border: 1px solid #f0f0f0; 
+            border: 1px solid #eeeeee; 
             box-sizing: border-box; 
             display: flex; 
             align-items: center; 
             justify-content: center;
         }
 
-        /* 核心修復：限定 max-width/max-height 保持原圖長寬比，留白縮小但絕對不切圖 */
+        /* 全面解決圖片切圖與貼邊問題 */
         .ig-grid-item img { 
-            max-width: 92% !important; 
-            max-height: 75% !important; 
+            max-width: 82% !important; 
+            max-height: 65% !important; 
             width: auto !important;
             height: auto !important;
             object-fit: contain !important; 
-            margin: auto;
-            display: block;
-            background-color: transparent !important;
+            display: block !important;
+            margin: auto !important;
         }
 
-        /* 1. 商品名稱：純白底 */
+        /* 1. 商品名稱標籤 */
         .ig-tag-title {
             position: absolute; 
-            top: 15px; 
-            left: 15px; 
-            right: 15px;
+            top: 20px; 
+            left: 20px; 
+            right: 20px;
             background-color: #ffffff !important; 
-            background: #ffffff !important;
             color: #000000 !important;
-            padding: 8px 12px; 
+            padding: 10px 14px; 
             border-radius: 8px; 
             font-size: 20px; 
             font-weight: 800; 
@@ -291,30 +286,29 @@
             -webkit-line-clamp: 2; 
             -webkit-box-orient: vertical; 
             overflow: hidden;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.12); 
-            border: 1px solid #dcdcdc; 
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1); 
+            border: 1px solid #e0e0e0; 
             z-index: 10;
         }
 
-        /* 2. 價格框：純白底 + 自適應包覆 */
+        /* 2. 價格標籤 */
         .ig-tag-price-box {
             position: absolute; 
-            bottom: 15px; 
+            bottom: 20px; 
             left: 50%; 
             transform: translateX(-50%);
             background-color: #ffffff !important; 
-            background: #ffffff !important;
-            padding: 6px 18px; 
+            padding: 8px 22px; 
             border-radius: 10px;
             text-align: center; 
             display: flex; 
             flex-direction: column; 
             align-items: center; 
+            justify-content: center;
             gap: 2px;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.12); 
-            border: 1px solid #dcdcdc; 
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1); 
+            border: 1px solid #e0e0e0; 
             z-index: 10;
-            width: auto !important; 
             white-space: nowrap;
         }
 
@@ -323,9 +317,9 @@
 
         .ig-center-brand {
             position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
-            color: #ffffff !important; font-size: 30px; font-weight: 900;
-            padding: 10px 32px; border-radius: 18px; text-transform: uppercase; letter-spacing: 1px; z-index: 20;
-            text-align: center; box-shadow: 0 6px 20px rgba(0,0,0,0.2); opacity: 1 !important;
+            color: #ffffff !important; font-size: 28px; font-weight: 900;
+            padding: 10px 30px; border-radius: 16px; text-transform: uppercase; letter-spacing: 1px; z-index: 20;
+            text-align: center; box-shadow: 0 6px 20px rgba(0,0,0,0.25);
         }
     </style>
 </head>
@@ -397,12 +391,12 @@
 
 <!-- 隱藏截圖畫布容器 -->
 <div id="renderCanvasHidden">
-    <div class="ig-poster-1350" id="igPostTemplate">
+    <div class="ig-poster-1350" id="igPostTemplate" style="background-color: #ffffff !important;">
         <div class="ig-center-brand" id="igBrandTag">BRAND</div>
-        <div class="ig-grid-item" id="igCell0"></div>
-        <div class="ig-grid-item" id="igCell1"></div>
-        <div class="ig-grid-item" id="igCell2"></div>
-        <div class="ig-grid-item" id="igCell3"></div>
+        <div class="ig-grid-item" id="igCell0" style="background-color: #ffffff !important;"></div>
+        <div class="ig-grid-item" id="igCell1" style="background-color: #ffffff !important;"></div>
+        <div class="ig-grid-item" id="igCell2" style="background-color: #ffffff !important;"></div>
+        <div class="ig-grid-item" id="igCell3" style="background-color: #ffffff !important;"></div>
     </div>
 </div>
 
@@ -689,22 +683,30 @@ async function generateAllIGPosters() {
                     const d1Str = formatEndDate(item['Price 1 Date']);
                     const d2Str = item['Price 2 Date'] ? `(${item['Price 2 Date'].trim()})` : '';
 
-                    let priceHtml = `<div class="ig-price-line highlight">$${p1} ${d1Str}</div>`;
+                    let priceHtml = `<div class="ig-price-line highlight" style="color:#E11D48 !important; font-size:24px; font-weight:900;">$${p1} ${d1Str}</div>`;
                     if (p2) {
-                        priceHtml += `<div class="ig-price-line sub">$${p2} ${d2Str}</div>`;
+                        priceHtml += `<div class="ig-price-line sub" style="color:#475569 !important; font-size:18px; font-weight:700;">$${p2} ${d2Str}</div>`;
                     }
 
+                    /* 使用 Inline Style 強制鎖定背景純白，防止 html2canvas 繪製透明底色 */
                     cell.innerHTML = `
-                        <img src="${item['Image'] || ''}" crossorigin="anonymous" onerror="this.src='https://placehold.co/500x500?text=No+Image'">
-                        <div class="ig-tag-title" style="background-color: #ffffff !important; background: #ffffff !important;">${name}</div>
-                        <div class="ig-tag-price-box" style="background-color: #ffffff !important; background: #ffffff !important;">${priceHtml}</div>
+                        <img src="${item['Image'] || ''}" crossorigin="anonymous" style="max-width: 82% !important; max-height: 65% !important; width: auto !important; height: auto !important; object-fit: contain !important; display: block; margin: auto;" onerror="this.src='https://placehold.co/500x500?text=No+Image'">
+                        <div class="ig-tag-title" style="background-color: #ffffff !important; background: #ffffff !important; color: #000000 !important; border: 1px solid #dcdcdc;">${name}</div>
+                        <div class="ig-tag-price-box" style="background-color: #ffffff !important; background: #ffffff !important; border: 1px solid #dcdcdc;">${priceHtml}</div>
                     `;
                 }
             }
 
             await new Promise(r => setTimeout(r, 400));
             const target = document.getElementById("igPostTemplate");
-            const canvas = await html2canvas(target, { useCORS: true, scale: 1, backgroundColor: "#ffffff" });
+            
+            /* html2canvas 強制設定純白底 */
+            const canvas = await html2canvas(target, { 
+                useCORS: true, 
+                scale: 1, 
+                backgroundColor: "#ffffff",
+                logging: false
+            });
             
             const link = document.createElement("a");
             link.download = `${bName.replace(/\s+/g, '_')}_Part${page}_IG_1080x1350.png`;
