@@ -564,7 +564,6 @@
             box-shadow: 0 18px 45px rgba(0, 0, 0, 0.24);
         }
 
-        /* 讓關閉按鈕在大圖捲動時持續釘在右上角 */
         .close-btn {
             position: sticky;
             top: 0;
@@ -587,16 +586,22 @@
             line-height: 1;
         }
 
-        /* Modal 內的圖片樣式（自動按比例縮放） */
+        /* 詳情無縫拼接長圖容器與圖片設定 */
+        #modalImgBox {
+            display: flex;
+            flex-direction: column;
+            width: 100%;
+            margin-bottom: 15px;
+            gap: 0 !important;
+        }
+
         .modal-detail-img {
             display: block;
-            width: auto;
-            max-width: 100%;
-            max-height: 70vh;
-            margin: 0 auto;
-            object-fit: contain;
-            border-radius: 12px;
-            border: 1px solid #E2E8F0;
+            width: 100%;
+            height: auto;
+            margin: 0;
+            padding: 0;
+            border: none;
         }
 
         /* ===== IG POSTER: 1080 x 1350 ===== */
@@ -764,7 +769,7 @@
                 src="logo.png"
                 alt="Korlection Logo"
                 class="korlection-logo"
-                onerror="this.src='logo.jpg';"
+                onerror="this.style.display='none';"
             >
 
             <div class="title-container">
@@ -776,6 +781,7 @@
                     src="https://flagcdn.com/w80/kr.png"
                     alt="韓國"
                     class="subtitle-flag"
+                    onerror="this.style.display='none';"
                 >
                 <span>韓國9月份代購</span>
             </div>
@@ -792,7 +798,7 @@
                     src="daiso_logo.png"
                     alt="Daiso Logo"
                     class="daiso-logo"
-                    onerror="this.src='daisologo.jpg';"
+                    onerror="this.style.display='none';"
                 >
             </div>
         </div>
@@ -894,8 +900,8 @@
 
             <h2 id="modalTitle" style="font-size:18px; margin:5px 0 15px; color:#182033;"></h2>
 
-            <!-- 詳情圖片渲染區 -->
-            <div id="modalImgBox" style="display:flex; flex-direction:column; gap:16px; margin-bottom:15px; align-items:center;"></div>
+            <!-- 詳情無縫圖片渲染區 -->
+            <div id="modalImgBox"></div>
 
             <div
                 id="modalPrices"
@@ -1072,7 +1078,6 @@
             );
         }
 
-        // 解析 Character 欄位，同時相容 Cinamoroll / Cinnamoroll
         function getCharacterList(value) {
             return String(value || "")
                 .split(/[\/\,\;]/)
@@ -1496,7 +1501,7 @@
                             src="${escapeHtml(image)}"
                             alt="${escapeHtml(name)}"
                             referrerpolicy="no-referrer"
-                            onerror="this.onerror=null; this.src='https://placehold.co/300x300?text=No+Image';"
+                            onerror="this.style.display='none';"
                         >
                     </div>
 
@@ -1514,7 +1519,6 @@
             });
         }
 
-        // 開啟 Modal 並且加入自動縮放的 CSS Class
         function openModal(brand, name, imageString, price1, price2, date1, date2, character) {
             const imgBox = document.getElementById("modalImgBox");
             imgBox.innerHTML = "";
@@ -1524,17 +1528,12 @@
                 .map(url => url.trim())
                 .filter(Boolean);
 
-            if (imgList.length === 0) {
-                imgList.push("https://placehold.co/500x500?text=No+Image");
-            }
-
             imgList.forEach(function(src) {
                 const img = document.createElement("img");
                 img.src = src;
                 img.className = "modal-detail-img";
                 img.onerror = function() {
-                    this.onerror = null;
-                    this.src = "https://placehold.co/500x500?text=No+Image";
+                    this.style.display = "none";
                 };
                 imgBox.appendChild(img);
             });
@@ -1659,7 +1658,7 @@
                                     display:block;
                                     margin:auto;
                                 "
-                                onerror="this.onerror=null; this.src='https://placehold.co/500x500?text=No+Image';"
+                                onerror="this.style.display='none';"
                             >
 
                             <div
