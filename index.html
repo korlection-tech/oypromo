@@ -960,21 +960,6 @@
 
         document.addEventListener("DOMContentLoaded", function() {
             loadProductCsv();
-
-            const searchInput = document.getElementById("searchInput");
-            
-            // 實時輸入搜尋
-            searchInput.addEventListener("input", function() {
-                performSearch();
-            });
-
-            // 按 Enter 鍵直接執行搜尋（避免 Enter 觸發預設換行）
-            searchInput.addEventListener("keydown", function(event) {
-                if (event.key === "Enter") {
-                    event.preventDefault();
-                    performSearch();
-                }
-            });
         });
 
         function loadProductCsv() {
