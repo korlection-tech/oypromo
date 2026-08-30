@@ -555,7 +555,7 @@
         .modal-content {
             position: relative;
             width: 90%;
-            max-width: 550px;
+            max-width: 580px;
             max-height: 85vh;
             padding: 25px;
             overflow-y: auto;
@@ -564,21 +564,39 @@
             box-shadow: 0 18px 45px rgba(0, 0, 0, 0.24);
         }
 
+        /* 讓關閉按鈕在大圖捲動時持續釘在右上角 */
         .close-btn {
-            position: absolute;
-            top: 15px;
-            right: 15px;
+            position: sticky;
+            top: 0;
+            float: right;
+            z-index: 100;
             display: flex;
             align-items: center;
             justify-content: center;
             width: 36px;
             height: 36px;
+            margin-top: -10px;
+            margin-right: -10px;
             border: none;
             border-radius: 50%;
             cursor: pointer;
             color: #666;
             background: #f1f5f9;
-            font-size: 28px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+            font-size: 26px;
+            line-height: 1;
+        }
+
+        /* Modal 內的圖片樣式（自動按比例縮放） */
+        .modal-detail-img {
+            display: block;
+            width: auto;
+            max-width: 100%;
+            max-height: 70vh;
+            margin: 0 auto;
+            object-fit: contain;
+            border-radius: 12px;
+            border: 1px solid #E2E8F0;
         }
 
         /* ===== IG POSTER: 1080 x 1350 ===== */
@@ -877,7 +895,7 @@
             <h2 id="modalTitle" style="font-size:18px; margin:5px 0 15px; color:#182033;"></h2>
 
             <!-- 詳情圖片渲染區 -->
-            <div id="modalImgBox" style="display:flex; flex-direction:column; gap:12px; margin-bottom:15px;"></div>
+            <div id="modalImgBox" style="display:flex; flex-direction:column; gap:16px; margin-bottom:15px; align-items:center;"></div>
 
             <div
                 id="modalPrices"
@@ -989,7 +1007,7 @@
                     statusMessage.innerHTML = `
                         <strong>無法讀取 olive_pricelist.csv。</strong><br><br>
                         請確認檔案已 upload 至 GitHub repository 根目錄，並已 commit / push。<br>
-                        HTML 與 CSV 必須位於同一層資料夾。
+                        HTML 與 CSV 預設位於同一層資料夾。
                     `;
                 }
             });
@@ -1044,7 +1062,6 @@
             );
         }
 
-        // 相容不同 Header 拼法的 詳情圖片讀取
         function getDetailImageValue(product) {
             return normalizeText(
                 product["Detail Image"] ||
@@ -1055,11 +1072,14 @@
             );
         }
 
+        // 解析 Character 欄位，同時相容 Cinamoroll / Cinnamoroll
         function getCharacterList(value) {
             return String(value || "")
                 .split(/[\/\,\;]/)
                 .map(function(character) {
-                    return character.trim().toLowerCase();
+                    let charLower = character.trim().toLowerCase();
+                    if (charLower === "cinamoroll") return "cinnamoroll";
+                    return charLower;
                 })
                 .filter(Boolean);
         }
@@ -1078,7 +1098,6 @@
             return ["y", "yes", "1", "true"].includes(normalizeLower(value));
         }
 
-        // 判斷是否屬於 Featured 精選商品（容錯支援 Fetured 拼錯）
         function isFeaturedProduct(product) {
             const val = product["Featured"] || product["featured"] || product["Fetured"] || product["fetured"];
             return isTrueValue(val);
@@ -1216,7 +1235,7 @@
                 const storeMatch = getStoreValue(product) === currentStore;
                 const categoryMatch = selectedCategories.includes("all") || selectedCategories.some(cat => categoryMatches(product, cat));
                 const characters = getCharacterList(product["Character"] || product["character"]);
-                const characterMatch = selectedCharacter === "all" || characters.includes(selectedCharacter);
+                const characterMatch = selectedCharacter === "all" || characters.some(c => c.includes(selectedCharacter));
 
                 return storeMatch && categoryMatch && characterMatch;
             });
@@ -1275,7 +1294,6 @@
                     return false;
                 }
 
-                // 一進網站首頁，預設僅顯示 Featured 精選商品
                 if (isDefaultState && selectedCategories.includes("all") && selectedCharacter === "all" && selectedBrand === "all") {
                     if (featuredExists) {
                         return isFeaturedProduct(product);
@@ -1290,7 +1308,8 @@
 
                 if (selectedCharacter !== "all") {
                     const productCharacters = getCharacterList(product["Character"] || product["character"]);
-                    if (!productCharacters.includes(selectedCharacter)) {
+                    const charMatch = productCharacters.some(c => c.includes(selectedCharacter) || selectedCharacter.includes(c));
+                    if (!charMatch) {
                         return false;
                     }
                 }
@@ -1495,12 +1514,11 @@
             });
         }
 
-        // 開啟 Modal 並支援多張 Detail Picture 顯示
+        // 開啟 Modal 並且加入自動縮放的 CSS Class
         function openModal(brand, name, imageString, price1, price2, date1, date2, character) {
             const imgBox = document.getElementById("modalImgBox");
             imgBox.innerHTML = "";
 
-            // 支援分割逗號或分號分隔的多張圖片網址
             const imgList = String(imageString || "")
                 .split(/[\,\;]/)
                 .map(url => url.trim())
@@ -1513,11 +1531,7 @@
             imgList.forEach(function(src) {
                 const img = document.createElement("img");
                 img.src = src;
-                img.style.width = "100%";
-                img.style.maxHeight = "400px";
-                img.style.objectFit = "contain";
-                img.style.borderRadius = "10px";
-                img.style.border = "1px solid #E2E8F0";
+                img.className = "modal-detail-img";
                 img.onerror = function() {
                     this.onerror = null;
                     this.src = "https://placehold.co/500x500?text=No+Image";
