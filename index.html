@@ -14,6 +14,7 @@
             --pink: #ff4f91;
             --ink: #182033;
             --muted: #64748b;
+            --white: #ffffff;
         }
 
         * {
@@ -279,6 +280,14 @@
             background: rgba(255, 255, 255, 0.90);
         }
 
+        .filter-label {
+            width: 100%;
+            margin-bottom: 2px;
+            color: #59677e;
+            font-size: 12px;
+            font-weight: 800;
+        }
+
         .character-chip {
             padding: 7px 14px;
             border: 1px solid #f1b7ce;
@@ -432,11 +441,13 @@
             width: 100%;
             height: 180px;
             margin-bottom: 12px;
+            overflow: hidden;
             border-radius: 12px;
-            background: linear-gradient(145deg, #fafcff, #f4f7fc);
+            background: #fafcff;
         }
 
         .card img {
+            display: block;
             max-width: 100%;
             max-height: 100%;
             object-fit: contain;
@@ -451,6 +462,7 @@
         }
 
         .brand-badge {
+            max-width: 62%;
             padding: 4px 8px;
             overflow: hidden;
             border-radius: 6px;
@@ -569,7 +581,7 @@
             font-size: 28px;
         }
 
-        /* ===== IG POSTER: 1080px x 1350px ===== */
+        /* ===== IG POSTER: 1080 x 1350 ===== */
 
         #renderCanvasHidden {
             position: absolute;
@@ -618,23 +630,18 @@
             left: 20px;
             right: 20px;
             z-index: 10;
-
             display: -webkit-box;
             overflow: hidden;
             padding: 11px 14px;
-
             color: #000 !important;
             background-color: #fff !important;
-
             border: 0 !important;
             border-radius: 0 !important;
             box-shadow: none !important;
             opacity: 1 !important;
-
             font-size: 20px;
             font-weight: 800;
             line-height: 1.28;
-
             -webkit-box-orient: vertical;
             -webkit-line-clamp: 2;
         }
@@ -644,23 +651,18 @@
             bottom: 20px;
             left: 50%;
             z-index: 10;
-
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: center;
             gap: 2px;
-
             padding: 9px 22px;
-
             color: #000 !important;
             background-color: #fff !important;
-
             border: 0 !important;
             border-radius: 0 !important;
             box-shadow: none !important;
             opacity: 1 !important;
-
             transform: translateX(-50%);
             text-align: center;
             white-space: nowrap;
@@ -685,20 +687,14 @@
             top: 50%;
             left: 50%;
             z-index: 20;
-
             padding: 10px 30px;
-
             border: 0 !important;
             border-radius: 16px;
-
             transform: translate(-50%, -50%);
-
             color: #fff !important;
             background-color: #e98fa3 !important;
-
             box-shadow: none !important;
             opacity: 1 !important;
-
             font-size: 28px;
             font-weight: 900;
             letter-spacing: 1px;
@@ -808,48 +804,21 @@
         <div class="category-section">
             <div class="category-title">
                 <span>Category</span>
-
                 <span style="font-size:12px; color:#64748B; font-weight:normal;">
                     可選多個分類
                 </span>
             </div>
 
             <div class="category-tabs" id="categoryTabs">
-                <div class="cat-btn selected" data-cat="all" onclick="toggleCategory('all')">
-                    All
-                </div>
-
-                <div class="cat-btn" data-cat="cosmetics" onclick="toggleCategory('cosmetics')">
-                    Cosmetics
-                </div>
-
-                <div class="cat-btn" data-cat="skincare" onclick="toggleCategory('skincare')">
-                    Skincare
-                </div>
-
-                <div class="cat-btn" data-cat="bodycare" onclick="toggleCategory('bodycare')">
-                    Bodycare
-                </div>
-
-                <div class="cat-btn" data-cat="haircare" onclick="toggleCategory('haircare')">
-                    Haircare
-                </div>
-
-                <div class="cat-btn" data-cat="supplement" onclick="toggleCategory('supplement')">
-                    Supplement
-                </div>
-
-                <div class="cat-btn" data-cat="snacks" onclick="toggleCategory('snacks')">
-                    Snacks
-                </div>
-
-                <div class="cat-btn" data-cat="sanrio專區" onclick="toggleCategory('sanrio專區')">
-                    Sanrio專區
-                </div>
-
-                <div class="cat-btn" data-cat="others & grocery" onclick="toggleCategory('others & grocery')">
-                    Others &amp; Grocery
-                </div>
+                <div class="cat-btn selected" data-cat="all" onclick="toggleCategory('all')">All</div>
+                <div class="cat-btn" data-cat="cosmetics" onclick="toggleCategory('cosmetics')">Cosmetics</div>
+                <div class="cat-btn" data-cat="skincare" onclick="toggleCategory('skincare')">Skincare</div>
+                <div class="cat-btn" data-cat="bodycare" onclick="toggleCategory('bodycare')">Bodycare</div>
+                <div class="cat-btn" data-cat="haircare" onclick="toggleCategory('haircare')">Haircare</div>
+                <div class="cat-btn" data-cat="supplement" onclick="toggleCategory('supplement')">Supplement</div>
+                <div class="cat-btn" data-cat="snacks" onclick="toggleCategory('snacks')">Snacks</div>
+                <div class="cat-btn" data-cat="sanrio" onclick="toggleCategory('sanrio')">Sanrio專區</div>
+                <div class="cat-btn" data-cat="others & grocery" onclick="toggleCategory('others & grocery')">Others &amp; Grocery</div>
             </div>
 
             <div class="character-filter-box" id="characterFilterBox"></div>
@@ -923,7 +892,6 @@
     <div id="renderCanvasHidden">
         <div class="ig-poster-1350" id="igPostTemplate">
             <div class="ig-center-brand" id="igBrandTag">BRAND</div>
-
             <div class="ig-grid-item" id="igCell0"></div>
             <div class="ig-grid-item" id="igCell1"></div>
             <div class="ig-grid-item" id="igCell2"></div>
@@ -937,6 +905,7 @@
         let selectedCategories = ["all"];
         let selectedBrand = "all";
         let selectedCharacter = "all";
+        let isDefaultState = true;
 
         const sanrioCharacters = [
             "Hello Kitty",
@@ -955,7 +924,7 @@
             haircare: "#9B51E0",
             supplement: "#F2994A",
             snacks: "#F2C94C",
-            "sanrio專區": "#F36FA8",
+            sanrio: "#F36FA8",
             "others & grocery": "#F2B84B",
             default: "#E98FA3"
         };
@@ -983,26 +952,33 @@
             searchButton.disabled = true;
             searchButton.innerText = "載入中……";
 
-            const cacheBuster = "?v=" + new Date().getTime();
-
-            Papa.parse("olive_pricelist.csv" + cacheBuster, {
+            Papa.parse("olive_pricelist.csv?v=" + Date.now(), {
                 download: true,
                 header: true,
                 skipEmptyLines: true,
                 delimiter: "",
 
                 complete: function(results) {
-                    console.log("CSV 成功讀取：", results.data);
-                    console.log("CSV errors：", results.errors);
+                    console.log("CSV 資料：", results.data);
+                    console.log("CSV 格式警告：", results.errors);
 
-                    productsData = (results.data || []).filter(function(product) {
-                        return Object.values(product).some(function(value) {
-                            return String(value || "").trim() !== "";
+                    productsData = (results.data || [])
+                        .map(normalizeCsvRow)
+                        .filter(function(product) {
+                            return Object.values(product).some(function(value) {
+                                return String(value || "").trim() !== "";
+                            });
                         });
-                    });
+
+                    if (productsData.length === 0) {
+                        statusMessage.className = "status-message status-error";
+                        statusMessage.innerHTML =
+                            "<strong>CSV 已讀取，但未找到產品資料。</strong><br>" +
+                            "請確認 CSV 第一行是欄位名稱，第二行起才是商品資料。";
+                        return;
+                    }
 
                     statusMessage.style.display = "none";
-
                     searchButton.disabled = false;
                     searchButton.innerText = "搜尋商品";
 
@@ -1018,13 +994,25 @@
                     statusMessage.className = "status-message status-error";
                     statusMessage.innerHTML = `
                         <strong>無法讀取 olive_pricelist.csv。</strong><br><br>
-                        請檢查：<br>
-                        1. 檔名必須完全是 olive_pricelist.csv<br>
-                        2. CSV 與 index.html 要放在同一個 folder<br>
-                        3. 請用 Live Server / localhost 開啟，而不是 file:/// 模式
+                        請確認檔案已 upload 至 GitHub repository 根目錄，並已 commit / push。<br>
+                        HTML 與 CSV 必須位於同一層資料夾。
                     `;
                 }
             });
+        }
+
+        function normalizeCsvRow(row) {
+            const cleaned = {};
+
+            Object.keys(row).forEach(function(key) {
+                const cleanKey = String(key || "")
+                    .replace(/^\uFEFF/, "")
+                    .trim();
+
+                cleaned[cleanKey] = row[key];
+            });
+
+            return cleaned;
         }
 
         function normalizeText(value) {
@@ -1033,6 +1021,47 @@
 
         function normalizeLower(value) {
             return normalizeText(value).toLowerCase();
+        }
+
+        function getStoreValue(product) {
+            return normalizeLower(product["Store"] || product["store"]);
+        }
+
+        function getCategoryValue(product) {
+            return normalizeLower(product["Category"] || product["category"]);
+        }
+
+        function getBrandValue(product) {
+            return normalizeText(product["Brand"] || product["brand"] || "K-BEAUTY");
+        }
+
+        function getProductNameValue(product) {
+            return normalizeText(
+                product["Product Name"] ||
+                product["ProductName"] ||
+                product["Name"] ||
+                product["name"] ||
+                "無品名"
+            );
+        }
+
+        function getImageValue(product) {
+            return normalizeText(
+                product["Image"] ||
+                product["Image URL"] ||
+                product["ImageURL"] ||
+                product["image"] ||
+                ""
+            );
+        }
+
+        function getDetailImageValue(product) {
+            return normalizeText(
+                product["Detail Image"] ||
+                product["DetailImage"] ||
+                product["Detail Image URL"] ||
+                getImageValue(product)
+            );
         }
 
         function getCharacterList(value) {
@@ -1046,12 +1075,47 @@
                 });
         }
 
+        function getCharacterDisplay(value) {
+            return String(value || "")
+                .split("/")
+                .map(function(character) {
+                    return character.trim();
+                })
+                .filter(Boolean)
+                .join(" / ");
+        }
+
         function isTrueValue(value) {
             return ["y", "yes", "1", "true"].includes(normalizeLower(value));
         }
 
+        function isSanrioProduct(product) {
+            const category = getCategoryValue(product);
+
+            return (
+                category === "sanrio" ||
+                category === "sanrio專區" ||
+                category === "sanrio专区" ||
+                category.includes("sanrio")
+            );
+        }
+
+        function categoryMatches(product, selectedCategory) {
+            const category = getCategoryValue(product);
+
+            if (selectedCategory === "sanrio") {
+                return isSanrioProduct(product);
+            }
+
+            return category === selectedCategory;
+        }
+
         function switchStore(store) {
             currentStore = store;
+            isDefaultState = true;
+            selectedCategories = ["all"];
+            selectedBrand = "all";
+            selectedCharacter = "all";
 
             document
                 .getElementById("tabOlive")
@@ -1061,15 +1125,15 @@
                 .getElementById("tabDaiso")
                 .classList.toggle("active", store === "daiso");
 
-            selectedBrand = "all";
-            selectedCharacter = "all";
-
+            refreshCategoryButtons();
             updateCharacterChips();
             updateBrandChips();
             applyFilter();
         }
 
         function toggleCategory(category) {
+            isDefaultState = false;
+
             if (category === "all") {
                 selectedCategories = ["all"];
             } else {
@@ -1087,9 +1151,20 @@
 
                 if (selectedCategories.length === 0) {
                     selectedCategories = ["all"];
+                    isDefaultState = true;
                 }
             }
 
+            selectedCharacter = "all";
+            selectedBrand = "all";
+
+            refreshCategoryButtons();
+            updateCharacterChips();
+            updateBrandChips();
+            applyFilter();
+        }
+
+        function refreshCategoryButtons() {
             document.querySelectorAll("#categoryTabs .cat-btn").forEach(function(button) {
                 const categoryName = button.getAttribute("data-cat");
 
@@ -1098,17 +1173,10 @@
                     selectedCategories.includes(categoryName)
                 );
             });
-
-            selectedCharacter = "all";
-            selectedBrand = "all";
-
-            updateCharacterChips();
-            updateBrandChips();
-            applyFilter();
         }
 
         function isSanrioCategorySelected() {
-            return selectedCategories.includes("sanrio專區");
+            return selectedCategories.includes("sanrio");
         }
 
         function updateCharacterChips() {
@@ -1123,28 +1191,40 @@
 
             box.style.display = "flex";
 
-            const allChip = document.createElement("div");
+            const label = document.createElement("div");
+            label.className = "filter-label";
+            label.innerText = "Character";
+            box.appendChild(label);
 
+            const availableCharacters = sanrioCharacters.filter(function(characterName) {
+                const targetCharacter = characterName.toLowerCase();
+
+                return productsData.some(function(product) {
+                    return (
+                        getStoreValue(product) === currentStore &&
+                        isSanrioProduct(product) &&
+                        getCharacterList(product["Character"] || product["character"])
+                            .includes(targetCharacter)
+                    );
+                });
+            });
+
+            const allChip = document.createElement("div");
             allChip.className = "character-chip active";
             allChip.innerText = "All Characters";
 
             allChip.onclick = function() {
                 selectedCharacter = "all";
-
-                document.querySelectorAll(".character-chip").forEach(function(chip) {
-                    chip.classList.remove("active");
-                });
-
-                allChip.classList.add("active");
-
                 selectedBrand = "all";
+
+                updateCharacterChips();
                 updateBrandChips();
                 applyFilter();
             };
 
             box.appendChild(allChip);
 
-            sanrioCharacters.forEach(function(characterName) {
+            availableCharacters.forEach(function(characterName) {
                 const chip = document.createElement("div");
 
                 chip.className = "character-chip";
@@ -1152,17 +1232,17 @@
 
                 chip.onclick = function() {
                     selectedCharacter = characterName.toLowerCase();
-
-                    document.querySelectorAll(".character-chip").forEach(function(item) {
-                        item.classList.remove("active");
-                    });
-
-                    chip.classList.add("active");
-
                     selectedBrand = "all";
+
+                    updateCharacterChips();
                     updateBrandChips();
                     applyFilter();
                 };
+
+                if (selectedCharacter === characterName.toLowerCase()) {
+                    chip.classList.add("active");
+                    allChip.classList.remove("active");
+                }
 
                 box.appendChild(chip);
             });
@@ -1179,29 +1259,26 @@
             }
 
             const filteredProducts = productsData.filter(function(product) {
-                const storeMatch =
-                    normalizeLower(product["Store"]) === currentStore;
+                const storeMatch = getStoreValue(product) === currentStore;
 
-                const categoryMatch =
-                    selectedCategories.includes(
-                        normalizeLower(product["Category"])
-                    );
+                const categoryMatch = selectedCategories.some(function(category) {
+                    return categoryMatches(product, category);
+                });
 
-                const productCharacters =
-                    getCharacterList(product["Character"]);
+                const characters = getCharacterList(
+                    product["Character"] || product["character"]
+                );
 
                 const characterMatch =
                     selectedCharacter === "all" ||
-                    productCharacters.includes(selectedCharacter);
+                    characters.includes(selectedCharacter);
 
                 return storeMatch && categoryMatch && characterMatch;
             });
 
             const brands = [...new Set(
                 filteredProducts
-                    .map(function(product) {
-                        return normalizeText(product["Brand"]);
-                    })
+                    .map(getBrandValue)
                     .filter(Boolean)
             )];
 
@@ -1212,20 +1289,18 @@
 
             box.style.display = "flex";
 
-            const allChip = document.createElement("div");
+            const label = document.createElement("div");
+            label.className = "filter-label";
+            label.innerText = "Brand";
+            box.appendChild(label);
 
+            const allChip = document.createElement("div");
             allChip.className = "brand-chip active";
             allChip.innerText = "All Brands";
 
             allChip.onclick = function() {
                 selectedBrand = "all";
-
-                document.querySelectorAll(".brand-chip").forEach(function(chip) {
-                    chip.classList.remove("active");
-                });
-
-                allChip.classList.add("active");
-
+                updateBrandChips();
                 applyFilter();
             };
 
@@ -1239,37 +1314,58 @@
 
                 chip.onclick = function() {
                     selectedBrand = brand.toLowerCase();
-
-                    document.querySelectorAll(".brand-chip").forEach(function(item) {
-                        item.classList.remove("active");
-                    });
-
-                    chip.classList.add("active");
-
+                    updateBrandChips();
                     applyFilter();
                 };
+
+                if (selectedBrand === brand.toLowerCase()) {
+                    chip.classList.add("active");
+                    allChip.classList.remove("active");
+                }
 
                 box.appendChild(chip);
             });
         }
 
+        function hasAnyFeaturedProduct(store) {
+            return productsData.some(function(product) {
+                return (
+                    getStoreValue(product) === store &&
+                    isTrueValue(product["Featured"] || product["featured"])
+                );
+            });
+        }
+
         function getFilteredProducts() {
+            const featuredExists = hasAnyFeaturedProduct(currentStore);
+
             return productsData.filter(function(product) {
-                if (normalizeLower(product["Store"]) !== currentStore) {
+                if (getStoreValue(product) !== currentStore) {
                     return false;
                 }
 
-                if (!selectedCategories.includes("all")) {
-                    const productCategory = normalizeLower(product["Category"]);
+                if (isDefaultState && selectedCategories.includes("all")) {
+                    if (featuredExists) {
+                        return isTrueValue(product["Featured"] || product["featured"]);
+                    }
 
-                    if (!selectedCategories.includes(productCategory)) {
+                    return true;
+                }
+
+                if (!selectedCategories.includes("all")) {
+                    const categoryMatch = selectedCategories.some(function(category) {
+                        return categoryMatches(product, category);
+                    });
+
+                    if (!categoryMatch) {
                         return false;
                     }
                 }
 
                 if (selectedCharacter !== "all") {
-                    const productCharacters =
-                        getCharacterList(product["Character"]);
+                    const productCharacters = getCharacterList(
+                        product["Character"] || product["character"]
+                    );
 
                     if (!productCharacters.includes(selectedCharacter)) {
                         return false;
@@ -1277,7 +1373,7 @@
                 }
 
                 if (selectedBrand !== "all") {
-                    if (normalizeLower(product["Brand"]) !== selectedBrand) {
+                    if (normalizeLower(getBrandValue(product)) !== selectedBrand) {
                         return false;
                     }
                 }
@@ -1289,8 +1385,14 @@
         function applyFilter() {
             const filteredProducts = getFilteredProducts();
 
-            document.getElementById("resultsCount").innerText =
-                `共 ${filteredProducts.length} 件商品`;
+            const isFeaturedHome =
+                isDefaultState &&
+                selectedCategories.includes("all") &&
+                hasAnyFeaturedProduct(currentStore);
+
+            document.getElementById("resultsCount").innerText = isFeaturedHome
+                ? `⭐ Featured 商品：共 ${filteredProducts.length} 件`
+                : `共 ${filteredProducts.length} 件商品`;
 
             renderGrid(filteredProducts);
         }
@@ -1301,21 +1403,33 @@
             );
 
             if (!keywordText) {
+                isDefaultState = false;
+                selectedCategories = ["all"];
+                selectedBrand = "all";
+                selectedCharacter = "all";
+
+                refreshCategoryButtons();
+                updateCharacterChips();
+                updateBrandChips();
                 applyFilter();
                 return;
             }
 
+            isDefaultState = false;
+
             const keywords = keywordText.split(/\s+/).filter(Boolean);
 
             const filteredProducts = productsData.filter(function(product) {
-                if (normalizeLower(product["Store"]) !== currentStore) {
+                if (getStoreValue(product) !== currentStore) {
                     return false;
                 }
 
-                const brand = normalizeLower(product["Brand"]);
-                const name = normalizeLower(product["Product Name"]);
-                const character = normalizeLower(product["Character"]);
-                const category = normalizeLower(product["Category"]);
+                const brand = normalizeLower(getBrandValue(product));
+                const name = normalizeLower(getProductNameValue(product));
+                const character = normalizeLower(
+                    product["Character"] || product["character"]
+                );
+                const category = getCategoryValue(product);
 
                 return keywords.every(function(keyword) {
                     return (
@@ -1333,6 +1447,10 @@
             renderGrid(filteredProducts);
         }
 
+        /*
+         * CSV 日期格式使用 日/月 或 日/月/年。
+         * 例：5/9 代表 9 月 5 日，而不是 5 月 9 日。
+         */
         function parseCsvDate(value) {
             if (!value) {
                 return null;
@@ -1351,19 +1469,19 @@
                 );
             }
 
-            match = text.match(/^(\d{1,2})\/(\d{1,2})$/);
+            match = text.match(/^(\d{1,2})\/(\d{1,2})(?:\/(\d{4}))?$/);
 
             if (match) {
-                return new Date(
-                    new Date().getFullYear(),
-                    Number(match[1]) - 1,
-                    Number(match[2])
-                );
+                const day = Number(match[1]);
+                const month = Number(match[2]);
+                const year = match[3]
+                    ? Number(match[3])
+                    : new Date().getFullYear();
+
+                return new Date(year, month - 1, day);
             }
 
-            const parsedDate = new Date(text);
-
-            return Number.isNaN(parsedDate.getTime()) ? null : parsedDate;
+            return null;
         }
 
         function formatSaleDate(date) {
@@ -1376,9 +1494,7 @@
 
         function nextDay(date) {
             const result = new Date(date);
-
             result.setDate(result.getDate() + 1);
-
             return result;
         }
 
@@ -1395,46 +1511,54 @@
             };
         }
 
+        function escapeHtml(value) {
+            return String(value || "")
+                .replace(/&/g, "&amp;")
+                .replace(/</g, "&lt;")
+                .replace(/>/g, "&gt;")
+                .replace(/"/g, "&quot;")
+                .replace(/'/g, "&#039;");
+        }
+
         function renderGrid(list) {
             const grid = document.getElementById("resultsGrid");
-
             grid.innerHTML = "";
 
             if (list.length === 0) {
                 grid.innerHTML = `
-                    <div style="grid-column:1/-1; text-align:center; color:#94A3B8; padding:40px;">
+                    <div style="grid-column:1/-1; text-align:center; color:#64748B; padding:40px;">
                         未有符合目前篩選條件的商品。
                     </div>
                 `;
-
                 return;
             }
 
             list.forEach(function(item) {
-                const brand = item["Brand"] || "K-BEAUTY";
-                const name = item["Product Name"] || "無品名";
-                const category = item["Category"] || "";
-                const character = item["Character"] || "";
+                const brand = getBrandValue(item);
+                const name = getProductNameValue(item);
+                const category = normalizeText(item["Category"] || item["category"]);
+                const character = getCharacterDisplay(
+                    item["Character"] || item["character"]
+                );
 
                 const price1 =
-                    item["Price 1 (HKD)"] ||
-                    item["Price (HKD)"] ||
+                    normalizeText(item["Price 1 (HKD)"]) ||
+                    normalizeText(item["Price (HKD)"]) ||
                     "未定價";
 
-                const price2 = item["Price 2 (HKD)"] || "";
-                const image = item["Image"] || "";
-
+                const price2 = normalizeText(item["Price 2 (HKD)"]);
+                const image = getImageValue(item);
+                const detailImage = getDetailImageValue(item);
                 const validity = buildValidityText(item);
 
                 const card = document.createElement("div");
-
                 card.className = "card";
 
                 card.onclick = function() {
                     openModal(
                         brand,
                         name,
-                        item["Detail Image"] || image,
+                        detailImage,
                         price1,
                         price2,
                         item["Price 1 Date"],
@@ -1445,26 +1569,16 @@
 
                 let priceHtml = `
                     <div class="price-row p1">
-                        <span class="date-label">
-                            ${validity.price1Text || "優惠價"}
-                        </span>
-
-                        <span class="price-val">
-                            HKD $${price1}
-                        </span>
+                        <span class="date-label">${escapeHtml(validity.price1Text || "優惠價")}</span>
+                        <span class="price-val">HKD $${escapeHtml(price1)}</span>
                     </div>
                 `;
 
-                if (price2 && String(price2).trim() !== "") {
+                if (price2) {
                     priceHtml += `
                         <div class="price-row p2">
-                            <span class="date-label">
-                                ${validity.price2Text || "第二階段"}
-                            </span>
-
-                            <span class="price-val">
-                                HKD $${price2}
-                            </span>
+                            <span class="date-label">${escapeHtml(validity.price2Text || "第二階段")}</span>
+                            <span class="price-val">HKD $${escapeHtml(price2)}</span>
                         </div>
                     `;
                 }
@@ -1474,25 +1588,21 @@
                 card.innerHTML = `
                     <div class="image-container">
                         <img
-                            src="${image}"
-                            alt="${name}"
-                            onerror="this.src='https://placehold.co/200x200?text=No+Image'"
+                            src="${escapeHtml(image)}"
+                            alt="${escapeHtml(name)}"
+                            referrerpolicy="no-referrer"
+                            onerror="this.onerror=null; this.src='https://placehold.co/300x300?text=No+Image';"
                         >
                     </div>
 
                     <div class="card-top-info">
-                        <span class="brand-badge">${brand}</span>
-
-                        <span class="category-badge">
-                            ${characterOrCategory}
-                        </span>
+                        <span class="brand-badge">${escapeHtml(brand)}</span>
+                        <span class="category-badge">${escapeHtml(characterOrCategory)}</span>
                     </div>
 
-                    <div class="product-name">${name}</div>
+                    <div class="product-name">${escapeHtml(name)}</div>
 
-                    <div class="prices-container">
-                        ${priceHtml}
-                    </div>
+                    <div class="prices-container">${priceHtml}</div>
                 `;
 
                 grid.appendChild(card);
@@ -1500,7 +1610,13 @@
         }
 
         function openModal(brand, name, image, price1, price2, date1, date2, character) {
-            document.getElementById("modalImg").src = image;
+            const modalImage = document.getElementById("modalImg");
+
+            modalImage.src = image;
+            modalImage.onerror = function() {
+                this.onerror = null;
+                this.src = "https://placehold.co/500x500?text=No+Image";
+            };
 
             document.getElementById("modalBrand").innerText =
                 character ? `${brand} · ${character}` : brand;
@@ -1514,20 +1630,16 @@
 
             let priceBox = `
                 <div>
-                    <b>HKD $${price1}</b>
-                    <span style="color:#64748B;">
-                        ${validity.price1Text}
-                    </span>
+                    <b>HKD $${escapeHtml(price1)}</b>
+                    <span style="color:#64748B;">${escapeHtml(validity.price1Text)}</span>
                 </div>
             `;
 
-            if (price2 && String(price2).trim() !== "") {
+            if (price2) {
                 priceBox += `
                     <div style="margin-top:5px; color:#666;">
-                        <b>HKD $${price2}</b>
-                        <span style="color:#64748B;">
-                            ${validity.price2Text}
-                        </span>
+                        <b>HKD $${escapeHtml(price2)}</b>
+                        <span style="color:#64748B;">${escapeHtml(validity.price2Text)}</span>
                     </div>
                 `;
             }
@@ -1536,24 +1648,35 @@
             document.getElementById("detailModal").classList.add("active");
         }
 
+        function waitForImage(imageElement) {
+            return new Promise(function(resolve) {
+                if (imageElement.complete) {
+                    resolve();
+                    return;
+                }
+
+                imageElement.onload = resolve;
+                imageElement.onerror = resolve;
+            });
+        }
+
         async function generateAllIGPosters() {
             const targetProducts = productsData.filter(function(product) {
-                return isTrueValue(product["Generate_IG"]);
+                return isTrueValue(product["Generate_IG"] || product["Generate IG"]);
             });
 
             if (targetProducts.length === 0) {
                 alert(
                     "⚠️ 沒有找到需要生成 IG 圖的產品！\n\n" +
-                    "請確保 olive_pricelist.csv 的 Generate_IG 欄位填寫：Y、YES、1 或 TRUE。"
+                    "請確保 CSV 的 Generate_IG 欄位填寫：Y、YES、1 或 TRUE。"
                 );
-
                 return;
             }
 
             const brandMap = {};
 
             targetProducts.forEach(function(product) {
-                const brand = normalizeText(product["Brand"]) || "K-BEAUTY";
+                const brand = getBrandValue(product);
 
                 if (!brandMap[brand]) {
                     brandMap[brand] = [];
@@ -1564,22 +1687,19 @@
 
             const brandNames = Object.keys(brandMap);
 
-            const confirmed = confirm(
+            if (!confirm(
                 `找到 ${targetProducts.length} 件指定產品（共 ${brandNames.length} 個品牌）。\n\n` +
                 "是否開始生成 1080 x 1350 IG 宣傳圖？"
-            );
-
-            if (!confirmed) {
+            )) {
                 return;
             }
 
             for (const brandName of brandNames) {
                 const items = brandMap[brandName];
-
-                const mainCategory = normalizeLower(items[0]["Category"]);
-
-                const brandColor =
-                    categoryColors[mainCategory] || categoryColors.default;
+                const mainCategory = getCategoryValue(items[0]);
+                const brandColor = isSanrioProduct(items[0])
+                    ? categoryColors.sanrio
+                    : (categoryColors[mainCategory] || categoryColors.default);
 
                 const brandTag = document.getElementById("igBrandTag");
 
@@ -1593,10 +1713,7 @@
                     const page = Math.floor(index / 4) + 1;
 
                     for (let cellIndex = 0; cellIndex < 4; cellIndex++) {
-                        const cell = document.getElementById(
-                            "igCell" + cellIndex
-                        );
-
+                        const cell = document.getElementById("igCell" + cellIndex);
                         cell.innerHTML = "";
 
                         const item = chunk[cellIndex];
@@ -1605,36 +1722,35 @@
                             continue;
                         }
 
-                        const name = item["Product Name"] || "";
-                        const image = item["Image"] || "";
+                        const name = getProductNameValue(item);
+                        const image = getImageValue(item);
 
                         const price1 =
-                            item["Price 1 (HKD)"] ||
-                            item["Price (HKD)"] ||
-                            "";
+                            normalizeText(item["Price 1 (HKD)"]) ||
+                            normalizeText(item["Price (HKD)"]);
 
-                        const price2 = item["Price 2 (HKD)"] || "";
-
+                        const price2 = normalizeText(item["Price 2 (HKD)"]);
                         const validity = buildValidityText(item);
 
                         let priceHtml = `
                             <div class="ig-price-line highlight">
-                                $${price1} ${validity.price1Text}
+                                $${escapeHtml(price1)} ${escapeHtml(validity.price1Text)}
                             </div>
                         `;
 
-                        if (price2 && String(price2).trim() !== "") {
+                        if (price2) {
                             priceHtml += `
                                 <div class="ig-price-line sub">
-                                    $${price2} ${validity.price2Text}
+                                    $${escapeHtml(price2)} ${escapeHtml(validity.price2Text)}
                                 </div>
                             `;
                         }
 
                         cell.innerHTML = `
                             <img
-                                src="${image}"
+                                src="${escapeHtml(image)}"
                                 crossorigin="anonymous"
+                                referrerpolicy="no-referrer"
                                 style="
                                     max-width:98% !important;
                                     max-height:94% !important;
@@ -1644,7 +1760,7 @@
                                     display:block;
                                     margin:auto;
                                 "
-                                onerror="this.src='https://placehold.co/500x500?text=No+Image'"
+                                onerror="this.onerror=null; this.src='https://placehold.co/500x500?text=No+Image';"
                             >
 
                             <div
@@ -1658,7 +1774,7 @@
                                     opacity:1 !important;
                                 "
                             >
-                                ${name}
+                                ${escapeHtml(name)}
                             </div>
 
                             <div
@@ -1677,11 +1793,16 @@
                         `;
                     }
 
-                    await new Promise(function(resolve) {
-                        setTimeout(resolve, 500);
-                    });
-
                     const poster = document.getElementById("igPostTemplate");
+                    const images = poster.querySelectorAll("img");
+
+                    await Promise.all(
+                        Array.from(images).map(waitForImage)
+                    );
+
+                    await new Promise(function(resolve) {
+                        setTimeout(resolve, 250);
+                    });
 
                     const canvas = await html2canvas(poster, {
                         useCORS: true,
@@ -1726,7 +1847,6 @@
                         `${safeBrandName}_Part${page}_IG_1080x1350.png`;
 
                     link.href = canvas.toDataURL("image/png");
-
                     link.click();
                 }
             }
