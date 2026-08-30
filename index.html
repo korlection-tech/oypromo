@@ -857,6 +857,7 @@
         <div class="grid" id="resultsGrid"></div>
     </div>
 
+    <!-- Modal 詳情圖片與價格彈窗 -->
     <div class="modal-overlay" id="detailModal">
         <div class="modal-content">
             <button
@@ -866,25 +867,21 @@
                 ×
             </button>
 
-            <img
-                src=""
-                id="modalImg"
-                style="width:100%; max-height:300px; object-fit:contain; margin-bottom:15px;"
-                alt="Product detail"
-            >
-
             <div
                 id="modalBrand"
-                style="font-size:12px; font-weight:bold; color:#1D63FF;"
+                style="font-size:13px; font-weight:bold; color:#1D63FF; text-transform:uppercase;"
             >
                 BRAND
             </div>
 
-            <h2 id="modalTitle" style="font-size:18px; margin:5px 0 15px;"></h2>
+            <h2 id="modalTitle" style="font-size:18px; margin:5px 0 15px; color:#182033;"></h2>
+
+            <!-- 詳情圖片渲染區 -->
+            <div id="modalImgBox" style="display:flex; flex-direction:column; gap:12px; margin-bottom:15px;"></div>
 
             <div
                 id="modalPrices"
-                style="padding:15px; border-radius:8px; background:#FFF5F5;"
+                style="padding:15px; border-radius:12px; background:#FFF5F5;"
             ></div>
         </div>
     </div>
@@ -959,9 +956,6 @@
                 delimiter: "",
 
                 complete: function(results) {
-                    console.log("CSV 資料：", results.data);
-                    console.log("CSV 格式警告：", results.errors);
-
                     productsData = (results.data || [])
                         .map(normalizeCsvRow)
                         .filter(function(product) {
@@ -1003,15 +997,10 @@
 
         function normalizeCsvRow(row) {
             const cleaned = {};
-
             Object.keys(row).forEach(function(key) {
-                const cleanKey = String(key || "")
-                    .replace(/^\uFEFF/, "")
-                    .trim();
-
+                const cleanKey = String(key || "").replace(/^\uFEFF/, "").trim();
                 cleaned[cleanKey] = row[key];
             });
-
             return cleaned;
         }
 
@@ -1055,29 +1044,29 @@
             );
         }
 
+        // 相容不同 Header 拼法的 詳情圖片讀取
         function getDetailImageValue(product) {
             return normalizeText(
                 product["Detail Image"] ||
                 product["DetailImage"] ||
                 product["Detail Image URL"] ||
+                product["detail_image"] ||
                 getImageValue(product)
             );
         }
 
         function getCharacterList(value) {
             return String(value || "")
-                .split("/")
+                .split(/[\/\,\;]/)
                 .map(function(character) {
                     return character.trim().toLowerCase();
                 })
-                .filter(function(character) {
-                    return character !== "";
-                });
+                .filter(Boolean);
         }
 
         function getCharacterDisplay(value) {
             return String(value || "")
-                .split("/")
+                .split(/[\/\,\;]/)
                 .map(function(character) {
                     return character.trim();
                 })
@@ -1089,25 +1078,27 @@
             return ["y", "yes", "1", "true"].includes(normalizeLower(value));
         }
 
+        // 判斷是否屬於 Featured 精選商品（容錯支援 Fetured 拼錯）
+        function isFeaturedProduct(product) {
+            const val = product["Featured"] || product["featured"] || product["Fetured"] || product["fetured"];
+            return isTrueValue(val);
+        }
+
         function isSanrioProduct(product) {
             const category = getCategoryValue(product);
-
+            const character = normalizeLower(product["Character"] || product["character"]);
             return (
                 category === "sanrio" ||
-                category === "sanrio專區" ||
-                category === "sanrio专区" ||
-                category.includes("sanrio")
+                category.includes("sanrio") ||
+                character !== ""
             );
         }
 
         function categoryMatches(product, selectedCategory) {
-            const category = getCategoryValue(product);
-
             if (selectedCategory === "sanrio") {
                 return isSanrioProduct(product);
             }
-
-            return category === selectedCategory;
+            return getCategoryValue(product) === selectedCategory;
         }
 
         function switchStore(store) {
@@ -1117,13 +1108,8 @@
             selectedBrand = "all";
             selectedCharacter = "all";
 
-            document
-                .getElementById("tabOlive")
-                .classList.toggle("active", store === "olive");
-
-            document
-                .getElementById("tabDaiso")
-                .classList.toggle("active", store === "daiso");
+            document.getElementById("tabOlive").classList.toggle("active", store === "olive");
+            document.getElementById("tabDaiso").classList.toggle("active", store === "daiso");
 
             refreshCategoryButtons();
             updateCharacterChips();
@@ -1137,14 +1123,10 @@
             if (category === "all") {
                 selectedCategories = ["all"];
             } else {
-                selectedCategories = selectedCategories.filter(function(item) {
-                    return item !== "all";
-                });
+                selectedCategories = selectedCategories.filter(item => item !== "all");
 
                 if (selectedCategories.includes(category)) {
-                    selectedCategories = selectedCategories.filter(function(item) {
-                        return item !== category;
-                    });
+                    selectedCategories = selectedCategories.filter(item => item !== category);
                 } else {
                     selectedCategories.push(category);
                 }
@@ -1167,11 +1149,7 @@
         function refreshCategoryButtons() {
             document.querySelectorAll("#categoryTabs .cat-btn").forEach(function(button) {
                 const categoryName = button.getAttribute("data-cat");
-
-                button.classList.toggle(
-                    "selected",
-                    selectedCategories.includes(categoryName)
-                );
+                button.classList.toggle("selected", selectedCategories.includes(categoryName));
             });
         }
 
@@ -1181,7 +1159,6 @@
 
         function updateCharacterChips() {
             const box = document.getElementById("characterFilterBox");
-
             box.innerHTML = "";
 
             if (!isSanrioCategorySelected()) {
@@ -1193,56 +1170,34 @@
 
             const label = document.createElement("div");
             label.className = "filter-label";
-            label.innerText = "Character";
+            label.innerText = "Sanrio Character 篩選";
             box.appendChild(label);
 
-            const availableCharacters = sanrioCharacters.filter(function(characterName) {
-                const targetCharacter = characterName.toLowerCase();
-
-                return productsData.some(function(product) {
-                    return (
-                        getStoreValue(product) === currentStore &&
-                        isSanrioProduct(product) &&
-                        getCharacterList(product["Character"] || product["character"])
-                            .includes(targetCharacter)
-                    );
-                });
-            });
-
             const allChip = document.createElement("div");
-            allChip.className = "character-chip active";
+            allChip.className = "character-chip" + (selectedCharacter === "all" ? " active" : "");
             allChip.innerText = "All Characters";
-
             allChip.onclick = function() {
                 selectedCharacter = "all";
                 selectedBrand = "all";
-
                 updateCharacterChips();
                 updateBrandChips();
                 applyFilter();
             };
-
             box.appendChild(allChip);
 
-            availableCharacters.forEach(function(characterName) {
+            sanrioCharacters.forEach(function(characterName) {
                 const chip = document.createElement("div");
-
-                chip.className = "character-chip";
+                const charLower = characterName.toLowerCase();
+                chip.className = "character-chip" + (selectedCharacter === charLower ? " active" : "");
                 chip.innerText = characterName;
 
                 chip.onclick = function() {
-                    selectedCharacter = characterName.toLowerCase();
+                    selectedCharacter = charLower;
                     selectedBrand = "all";
-
                     updateCharacterChips();
                     updateBrandChips();
                     applyFilter();
                 };
-
-                if (selectedCharacter === characterName.toLowerCase()) {
-                    chip.classList.add("active");
-                    allChip.classList.remove("active");
-                }
 
                 box.appendChild(chip);
             });
@@ -1250,37 +1205,23 @@
 
         function updateBrandChips() {
             const box = document.getElementById("brandFilterBox");
-
             box.innerHTML = "";
 
-            if (selectedCategories.includes("all")) {
+            if (selectedCategories.includes("all") && isDefaultState) {
                 box.style.display = "none";
                 return;
             }
 
             const filteredProducts = productsData.filter(function(product) {
                 const storeMatch = getStoreValue(product) === currentStore;
-
-                const categoryMatch = selectedCategories.some(function(category) {
-                    return categoryMatches(product, category);
-                });
-
-                const characters = getCharacterList(
-                    product["Character"] || product["character"]
-                );
-
-                const characterMatch =
-                    selectedCharacter === "all" ||
-                    characters.includes(selectedCharacter);
+                const categoryMatch = selectedCategories.includes("all") || selectedCategories.some(cat => categoryMatches(product, cat));
+                const characters = getCharacterList(product["Character"] || product["character"]);
+                const characterMatch = selectedCharacter === "all" || characters.includes(selectedCharacter);
 
                 return storeMatch && categoryMatch && characterMatch;
             });
 
-            const brands = [...new Set(
-                filteredProducts
-                    .map(getBrandValue)
-                    .filter(Boolean)
-            )];
+            const brands = [...new Set(filteredProducts.map(getBrandValue).filter(Boolean))];
 
             if (brands.length === 0) {
                 box.style.display = "none";
@@ -1291,37 +1232,30 @@
 
             const label = document.createElement("div");
             label.className = "filter-label";
-            label.innerText = "Brand";
+            label.innerText = "Brand 品牌";
             box.appendChild(label);
 
             const allChip = document.createElement("div");
-            allChip.className = "brand-chip active";
+            allChip.className = "brand-chip" + (selectedBrand === "all" ? " active" : "");
             allChip.innerText = "All Brands";
-
             allChip.onclick = function() {
                 selectedBrand = "all";
                 updateBrandChips();
                 applyFilter();
             };
-
             box.appendChild(allChip);
 
             brands.forEach(function(brand) {
                 const chip = document.createElement("div");
-
-                chip.className = "brand-chip";
+                const brandLower = brand.toLowerCase();
+                chip.className = "brand-chip" + (selectedBrand === brandLower ? " active" : "");
                 chip.innerText = brand;
 
                 chip.onclick = function() {
-                    selectedBrand = brand.toLowerCase();
+                    selectedBrand = brandLower;
                     updateBrandChips();
                     applyFilter();
                 };
-
-                if (selectedBrand === brand.toLowerCase()) {
-                    chip.classList.add("active");
-                    allChip.classList.remove("active");
-                }
 
                 box.appendChild(chip);
             });
@@ -1329,10 +1263,7 @@
 
         function hasAnyFeaturedProduct(store) {
             return productsData.some(function(product) {
-                return (
-                    getStoreValue(product) === store &&
-                    isTrueValue(product["Featured"] || product["featured"])
-                );
+                return getStoreValue(product) === store && isFeaturedProduct(product);
             });
         }
 
@@ -1344,29 +1275,21 @@
                     return false;
                 }
 
-                if (isDefaultState && selectedCategories.includes("all")) {
+                // 一進網站首頁，預設僅顯示 Featured 精選商品
+                if (isDefaultState && selectedCategories.includes("all") && selectedCharacter === "all" && selectedBrand === "all") {
                     if (featuredExists) {
-                        return isTrueValue(product["Featured"] || product["featured"]);
+                        return isFeaturedProduct(product);
                     }
-
                     return true;
                 }
 
                 if (!selectedCategories.includes("all")) {
-                    const categoryMatch = selectedCategories.some(function(category) {
-                        return categoryMatches(product, category);
-                    });
-
-                    if (!categoryMatch) {
-                        return false;
-                    }
+                    const categoryMatch = selectedCategories.some(category => categoryMatches(product, category));
+                    if (!categoryMatch) return false;
                 }
 
                 if (selectedCharacter !== "all") {
-                    const productCharacters = getCharacterList(
-                        product["Character"] || product["character"]
-                    );
-
+                    const productCharacters = getCharacterList(product["Character"] || product["character"]);
                     if (!productCharacters.includes(selectedCharacter)) {
                         return false;
                     }
@@ -1388,22 +1311,22 @@
             const isFeaturedHome =
                 isDefaultState &&
                 selectedCategories.includes("all") &&
+                selectedCharacter === "all" &&
+                selectedBrand === "all" &&
                 hasAnyFeaturedProduct(currentStore);
 
             document.getElementById("resultsCount").innerText = isFeaturedHome
-                ? `⭐ Featured 商品：共 ${filteredProducts.length} 件`
+                ? `⭐ Featured 精選商品：共 ${filteredProducts.length} 件`
                 : `共 ${filteredProducts.length} 件商品`;
 
             renderGrid(filteredProducts);
         }
 
         function performSearch() {
-            const keywordText = normalizeLower(
-                document.getElementById("searchInput").value
-            );
+            const keywordText = normalizeLower(document.getElementById("searchInput").value);
 
             if (!keywordText) {
-                isDefaultState = false;
+                isDefaultState = true;
                 selectedCategories = ["all"];
                 selectedBrand = "all";
                 selectedCharacter = "all";
@@ -1416,29 +1339,22 @@
             }
 
             isDefaultState = false;
-
             const keywords = keywordText.split(/\s+/).filter(Boolean);
 
             const filteredProducts = productsData.filter(function(product) {
-                if (getStoreValue(product) !== currentStore) {
-                    return false;
-                }
+                if (getStoreValue(product) !== currentStore) return false;
 
                 const brand = normalizeLower(getBrandValue(product));
                 const name = normalizeLower(getProductNameValue(product));
-                const character = normalizeLower(
-                    product["Character"] || product["character"]
-                );
+                const character = normalizeLower(product["Character"] || product["character"]);
                 const category = getCategoryValue(product);
 
-                return keywords.every(function(keyword) {
-                    return (
-                        brand.includes(keyword) ||
-                        name.includes(keyword) ||
-                        character.includes(keyword) ||
-                        category.includes(keyword)
-                    );
-                });
+                return keywords.every(keyword => (
+                    brand.includes(keyword) ||
+                    name.includes(keyword) ||
+                    character.includes(keyword) ||
+                    category.includes(keyword)
+                ));
             });
 
             document.getElementById("resultsCount").innerText =
@@ -1447,48 +1363,25 @@
             renderGrid(filteredProducts);
         }
 
-        /*
-         * CSV 日期格式使用 日/月 或 日/月/年。
-         * 例：5/9 代表 9 月 5 日，而不是 5 月 9 日。
-         */
         function parseCsvDate(value) {
-            if (!value) {
-                return null;
-            }
-
+            if (!value) return null;
             const text = String(value).trim();
-            let match;
-
-            match = text.match(/^(\d{4})[-/](\d{1,2})[-/](\d{1,2})$/);
-
+            let match = text.match(/^(\d{4})[-/](\d{1,2})[-/](\d{1,2})$/);
             if (match) {
-                return new Date(
-                    Number(match[1]),
-                    Number(match[2]) - 1,
-                    Number(match[3])
-                );
+                return new Date(Number(match[1]), Number(match[2]) - 1, Number(match[3]));
             }
-
             match = text.match(/^(\d{1,2})\/(\d{1,2})(?:\/(\d{4}))?$/);
-
             if (match) {
                 const day = Number(match[1]);
                 const month = Number(match[2]);
-                const year = match[3]
-                    ? Number(match[3])
-                    : new Date().getFullYear();
-
+                const year = match[3] ? Number(match[3]) : new Date().getFullYear();
                 return new Date(year, month - 1, day);
             }
-
             return null;
         }
 
         function formatSaleDate(date) {
-            if (!date) {
-                return "";
-            }
-
+            if (!date) return "";
             return `${date.getDate()}/${date.getMonth() + 1}`;
         }
 
@@ -1504,10 +1397,9 @@
 
             return {
                 price1Text: date1 ? `(~${formatSaleDate(date1)})` : "",
-                price2Text:
-                    date1 && date2
-                        ? `(${formatSaleDate(nextDay(date1))}~${formatSaleDate(date2)})`
-                        : (date2 ? `(~${formatSaleDate(date2)})` : "")
+                price2Text: date1 && date2
+                    ? `(${formatSaleDate(nextDay(date1))}~${formatSaleDate(date2)})`
+                    : (date2 ? `(~${formatSaleDate(date2)})` : "")
             };
         }
 
@@ -1537,15 +1429,9 @@
                 const brand = getBrandValue(item);
                 const name = getProductNameValue(item);
                 const category = normalizeText(item["Category"] || item["category"]);
-                const character = getCharacterDisplay(
-                    item["Character"] || item["character"]
-                );
+                const character = getCharacterDisplay(item["Character"] || item["character"]);
 
-                const price1 =
-                    normalizeText(item["Price 1 (HKD)"]) ||
-                    normalizeText(item["Price (HKD)"]) ||
-                    "未定價";
-
+                const price1 = normalizeText(item["Price 1 (HKD)"]) || normalizeText(item["Price (HKD)"]) || "未定價";
                 const price2 = normalizeText(item["Price 2 (HKD)"]);
                 const image = getImageValue(item);
                 const detailImage = getDetailImageValue(item);
@@ -1609,18 +1495,37 @@
             });
         }
 
-        function openModal(brand, name, image, price1, price2, date1, date2, character) {
-            const modalImage = document.getElementById("modalImg");
+        // 開啟 Modal 並支援多張 Detail Picture 顯示
+        function openModal(brand, name, imageString, price1, price2, date1, date2, character) {
+            const imgBox = document.getElementById("modalImgBox");
+            imgBox.innerHTML = "";
 
-            modalImage.src = image;
-            modalImage.onerror = function() {
-                this.onerror = null;
-                this.src = "https://placehold.co/500x500?text=No+Image";
-            };
+            // 支援分割逗號或分號分隔的多張圖片網址
+            const imgList = String(imageString || "")
+                .split(/[\,\;]/)
+                .map(url => url.trim())
+                .filter(Boolean);
 
-            document.getElementById("modalBrand").innerText =
-                character ? `${brand} · ${character}` : brand;
+            if (imgList.length === 0) {
+                imgList.push("https://placehold.co/500x500?text=No+Image");
+            }
 
+            imgList.forEach(function(src) {
+                const img = document.createElement("img");
+                img.src = src;
+                img.style.width = "100%";
+                img.style.maxHeight = "400px";
+                img.style.objectFit = "contain";
+                img.style.borderRadius = "10px";
+                img.style.border = "1px solid #E2E8F0";
+                img.onerror = function() {
+                    this.onerror = null;
+                    this.src = "https://placehold.co/500x500?text=No+Image";
+                };
+                imgBox.appendChild(img);
+            });
+
+            document.getElementById("modalBrand").innerText = character ? `${brand} · ${character}` : brand;
             document.getElementById("modalTitle").innerText = name;
 
             const validity = buildValidityText({
@@ -1630,16 +1535,16 @@
 
             let priceBox = `
                 <div>
-                    <b>HKD $${escapeHtml(price1)}</b>
-                    <span style="color:#64748B;">${escapeHtml(validity.price1Text)}</span>
+                    <b style="font-size:16px; color:#E11D48;">HKD $${escapeHtml(price1)}</b>
+                    <span style="color:#64748B; font-size:13px;">${escapeHtml(validity.price1Text)}</span>
                 </div>
             `;
 
             if (price2) {
                 priceBox += `
                     <div style="margin-top:5px; color:#666;">
-                        <b>HKD $${escapeHtml(price2)}</b>
-                        <span style="color:#64748B;">${escapeHtml(validity.price2Text)}</span>
+                        <b style="font-size:15px;">HKD $${escapeHtml(price2)}</b>
+                        <span style="color:#64748B; font-size:13px;">${escapeHtml(validity.price2Text)}</span>
                     </div>
                 `;
             }
@@ -1654,7 +1559,6 @@
                     resolve();
                     return;
                 }
-
                 imageElement.onload = resolve;
                 imageElement.onerror = resolve;
             });
@@ -1666,31 +1570,20 @@
             });
 
             if (targetProducts.length === 0) {
-                alert(
-                    "⚠️ 沒有找到需要生成 IG 圖的產品！\n\n" +
-                    "請確保 CSV 的 Generate_IG 欄位填寫：Y、YES、1 或 TRUE。"
-                );
+                alert("⚠️ 沒有找到需要生成 IG 圖的產品！\n\n請確保 CSV 的 Generate_IG 欄位填寫：Y、YES、1 或 TRUE。");
                 return;
             }
 
             const brandMap = {};
-
             targetProducts.forEach(function(product) {
                 const brand = getBrandValue(product);
-
-                if (!brandMap[brand]) {
-                    brandMap[brand] = [];
-                }
-
+                if (!brandMap[brand]) brandMap[brand] = [];
                 brandMap[brand].push(product);
             });
 
             const brandNames = Object.keys(brandMap);
 
-            if (!confirm(
-                `找到 ${targetProducts.length} 件指定產品（共 ${brandNames.length} 個品牌）。\n\n` +
-                "是否開始生成 1080 x 1350 IG 宣傳圖？"
-            )) {
+            if (!confirm(`找到 ${targetProducts.length} 件指定產品（共 ${brandNames.length} 個品牌）。\n\n是否開始生成 1080 x 1350 IG 宣傳圖？`)) {
                 return;
             }
 
@@ -1702,7 +1595,6 @@
                     : (categoryColors[mainCategory] || categoryColors.default);
 
                 const brandTag = document.getElementById("igBrandTag");
-
                 brandTag.innerText = brandName;
                 brandTag.style.backgroundColor = brandColor;
                 brandTag.style.boxShadow = "none";
@@ -1715,20 +1607,13 @@
                     for (let cellIndex = 0; cellIndex < 4; cellIndex++) {
                         const cell = document.getElementById("igCell" + cellIndex);
                         cell.innerHTML = "";
-
                         const item = chunk[cellIndex];
 
-                        if (!item) {
-                            continue;
-                        }
+                        if (!item) continue;
 
                         const name = getProductNameValue(item);
                         const image = getImageValue(item);
-
-                        const price1 =
-                            normalizeText(item["Price 1 (HKD)"]) ||
-                            normalizeText(item["Price (HKD)"]);
-
+                        const price1 = normalizeText(item["Price 1 (HKD)"]) || normalizeText(item["Price (HKD)"]);
                         const price2 = normalizeText(item["Price 2 (HKD)"]);
                         const validity = buildValidityText(item);
 
@@ -1796,13 +1681,8 @@
                     const poster = document.getElementById("igPostTemplate");
                     const images = poster.querySelectorAll("img");
 
-                    await Promise.all(
-                        Array.from(images).map(waitForImage)
-                    );
-
-                    await new Promise(function(resolve) {
-                        setTimeout(resolve, 250);
-                    });
+                    await Promise.all(Array.from(images).map(waitForImage));
+                    await new Promise(resolve => setTimeout(resolve, 250));
 
                     const canvas = await html2canvas(poster, {
                         useCORS: true,
@@ -1825,9 +1705,7 @@
                                 });
 
                             clonedDocument
-                                .querySelectorAll(
-                                    "#renderCanvasHidden, .ig-poster-1350, .ig-grid-item"
-                                )
+                                .querySelectorAll("#renderCanvasHidden, .ig-poster-1350, .ig-grid-item")
                                 .forEach(function(element) {
                                     element.style.background = "none";
                                     element.style.backgroundColor = "#FFFFFF";
@@ -1837,15 +1715,9 @@
                         }
                     });
 
-                    const safeBrandName = brandName
-                        .replace(/[\\/:*?"<>|]/g, "_")
-                        .replace(/\s+/g, "_");
-
+                    const safeBrandName = brandName.replace(/[\\/:*?"<>|]/g, "_").replace(/\s+/g, "_");
                     const link = document.createElement("a");
-
-                    link.download =
-                        `${safeBrandName}_Part${page}_IG_1080x1350.png`;
-
+                    link.download = `${safeBrandName}_Part${page}_IG_1080x1350.png`;
                     link.href = canvas.toDataURL("image/png");
                     link.click();
                 }
