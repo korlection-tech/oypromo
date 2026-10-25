@@ -586,7 +586,6 @@
             line-height: 1;
         }
 
-        /* 詳情無縫拼接長圖容器與圖片設定 */
         #modalImgBox {
             display: flex;
             flex-direction: column;
@@ -603,8 +602,6 @@
             padding: 0;
             border: none;
         }
-
-        /* ===== IG POSTER: 1080 x 1350 ===== */
 
         #renderCanvasHidden {
             position: absolute;
@@ -900,7 +897,6 @@
 
             <h2 id="modalTitle" style="font-size:18px; margin:5px 0 15px; color:#182033;"></h2>
 
-            <!-- 詳情無縫圖片渲染區 -->
             <div id="modalImgBox"></div>
 
             <div
@@ -1409,21 +1405,55 @@
             return `${date.getDate()}/${date.getMonth() + 1}`;
         }
 
-        function nextDay(date) {
-            const result = new Date(date);
-            result.setDate(result.getDate() + 1);
-            return result;
+        // 向上取整至 0 尾或 5 尾 (e.g., Math.ceil(val / 5) * 5)
+        function roundUpTo0Or5(val) {
+            return Math.ceil(val / 5.0) * 5;
         }
 
-        function buildValidityText(item) {
-            const date1 = parseCsvDate(item["Price 1 Date"]);
-            const date2 = parseCsvDate(item["Price 2 Date"]);
+        // 核心公式計算與排序邏輯
+        function calculateProductPrices(item) {
+            const origPrice = parseFloat(item["Original Price"] || item["OriginalPrice"] || item["original_price"] || 0);
+            const saleDisc = parseFloat(item["Sale Discount"] || item["SaleDiscount"] || item["sale_discount"] || 0);
+            const couponDisc = parseFloat(item["Coupon Discount"] || item["CouponDiscount"] || item["coupon_discount"] || 0);
+
+            const shippingType = normalizeLower(item["Shipping Type"] || item["ShippingType"] || item["shipping_type"] || "standard");
+            const shippingFee = shippingType === "heavy" ? 35 : 18;
+
+            // 公式 1：(Original price - Sale Discount)/155*1.2 + 運費
+            const rawPrice1 = (origPrice - saleDisc) / 155 * 1.2 + shippingFee;
+            const price1 = roundUpTo0Or5(rawPrice1);
+
+            // 公式 2：(Original price - Sale Discount - Coupon Discount)/155*1.2 + 運費 (註: 若第二個公式也需加運費可在此加; 如只需第一個加運費可自行調整)
+            const rawPrice2 = (origPrice - saleDisc - couponDisc) / 155 * 1.2 + shippingFee;
+            const price2 = roundUpTo0Or5(rawPrice2);
+
+            const saleDateStart = parseCsvDate(item["Sale Date Start"] || item["Sale Start Date"] || item["Price 1 Date"]);
+            const saleDateEnd = parseCsvDate(item["Sale Date End"] || item["Sale End Date"] || item["Price 1 End Date"]);
+
+            const couponDateStart = parseCsvDate(item["Coupon Date Start"] || item["Coupon Start Date"] || item["Price 2 Date"]);
+            const couponDateEnd = parseCsvDate(item["Coupon Date End"] || item["Coupon End Date"] || item["Price 2 End Date"]);
+
+            const dateText1 = saleDateStart && saleDateEnd ? `(${formatSaleDate(saleDateStart)} - ${formatSaleDate(saleDateEnd)})` : "";
+            const dateText2 = couponDateStart && couponDateEnd ? `(${formatSaleDate(couponDateStart)} - ${formatSaleDate(couponDateEnd)})` : "";
+
+            // 永遠將較平的價錢放第一行
+            let finalRow1Price = price1;
+            let finalRow1Date = dateText1;
+            let finalRow2Price = price2;
+            let finalRow2Date = dateText2;
+
+            if (price2 > 0 && price2 < price1) {
+                finalRow1Price = price2;
+                finalRow1Date = dateText2;
+                finalRow2Price = price1;
+                finalRow2Date = dateText1;
+            }
 
             return {
-                price1Text: date1 ? `(~${formatSaleDate(date1)})` : "",
-                price2Text: date1 && date2
-                    ? `(${formatSaleDate(nextDay(date1))}~${formatSaleDate(date2)})`
-                    : (date2 ? `(~${formatSaleDate(date2)})` : "")
+                row1Price: isNaN(finalRow1Price) ? "未定價" : finalRow1Price,
+                row1DateText: finalRow1Date,
+                row2Price: isNaN(finalRow2Price) ? "" : finalRow2Price,
+                row2DateText: finalRow2Date
             };
         }
 
@@ -1455,11 +1485,9 @@
                 const category = normalizeText(item["Category"] || item["category"]);
                 const character = getCharacterDisplay(item["Character"] || item["character"]);
 
-                const price1 = normalizeText(item["Price 1 (HKD)"]) || normalizeText(item["Price (HKD)"]) || "未定價";
-                const price2 = normalizeText(item["Price 2 (HKD)"]);
+                const calculated = calculateProductPrices(item);
                 const image = getImageValue(item);
                 const detailImage = getDetailImageValue(item);
-                const validity = buildValidityText(item);
 
                 const card = document.createElement("div");
                 card.className = "card";
@@ -1469,26 +1497,26 @@
                         brand,
                         name,
                         detailImage,
-                        price1,
-                        price2,
-                        item["Price 1 Date"],
-                        item["Price 2 Date"],
+                        calculated.row1Price,
+                        calculated.row2Price,
+                        calculated.row1DateText,
+                        calculated.row2DateText,
                         character
                     );
                 };
 
                 let priceHtml = `
                     <div class="price-row p1">
-                        <span class="date-label">${escapeHtml(validity.price1Text || "優惠價")}</span>
-                        <span class="price-val">HKD $${escapeHtml(price1)}</span>
+                        <span class="date-label">${escapeHtml(calculated.row1DateText || "優惠價")}</span>
+                        <span class="price-val">HKD $${escapeHtml(calculated.row1Price)}</span>
                     </div>
                 `;
 
-                if (price2) {
+                if (calculated.row2Price) {
                     priceHtml += `
                         <div class="price-row p2">
-                            <span class="date-label">${escapeHtml(validity.price2Text || "第二階段")}</span>
-                            <span class="price-val">HKD $${escapeHtml(price2)}</span>
+                            <span class="date-label">${escapeHtml(calculated.row2DateText || "第二階段")}</span>
+                            <span class="price-val">HKD $${escapeHtml(calculated.row2Price)}</span>
                         </div>
                     `;
                 }
@@ -1541,15 +1569,10 @@
             document.getElementById("modalBrand").innerText = character ? `${brand} · ${character}` : brand;
             document.getElementById("modalTitle").innerText = name;
 
-            const validity = buildValidityText({
-                "Price 1 Date": date1,
-                "Price 2 Date": date2
-            });
-
             let priceBox = `
                 <div>
                     <b style="font-size:16px; color:#E11D48;">HKD $${escapeHtml(price1)}</b>
-                    <span style="color:#64748B; font-size:13px;">${escapeHtml(validity.price1Text)}</span>
+                    <span style="color:#64748B; font-size:13px;">${escapeHtml(date1)}</span>
                 </div>
             `;
 
@@ -1557,7 +1580,7 @@
                 priceBox += `
                     <div style="margin-top:5px; color:#666;">
                         <b style="font-size:15px;">HKD $${escapeHtml(price2)}</b>
-                        <span style="color:#64748B; font-size:13px;">${escapeHtml(validity.price2Text)}</span>
+                        <span style="color:#64748B; font-size:13px;">${escapeHtml(date2)}</span>
                     </div>
                 `;
             }
@@ -1626,20 +1649,18 @@
 
                         const name = getProductNameValue(item);
                         const image = getImageValue(item);
-                        const price1 = normalizeText(item["Price 1 (HKD)"]) || normalizeText(item["Price (HKD)"]);
-                        const price2 = normalizeText(item["Price 2 (HKD)"]);
-                        const validity = buildValidityText(item);
+                        const calculated = calculateProductPrices(item);
 
                         let priceHtml = `
                             <div class="ig-price-line highlight">
-                                $${escapeHtml(price1)} ${escapeHtml(validity.price1Text)}
+                                $${escapeHtml(calculated.row1Price)} ${escapeHtml(calculated.row1DateText)}
                             </div>
                         `;
 
-                        if (price2) {
+                        if (calculated.row2Price) {
                             priceHtml += `
                                 <div class="ig-price-line sub">
-                                    $${escapeHtml(price2)} ${escapeHtml(validity.price2Text)}
+                                    $${escapeHtml(calculated.row2Price)} ${escapeHtml(calculated.row2DateText)}
                                 </div>
                             `;
                         }
