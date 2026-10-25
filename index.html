@@ -365,3 +365,42 @@
             display: flex;
             gap: 15px;
             margin-top: 15px;
+        }
+
+        .btn-search,
+        .btn-ig-gen {
+            padding: 14px;
+            border: none;
+            border-radius: 11px;
+            cursor: pointer;
+            color: #fff;
+            font-size: 16px;
+            font-weight: 800;
+            transition: transform 0.18s ease, box-shadow 0.18s ease;
+        }
+
+        .btn-search:hover:not(:disabled),
+        .btn-ig-gen:hover {
+            transform: translateY(-2px);
+        }
+
+        .btn-search {
+            flex: 2;
+            background: linear-gradient(135deg, #2873ff, #1657dc);
+            box-shadow: 0 6px 14px rgba(29, 99, 255, 0.21);
+        }
+
+        .btn-search:disabled {
+            cursor: not-allowed;
+            background: #aab6ca;
+            box-shadow: none;
+        }
+
+        .btn-ig-gen {
+            display: none;
+            flex: 1;
+            background: linear-gradient(135deg, #ff5c9b, #ec2875);
+            box-shadow: 0 6px 14px rgba(236, 40, 117, 0.20);
+        }
+
+        .results-count {
