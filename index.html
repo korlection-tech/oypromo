@@ -749,7 +749,8 @@
                 width: 34px;
             }
         }
-    body::before {content:"";position:fixed;inset:0;z-index:-1;pointer-events:none;background:#f4f6f9 url("background.png") center/cover no-repeat;}
+    
+body::before {content:"";position:fixed;inset:0;z-index:-1;pointer-events:none;background:#f4f6f9 url("background.png") center/cover no-repeat;}
 body {isolation:isolate;}
 #tabOlive, #tabOlive.active {background:#f9409e;color:#000;border-color:#f9409e;}
 #tabOlive.active {box-shadow:0 7px 17px rgba(249,64,158,.28);}
@@ -1050,7 +1051,10 @@ function normalizeText(value) {
         }
 
         function getStoreValue(product) {
-            return normalizeLower(product["Store"] || product["store"]);
+            const store = normalizeLower(product["Store"] || product["store"]);
+            if (!store || ["olive", "olive young", "oliveyoung", "oy"].includes(store)) return "olive";
+            if (store === "daiso") return "daiso";
+            return store;
         }
 
         function getCategoryValue(product) {
@@ -1420,8 +1424,8 @@ function normalizeText(value) {
 
         // 核心公式計算與排序邏輯
         function calculateProductPrices(item) {
-            const pick = (...keys) => { for (const key of keys) if (item[key] !== undefined && String(item[key]).trim() !== "") return item[key]; return ""; };
-            const num = value => {const t=String(value??"").replace(/,/g,"").trim();if(!t)return null;const n=Number(t);return Number.isFinite(n)?n:null;};
+            const pick=(...keys)=>{for(const key of keys)if(item[key]!==undefined&&String(item[key]).trim()!=="")return item[key];return "";};
+            const num=value=>{const t=String(value??"").replace(/,/g,"").trim();if(!t)return null;const n=Number(t);return Number.isFinite(n)?n:null;};
             const original=num(pick("Original Price","OriginalPrice","original_price"));
             const sale=num(pick("Sale Discount","SaleDiscount","sale_discount"))??0;
             const coupon=num(pick("Coupon Discount","CouponDiscount","coupon_discount"))??0;
@@ -1432,16 +1436,15 @@ function normalizeText(value) {
             const pe=parseCsvDate(pick("Promo End","Promo end","Sale Date End","Sale End Date","Price 1 End Date"));
             const es=parseCsvDate(pick("Extra Start","Coupon Date Start","Coupon Start Date","Price 2 Date"));
             const ee=parseCsvDate(pick("Extra End","Coupon Date End","Coupon End Date","Price 2 End Date"));
-            const automatic = deduction => original!==null && original>0 && sale>=0 && coupon>=0 && original-deduction>0 ? roundUpTo0Or5((original-deduction)/155*1.2+shipping) : null;
+            const automatic=deduction=>original!==null&&original>0&&sale>=0&&coupon>=0&&original-deduction>0?roundUpTo0Or5((original-deduction)/155*1.2+shipping):null;
             const dateText=(a,b)=>a&&b?`${formatSaleDate(a)} - ${formatSaleDate(b)}`:a?`${formatSaleDate(a)} 起`:b?`至 ${formatSaleDate(b)}`:"";
             const rows=[{price:manualPromo>0?manualPromo:automatic(sale),start:ps,end:pe,order:0}];
-            if(manualExtra>0 || coupon>0) rows.push({price:manualExtra>0?manualExtra:automatic(sale+coupon),start:es,end:ee,order:1});
+            if(manualExtra>0||coupon>0)rows.push({price:manualExtra>0?manualExtra:automatic(sale+coupon),start:es,end:ee,order:1});
             rows.sort((a,b)=>{
                 const sa=a.start?a.start.getTime():Infinity,sb=b.start?b.start.getTime():Infinity;
                 if(sa!==sb)return sa<sb?-1:1;
                 const ea=a.end?a.end.getTime():Infinity,eb=b.end?b.end.getTime():Infinity;
-                if(ea!==eb)return ea<eb?-1:1;
-                return a.order-b.order;
+                if(ea!==eb)return ea<eb?-1:1;return a.order-b.order;
             });
             return {row1Price:rows[0].price??"待確認",row1DateText:dateText(rows[0].start,rows[0].end),row2Price:rows[1]?(rows[1].price??"待確認"):"",row2DateText:rows[1]?dateText(rows[1].start,rows[1].end):""};
         }
