@@ -749,13 +749,12 @@
                 width: 34px;
             }
         }
-    
-body::before { content: ""; position: fixed; inset: 0; z-index: -1; pointer-events: none; background: #f4f6f9 url("background.png") center center / cover no-repeat; }
-body { isolation: isolate; }
-#tabOlive, #tabOlive.active { background: #f9409e; color: #000; border-color: #f9409e; }
-#tabOlive.active { box-shadow: 0 7px 17px rgba(249,64,158,.28); }
-.product-notes { white-space: pre-wrap; overflow-wrap: anywhere; font-size: 13px; line-height: 1.55; color: #475569; margin: 8px 0 12px; }
-#modalNotes { margin-top: 14px; }
+    body::before {content:"";position:fixed;inset:0;z-index:-1;pointer-events:none;background:#f4f6f9 url("background.png") center/cover no-repeat;}
+body {isolation:isolate;}
+#tabOlive, #tabOlive.active {background:#f9409e;color:#000;border-color:#f9409e;}
+#tabOlive.active {box-shadow:0 7px 17px rgba(249,64,158,.28);}
+.product-notes {white-space:pre-wrap;overflow-wrap:anywhere;font-size:13px;line-height:1.55;color:#475569;margin:8px 0 12px;}
+#modalNotes {margin-top:14px;}
 </style>
 </head>
 
@@ -897,8 +896,7 @@ body { isolation: isolate; }
 
             <h2 id="modalTitle" style="font-size:18px; margin:5px 0 15px; color:#182033;"></h2>
 
-            <div id="modalImgBox"></div>
-<div id="modalNotes" class="product-notes" hidden></div>
+            <div id="modalImgBox"></div><div id="modalNotes" class="product-notes" hidden></div>
 
             <div
                 id="modalPrices"
@@ -972,14 +970,15 @@ body { isolation: isolate; }
 
             let csvText;
             try {
-                const response = await fetch("olive_pricelist.csv?v=" + Date.now(), {cache: "no-store"});
-                if (!response.ok) throw new Error("HTTP " + response.status);
-                const bytes = await response.arrayBuffer();
-                try {
-                    csvText = new TextDecoder("utf-8", {fatal: true}).decode(bytes);
-                } catch {
-                    throw new Error("CSV 編碼不是有效 UTF-8。請在 Excel 另存為 CSV UTF-8（逗號分隔），再上載。唔好只改副檔名。");
-                }
+                if (!window.Papa) throw new Error("CSV 工具未載入，請檢查網絡後重新整理。");
+                if (location.protocol === "file:") throw new Error("請用 GitHub Pages 網址開網站，唔好雙擊本機 HTML。");
+                const csvUrl = new URL("olive_pricelist.csv", location.href);
+                csvUrl.searchParams.set("v", Date.now());
+                const response = await fetch(csvUrl, {cache: "no-store"});
+                if (!response.ok) throw new Error("HTTP " + response.status + "：" + csvUrl.pathname + "。請檢查檔名、位置及部署內容。");
+                try { csvText = new TextDecoder("utf-8", {fatal: true}).decode(await response.arrayBuffer()); }
+                catch { throw new Error("CSV 不是有效 UTF-8。請另存為 CSV UTF-8 後上載。"); }
+                if (/^\s*(<!doctype html|<html)/i.test(csvText)) throw new Error("CSV 網址回傳 HTML，請檢查發布設定。");
             } catch (error) {
                 statusMessage.className = "status-message status-error";
                 statusMessage.textContent = "未能讀取 olive_pricelist.csv：" + error.message;
@@ -1041,10 +1040,7 @@ body { isolation: isolate; }
             return cleaned;
         }
 
-        function getNotesValue(product) {
- const key = Object.keys(product).find(key => key.trim().toLowerCase() === "notes");
- return key ? String(product[key] ?? "").trim() : "";
-}
+        function getNotesValue(product) {const key=Object.keys(product).find(key=>key.trim().toLowerCase()==="notes");return key?String(product[key]??"").trim():"";}
 function normalizeText(value) {
             return String(value || "").trim();
         }
@@ -1405,20 +1401,11 @@ function normalizeText(value) {
         }
 
         function parseCsvDate(value) {
-            if (!value) return null;
-            const text = String(value).trim();
-            let match = text.match(/^(\d{4})[-/](\d{1,2})[-/](\d{1,2})$/);
-            if (match) {
-                return new Date(Number(match[1]), Number(match[2]) - 1, Number(match[3]));
-            }
-            match = text.match(/^(\d{1,2})\/(\d{1,2})(?:\/(\d{4}))?$/);
-            if (match) {
-                const day = Number(match[1]);
-                const month = Number(match[2]);
-                const year = match[3] ? Number(match[3]) : new Date().getFullYear();
-                return new Date(year, month - 1, day);
-            }
-            return null;
+            const text=String(value??"").trim();if(!text)return null;
+            let y,m,d,match=text.match(/^(\d{4})[-/](\d{1,2})[-/](\d{1,2})$/);
+            if(match){y=+match[1];m=+match[2];d=+match[3];}
+            else {match=text.match(/^(\d{1,2})\/(\d{1,2})(?:\/(\d{4}))?$/);if(!match)return null;d=+match[1];m=+match[2];y=match[3]?+match[3]:new Date().getFullYear();}
+            const result=new Date(y,m-1,d);return result.getFullYear()===y&&result.getMonth()===m-1&&result.getDate()===d?result:null;
         }
 
         function formatSaleDate(date) {
@@ -1433,49 +1420,30 @@ function normalizeText(value) {
 
         // 核心公式計算與排序邏輯
         function calculateProductPrices(item) {
-            const origPrice = parseFloat(item["Original Price"] || item["OriginalPrice"] || item["original_price"] || 0);
-            const saleDisc = parseFloat(item["Sale Discount"] || item["SaleDiscount"] || item["sale_discount"] || 0);
-            const couponDisc = parseFloat(item["Coupon Discount"] || item["CouponDiscount"] || item["coupon_discount"] || 0);
-
-            const shippingType = normalizeLower(item["Shipping Type"] || item["ShippingType"] || item["shipping_type"] || "standard");
-            const shippingFee = shippingType === "heavy" ? 35 : 18;
-
-            // 公式 1：(Original price - Sale Discount)/155*1.2 + 運費
-            const rawPrice1 = (origPrice - saleDisc) / 155 * 1.2 + shippingFee;
-            const price1 = roundUpTo0Or5(rawPrice1);
-
-            // 公式 2：(Original price - Sale Discount - Coupon Discount)/155*1.2 + 運費 (註: 若第二個公式也需加運費可在此加; 如只需第一個加運費可自行調整)
-            const rawPrice2 = (origPrice - saleDisc - couponDisc) / 155 * 1.2 + shippingFee;
-            const price2 = roundUpTo0Or5(rawPrice2);
-
-            const saleDateStart = parseCsvDate(item["Sale Date Start"] || item["Sale Start Date"] || item["Price 1 Date"]);
-            const saleDateEnd = parseCsvDate(item["Sale Date End"] || item["Sale End Date"] || item["Price 1 End Date"]);
-
-            const couponDateStart = parseCsvDate(item["Coupon Date Start"] || item["Coupon Start Date"] || item["Price 2 Date"]);
-            const couponDateEnd = parseCsvDate(item["Coupon Date End"] || item["Coupon End Date"] || item["Price 2 End Date"]);
-
-            const dateText1 = saleDateStart && saleDateEnd ? `(${formatSaleDate(saleDateStart)} - ${formatSaleDate(saleDateEnd)})` : "";
-            const dateText2 = couponDateStart && couponDateEnd ? `(${formatSaleDate(couponDateStart)} - ${formatSaleDate(couponDateEnd)})` : "";
-
-            // 永遠將較平的價錢放第一行
-            let finalRow1Price = price1;
-            let finalRow1Date = dateText1;
-            let finalRow2Price = price2;
-            let finalRow2Date = dateText2;
-
-            if (price2 > 0 && price2 < price1) {
-                finalRow1Price = price2;
-                finalRow1Date = dateText2;
-                finalRow2Price = price1;
-                finalRow2Date = dateText1;
-            }
-
-            return {
-                row1Price: isNaN(finalRow1Price) ? "未定價" : finalRow1Price,
-                row1DateText: finalRow1Date,
-                row2Price: isNaN(finalRow2Price) ? "" : finalRow2Price,
-                row2DateText: finalRow2Date
-            };
+            const pick = (...keys) => { for (const key of keys) if (item[key] !== undefined && String(item[key]).trim() !== "") return item[key]; return ""; };
+            const num = value => {const t=String(value??"").replace(/,/g,"").trim();if(!t)return null;const n=Number(t);return Number.isFinite(n)?n:null;};
+            const original=num(pick("Original Price","OriginalPrice","original_price"));
+            const sale=num(pick("Sale Discount","SaleDiscount","sale_discount"))??0;
+            const coupon=num(pick("Coupon Discount","CouponDiscount","coupon_discount"))??0;
+            const manualPromo=num(pick("Manual Promo Price HKD","Manual Price HKD"));
+            const manualExtra=num(pick("Manual Extra Price HKD"));
+            const shipping=["large","heavy"].includes(normalizeLower(pick("Shipping Type","ShippingType","shipping_type")))?35:18;
+            const ps=parseCsvDate(pick("Promo Start","Sale Date Start","Sale Start Date","Price 1 Date"));
+            const pe=parseCsvDate(pick("Promo End","Promo end","Sale Date End","Sale End Date","Price 1 End Date"));
+            const es=parseCsvDate(pick("Extra Start","Coupon Date Start","Coupon Start Date","Price 2 Date"));
+            const ee=parseCsvDate(pick("Extra End","Coupon Date End","Coupon End Date","Price 2 End Date"));
+            const automatic = deduction => original!==null && original>0 && sale>=0 && coupon>=0 && original-deduction>0 ? roundUpTo0Or5((original-deduction)/155*1.2+shipping) : null;
+            const dateText=(a,b)=>a&&b?`${formatSaleDate(a)} - ${formatSaleDate(b)}`:a?`${formatSaleDate(a)} 起`:b?`至 ${formatSaleDate(b)}`:"";
+            const rows=[{price:manualPromo>0?manualPromo:automatic(sale),start:ps,end:pe,order:0}];
+            if(manualExtra>0 || coupon>0) rows.push({price:manualExtra>0?manualExtra:automatic(sale+coupon),start:es,end:ee,order:1});
+            rows.sort((a,b)=>{
+                const sa=a.start?a.start.getTime():Infinity,sb=b.start?b.start.getTime():Infinity;
+                if(sa!==sb)return sa<sb?-1:1;
+                const ea=a.end?a.end.getTime():Infinity,eb=b.end?b.end.getTime():Infinity;
+                if(ea!==eb)return ea<eb?-1:1;
+                return a.order-b.order;
+            });
+            return {row1Price:rows[0].price??"待確認",row1DateText:dateText(rows[0].start,rows[0].end),row2Price:rows[1]?(rows[1].price??"待確認"):"",row2DateText:rows[1]?dateText(rows[1].start,rows[1].end):""};
         }
 
         function escapeHtml(value) {
@@ -1561,7 +1529,7 @@ function normalizeText(value) {
                     </div>
 
                     <div class="product-name">${escapeHtml(name)}</div>
-${getNotesValue(item) ? `<div class="product-notes">${escapeHtml(getNotesValue(item))}</div>` : ""}
+${getNotesValue(item)?`<div class="product-notes">${escapeHtml(getNotesValue(item))}</div>`:""}
 
                     <div class="prices-container">${priceHtml}</div>
                 `;
@@ -1570,7 +1538,7 @@ ${getNotesValue(item) ? `<div class="product-notes">${escapeHtml(getNotesValue(i
             });
         }
 
-        function openModal(brand, name, imageString, price1, price2, date1, date2, character, notes = "") {
+        function openModal(brand, name, imageString, price1, price2, date1, date2, character, notes="") {
             const imgBox = document.getElementById("modalImgBox");
             imgBox.innerHTML = "";
 
@@ -1591,9 +1559,7 @@ ${getNotesValue(item) ? `<div class="product-notes">${escapeHtml(getNotesValue(i
 
             document.getElementById("modalBrand").innerText = character ? `${brand} · ${character}` : brand;
             document.getElementById("modalTitle").innerText = name;
-const notesElement = document.getElementById("modalNotes");
-notesElement.textContent = notes;
-notesElement.hidden = !notes;
+const notesElement=document.getElementById("modalNotes");notesElement.textContent=notes;notesElement.hidden=!notes;
 
             let priceBox = `
                 <div>
