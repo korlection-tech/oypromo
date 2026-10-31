@@ -30,7 +30,7 @@
             font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
                 "Helvetica Neue", Arial, sans-serif;
             line-height: 1.3;
-            background: #f4f6f9;
+            background:#f4f6f9;
         }
 
         .container {
@@ -579,6 +579,7 @@
             line-height: 1;
         }
 
+        /* 詳情無縫拼接長圖容器與圖片設定 */
         #modalImgBox {
             display: flex;
             flex-direction: column;
@@ -595,6 +596,8 @@
             padding: 0;
             border: none;
         }
+
+        /* ===== IG POSTER: 1080 x 1350 ===== */
 
         #renderCanvasHidden {
             position: absolute;
@@ -749,14 +752,7 @@
                 width: 34px;
             }
         }
-    
-body::before {content:"";position:fixed;inset:0;z-index:-1;pointer-events:none;background:#f4f6f9 url("background.png") center/cover no-repeat;}
-body {isolation:isolate;}
-#tabOlive, #tabOlive.active {background:#f9409e;color:#000;border-color:#f9409e;}
-#tabOlive.active {box-shadow:0 7px 17px rgba(249,64,158,.28);}
-.product-notes {white-space:pre-wrap;overflow-wrap:anywhere;font-size:13px;line-height:1.55;color:#475569;margin:8px 0 12px;}
-#modalNotes {margin-top:14px;}
-</style>
+    body::before{content:"";position:fixed;inset:0;z-index:-1;pointer-events:none;background:#f4f6f9 url("background.png") center/cover no-repeat}body{isolation:isolate}#tabOlive,#tabOlive.active{background:#f9409e;color:#000;border-color:#f9409e}#tabOlive.active{box-shadow:0 7px 17px rgba(249,64,158,.28)}.product-notes{white-space:pre-wrap;overflow-wrap:anywhere;font-size:13px;line-height:1.55;color:#475569;margin:8px 0 12px}</style>
 </head>
 
 <body>
@@ -897,6 +893,7 @@ body {isolation:isolate;}
 
             <h2 id="modalTitle" style="font-size:18px; margin:5px 0 15px; color:#182033;"></h2>
 
+            <!-- 詳情無縫圖片渲染區 -->
             <div id="modalImgBox"></div><div id="modalNotes" class="product-notes" hidden></div>
 
             <div
@@ -971,21 +968,13 @@ body {isolation:isolate;}
 
             let csvText;
             try {
-                if (!window.Papa) throw new Error("CSV 工具未載入，請檢查網絡後重新整理。");
-                if (location.protocol === "file:") throw new Error("請用 GitHub Pages 網址開網站，唔好雙擊本機 HTML。");
-                const csvUrl = new URL("olive_pricelist.csv", location.href);
-                csvUrl.searchParams.set("v", Date.now());
-                const response = await fetch(csvUrl, {cache: "no-store"});
-                if (!response.ok) throw new Error("HTTP " + response.status + "：" + csvUrl.pathname + "。請檢查檔名、位置及部署內容。");
-                try { csvText = new TextDecoder("utf-8", {fatal: true}).decode(await response.arrayBuffer()); }
-                catch { throw new Error("CSV 不是有效 UTF-8。請另存為 CSV UTF-8 後上載。"); }
-                if (/^\s*(<!doctype html|<html)/i.test(csvText)) throw new Error("CSV 網址回傳 HTML，請檢查發布設定。");
-            } catch (error) {
-                statusMessage.className = "status-message status-error";
-                statusMessage.textContent = "未能讀取 olive_pricelist.csv：" + error.message;
-                searchButton.innerText = "未能載入";
-                return;
-            }
+                if(!window.Papa)throw new Error("CSV 工具載入失敗，請檢查網絡。");
+                if(location.protocol==="file:")throw new Error("請用 GitHub Pages 網址開啟網站。");
+                const response=await fetch("olive_pricelist.csv?v="+Date.now(),{cache:"no-store"});
+                if(!response.ok)throw new Error("CSV HTTP "+response.status);
+                try{csvText=new TextDecoder("utf-8",{fatal:true}).decode(await response.arrayBuffer());}catch{throw new Error("請將 CSV 另存為 CSV UTF-8 後上載。");}
+                if(/^\s*(<!doctype html|<html)/i.test(csvText))throw new Error("CSV 網址回傳 HTML，請檢查部署。");
+            } catch(error){statusMessage.className="status-message status-error";statusMessage.textContent=error.message;searchButton.innerText="未能載入";return;}
             Papa.parse(csvText, {
                 download: false,
                 header: true,
@@ -1041,8 +1030,8 @@ body {isolation:isolate;}
             return cleaned;
         }
 
-        function getNotesValue(product) {const key=Object.keys(product).find(key=>key.trim().toLowerCase()==="notes");return key?String(product[key]??"").trim():"";}
-function normalizeText(value) {
+        function getNotesValue(product){const key=Object.keys(product).find(k=>k.trim().toLowerCase()==="notes");return key?String(product[key]??"").trim():"";}
+        function normalizeText(value) {
             return String(value || "").trim();
         }
 
@@ -1051,10 +1040,7 @@ function normalizeText(value) {
         }
 
         function getStoreValue(product) {
-            const store = normalizeLower(product["Store"] || product["store"]);
-            if (!store || ["olive", "olive young", "oliveyoung", "oy"].includes(store)) return "olive";
-            if (store === "daiso") return "daiso";
-            return store;
+            const value=normalizeLower(product["Store"]||product["store"]);return !value||["olive","olive young","oliveyoung","oy"].includes(value)?"olive":value;
         }
 
         function getCategoryValue(product) {
@@ -1404,12 +1390,10 @@ function normalizeText(value) {
             renderGrid(filteredProducts);
         }
 
-        function parseCsvDate(value) {
-            const text=String(value??"").trim();if(!text)return null;
-            let y,m,d,match=text.match(/^(\d{4})[-/](\d{1,2})[-/](\d{1,2})$/);
-            if(match){y=+match[1];m=+match[2];d=+match[3];}
-            else {match=text.match(/^(\d{1,2})\/(\d{1,2})(?:\/(\d{4}))?$/);if(!match)return null;d=+match[1];m=+match[2];y=match[3]?+match[3]:new Date().getFullYear();}
-            const result=new Date(y,m-1,d);return result.getFullYear()===y&&result.getMonth()===m-1&&result.getDate()===d?result:null;
+        function parseCsvDate(value){
+            const t=String(value??"").trim();let m=t.match(/^(\d{4})[-/](\d{1,2})[-/](\d{1,2})$/),y,mo,d;
+            if(m){y=+m[1];mo=+m[2];d=+m[3];}else{m=t.match(/^(\d{1,2})\/(\d{1,2})(?:\/(\d{4}))?$/);if(!m)return null;d=+m[1];mo=+m[2];y=m[3]?+m[3]:new Date().getFullYear();}
+            const date=new Date(y,mo-1,d);return date.getFullYear()===y&&date.getMonth()===mo-1&&date.getDate()===d?date:null;
         }
 
         function formatSaleDate(date) {
@@ -1417,37 +1401,38 @@ function normalizeText(value) {
             return `${date.getDate()}/${date.getMonth() + 1}`;
         }
 
-        // 向上取整至 0 尾或 5 尾 (e.g., Math.ceil(val / 5) * 5)
-        function roundUpTo0Or5(val) {
-            return Math.ceil(val / 5.0) * 5;
+        function nextDay(date) {
+            const result = new Date(date);
+            result.setDate(result.getDate() + 1);
+            return result;
         }
 
-        // 核心公式計算與排序邏輯
-        function calculateProductPrices(item) {
-            const pick=(...keys)=>{for(const key of keys)if(item[key]!==undefined&&String(item[key]).trim()!=="")return item[key];return "";};
-            const num=value=>{const t=String(value??"").replace(/,/g,"").trim();if(!t)return null;const n=Number(t);return Number.isFinite(n)?n:null;};
-            const original=num(pick("Original Price","OriginalPrice","original_price"));
-            const sale=num(pick("Sale Discount","SaleDiscount","sale_discount"))??0;
-            const coupon=num(pick("Coupon Discount","CouponDiscount","coupon_discount"))??0;
-            const manualPromo=num(pick("Manual Promo Price HKD","Manual Price HKD"));
-            const manualExtra=num(pick("Manual Extra Price HKD"));
-            const shipping=["large","heavy"].includes(normalizeLower(pick("Shipping Type","ShippingType","shipping_type")))?35:18;
-            const ps=parseCsvDate(pick("Promo Start","Sale Date Start","Sale Start Date","Price 1 Date"));
-            const pe=parseCsvDate(pick("Promo End","Promo end","Sale Date End","Sale End Date","Price 1 End Date"));
-            const es=parseCsvDate(pick("Extra Start","Coupon Date Start","Coupon Start Date","Price 2 Date"));
-            const ee=parseCsvDate(pick("Extra End","Coupon Date End","Coupon End Date","Price 2 End Date"));
-            const automatic=deduction=>original!==null&&original>0&&sale>=0&&coupon>=0&&original-deduction>0?roundUpTo0Or5((original-deduction)/155*1.2+shipping):null;
-            const dateText=(a,b)=>a&&b?`${formatSaleDate(a)} - ${formatSaleDate(b)}`:a?`${formatSaleDate(a)} 起`:b?`至 ${formatSaleDate(b)}`:"";
-            const rows=[{price:manualPromo>0?manualPromo:automatic(sale),start:ps,end:pe,order:0}];
-            if(manualExtra>0||coupon>0)rows.push({price:manualExtra>0?manualExtra:automatic(sale+coupon),start:es,end:ee,order:1});
-            rows.sort((a,b)=>{
-                const sa=a.start?a.start.getTime():Infinity,sb=b.start?b.start.getTime():Infinity;
-                if(sa!==sb)return sa<sb?-1:1;
-                const ea=a.end?a.end.getTime():Infinity,eb=b.end?b.end.getTime():Infinity;
-                if(ea!==eb)return ea<eb?-1:1;return a.order-b.order;
-            });
-            return {row1Price:rows[0].price??"待確認",row1DateText:dateText(rows[0].start,rows[0].end),row2Price:rows[1]?(rows[1].price??"待確認"):"",row2DateText:rows[1]?dateText(rows[1].start,rows[1].end):""};
+        function csvValue(item,...names){
+            for(const name of names){const key=Object.keys(item).find(k=>k.trim().toLowerCase()===name.toLowerCase());if(key!==undefined&&String(item[key]??"").trim()!=="")return item[key];}
+            return "";
         }
+        function csvNumber(value){const text=String(value??"").replace(/,/g,"").trim();if(!text)return null;const n=Number(text);return Number.isFinite(n)?n:null;}
+        function calculatePeriods(item){
+            const p1start=parseCsvDate(csvValue(item,"Period Start","Period 1 Start","Promo Start","Extra Start"));
+            const p1end=parseCsvDate(csvValue(item,"Period End","Period 1 End","Promo End","Extra End","Price 1 Date"));
+            const p2end=parseCsvDate(csvValue(item,"Period 2 End","Period 2 End Date","Price 2 Date"));
+            const p2start=p1end?nextDay(p1end):null;
+            const heavy=["heavy","large"].includes(normalizeLower(csvValue(item,"Shipping Type")));
+            const orig=csvNumber(csvValue(item,"Original Price","KRW Price","KRW PRICE原價"));
+            const sale=csvNumber(csvValue(item,"Sale Discount"))??0;
+            const coupon=csvNumber(csvValue(item,"Coupon Discount"))??0;
+            const manual1=csvNumber(csvValue(item,"Manual Period 1 Price HKD","Manual Extra Price HKD","Manual Price HKD","Price 1 (HKD)","Price (HKD)"));
+            const manual2=csvNumber(csvValue(item,"Manual Period 2 Price HKD","Price 2 (HKD)"));
+            const auto=(discount,shipping)=>orig!==null&&orig>0&&sale>=0&&coupon>=0&&orig-discount>0?Math.ceil(((orig-discount)/155*1.2+shipping)/5)*5:null;
+            const price1=manual1>0?manual1:auto(sale+coupon,heavy?35:18);
+            const price2=manual2>0?manual2:auto(sale,heavy?55:25);
+            const valid1=!(p1start&&p1end&&p1start>p1end);
+            const requested2=!!csvValue(item,"Period 2 End","Period 2 End Date","Price 2 Date");
+            const valid2=!!(p2start&&p2end&&p2end>=p2start);
+            const label=(start,end)=>start&&end?`${formatSaleDate(start)} - ${formatSaleDate(end)}`:end?`至 ${formatSaleDate(end)}`:"日期待確認";
+            return {price1:valid1?(price1??"待確認"):"日期有誤",price2:requested2?(valid2?(price2??"待確認"):"日期有誤"):"",date1:valid1?label(p1start,p1end):"第一期日期有誤",date2:requested2?(valid2?label(p2start,p2end):"第二期日期有誤"):""};
+        }
+        function buildValidityText(item){const p=calculatePeriods(item);return {price1Text:p.date1,price2Text:p.date2};}
 
         function escapeHtml(value) {
             return String(value || "")
@@ -1477,9 +1462,12 @@ function normalizeText(value) {
                 const category = normalizeText(item["Category"] || item["category"]);
                 const character = getCharacterDisplay(item["Character"] || item["character"]);
 
-                const calculated = calculateProductPrices(item);
+                const calculated=calculatePeriods(item);
+                const price1=calculated.price1;
+                const price2=calculated.price2;
                 const image = getImageValue(item);
                 const detailImage = getDetailImageValue(item);
+                const validity = buildValidityText(item);
 
                 const card = document.createElement("div");
                 card.className = "card";
@@ -1489,10 +1477,10 @@ function normalizeText(value) {
                         brand,
                         name,
                         detailImage,
-                        calculated.row1Price,
-                        calculated.row2Price,
-                        calculated.row1DateText,
-                        calculated.row2DateText,
+                        price1,
+                        price2,
+                        validity.price1Text,
+                        validity.price2Text,
                         character,
                         getNotesValue(item)
                     );
@@ -1500,16 +1488,16 @@ function normalizeText(value) {
 
                 let priceHtml = `
                     <div class="price-row p1">
-                        <span class="date-label">${escapeHtml(calculated.row1DateText || "優惠價")}</span>
-                        <span class="price-val">HKD $${escapeHtml(calculated.row1Price)}</span>
+                        <span class="date-label">${escapeHtml(validity.price1Text || "優惠價")}</span>
+                        <span class="price-val">HKD $${escapeHtml(price1)}</span>
                     </div>
                 `;
 
-                if (calculated.row2Price) {
+                if (price2) {
                     priceHtml += `
                         <div class="price-row p2">
-                            <span class="date-label">${escapeHtml(calculated.row2DateText || "第二階段")}</span>
-                            <span class="price-val">HKD $${escapeHtml(calculated.row2Price)}</span>
+                            <span class="date-label">${escapeHtml(validity.price2Text || "第二階段")}</span>
+                            <span class="price-val">HKD $${escapeHtml(price2)}</span>
                         </div>
                     `;
                 }
@@ -1531,8 +1519,7 @@ function normalizeText(value) {
                         <span class="category-badge">${escapeHtml(characterOrCategory)}</span>
                     </div>
 
-                    <div class="product-name">${escapeHtml(name)}</div>
-${getNotesValue(item)?`<div class="product-notes">${escapeHtml(getNotesValue(item))}</div>`:""}
+                    <div class="product-name">${escapeHtml(name)}</div>${getNotesValue(item)?`<div class="product-notes">${escapeHtml(getNotesValue(item))}</div>`:""}
 
                     <div class="prices-container">${priceHtml}</div>
                 `;
@@ -1562,20 +1549,22 @@ ${getNotesValue(item)?`<div class="product-notes">${escapeHtml(getNotesValue(ite
 
             document.getElementById("modalBrand").innerText = character ? `${brand} · ${character}` : brand;
             document.getElementById("modalTitle").innerText = name;
-const notesElement=document.getElementById("modalNotes");notesElement.textContent=notes;notesElement.hidden=!notes;
+
+            const validity={price1Text:date1,price2Text:date2};
+            const notesBox=document.getElementById("modalNotes");notesBox.textContent=notes;notesBox.hidden=!notes;
 
             let priceBox = `
                 <div>
-                    <b style="font-size:16px; color:#E11D48;">HKD $${escapeHtml(price1)}</b>
-                    <span style="color:#64748B; font-size:13px;">${escapeHtml(date1)}</span>
+                    <span style="color:#64748B;font-size:13px;">${escapeHtml(validity.price1Text)}</span>
+                    <b style="float:right;font-size:16px;color:#E11D48;">HKD $${escapeHtml(price1)}</b>
                 </div>
             `;
 
             if (price2) {
                 priceBox += `
                     <div style="margin-top:5px; color:#666;">
-                        <b style="font-size:15px;">HKD $${escapeHtml(price2)}</b>
-                        <span style="color:#64748B; font-size:13px;">${escapeHtml(date2)}</span>
+                        <span style="color:#64748B;font-size:13px;">${escapeHtml(validity.price2Text)}</span>
+                        <b style="float:right;font-size:15px;">HKD $${escapeHtml(price2)}</b>
                     </div>
                 `;
             }
@@ -1644,18 +1633,21 @@ const notesElement=document.getElementById("modalNotes");notesElement.textConten
 
                         const name = getProductNameValue(item);
                         const image = getImageValue(item);
-                        const calculated = calculateProductPrices(item);
+                        const calculated=calculatePeriods(item);
+                        const price1=calculated.price1;
+                        const price2=calculated.price2;
+                        const validity = buildValidityText(item);
 
                         let priceHtml = `
                             <div class="ig-price-line highlight">
-                                $${escapeHtml(calculated.row1Price)} ${escapeHtml(calculated.row1DateText)}
+                                $${escapeHtml(price1)} ${escapeHtml(validity.price1Text)}
                             </div>
                         `;
 
-                        if (calculated.row2Price) {
+                        if (price2) {
                             priceHtml += `
                                 <div class="ig-price-line sub">
-                                    $${escapeHtml(calculated.row2Price)} ${escapeHtml(calculated.row2DateText)}
+                                    $${escapeHtml(price2)} ${escapeHtml(validity.price2Text)}
                                 </div>
                             `;
                         }
